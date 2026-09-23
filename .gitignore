@@ -20,8 +20,10 @@ share/python-wheels/
 *.egg-info/
 .installed.cfg
 *.egg
+.venv
 .venv/
 env/
+venv
 venv/
 ENV/
 

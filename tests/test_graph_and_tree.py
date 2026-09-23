@@ -35,6 +35,37 @@ class TestGraphAndTree(unittest.TestCase):
         self.assertIn("PART: 3005", path_text)
         self.assertIn("PARENT: 0000", path_text)
 
+    def test_bfs_tree_decode_and_reconstruction(self):
+        graph = AssemblyGraph("recon_test")
+        t1 = np.eye(4)
+        t1[:3, 3] = [0.0, -24.0, 0.0]
+        t2 = np.eye(4)
+        t2[:3, 3] = [20.0, -24.0, 0.0]
+
+        b1 = graph.add_part("3005", color_id=0, transform=t1)
+        b2 = graph.add_part("3004", color_id=71, transform=t2)
+        graph.connect(b1, "stud_0", b2, "tube_0", ConnectorType.STUD)
+
+        tree = BFSTreeCodec.encode(graph)
+        path_text = BFSTreeCodec.serialize_path_text(tree)
+        recon = BFSTreeCodec.decode(path_text)
+
+        self.assertEqual(len(recon.parts), 2)
+        self.assertEqual(recon.parts[b1].color_id, 0)
+        self.assertEqual(recon.parts[b2].color_id, 71)
+        self.assertEqual(recon.parts[b1].part_id, "3005")
+        self.assertEqual(recon.parts[b2].part_id, "3004")
+
+        # Zero coordinate drift
+        pos1_diff = np.max(np.abs(recon.parts[b1].position - t1[:3, 3]))
+        pos2_diff = np.max(np.abs(recon.parts[b2].position - t2[:3, 3]))
+        self.assertLess(pos1_diff, 0.001)
+        self.assertLess(pos2_diff, 0.001)
+
+        # Connection restored
+        self.assertEqual(recon.num_connections, 1)
+
 
 if __name__ == "__main__":
     unittest.main()
+

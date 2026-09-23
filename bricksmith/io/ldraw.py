@@ -86,6 +86,24 @@ def parse_ldr(content_or_path: Union[str, Path], infer_connections: bool = True)
 
         graph.add_part(part_id=part_stem, color_id=color_id, transform=transform)
 
+    if infer_connections and graph.num_connections == 0 and graph.num_parts > 1:
+        parts = list(graph.parts.values())
+        for i in range(len(parts)):
+            p1 = parts[i]
+            for j in range(i + 1, len(parts)):
+                p2 = parts[j]
+                dy = abs(p1.position[1] - p2.position[1])
+                dx = abs(p1.position[0] - p2.position[0])
+                dz = abs(p1.position[2] - p2.position[2])
+                if 7.0 <= dy <= 25.0 and dx <= 80.0 and dz <= 80.0:
+                    graph.connect(
+                        source_id=p1.instance_id,
+                        source_port="stud_0",
+                        target_id=p2.instance_id,
+                        target_port="tube_0",
+                        conn_type=ConnectorType.STUD,
+                    )
+
     return graph
 
 
