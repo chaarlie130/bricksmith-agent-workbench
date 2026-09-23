@@ -1,0 +1,4358 @@
+[
+  {
+    "model_id": "omr_10037-1_Breezeway_Cafe",
+    "title": "10037 - main.ldr",
+    "author": "Robert Paciorek [bercik]",
+    "source": "ldraw_omr",
+    "part_count": 221,
+    "unique_parts": 67,
+    "unique_colors": 12,
+    "dimensions_studs": {
+      "width_x": 29.8,
+      "height_y": 47.4,
+      "depth_z": 20.7
+    },
+    "stability_score": 0.955,
+    "json_path": "data/filtered_architecture/models/omr_10037-1_Breezeway_Cafe.json",
+    "ldr_path": "data/filtered_architecture/ldr/omr_10037-1_Breezeway_Cafe.ldr",
+    "tags": [
+      "curated_architecture",
+      "physically_stable",
+      "sweet_spot_band"
+    ]
+  },
+  {
+    "model_id": "omr_10159-1_City_Airport",
+    "title": "10159 - main.ldr",
+    "author": "Zolt\u00e1n K\u00e9ri [Zoltank82]",
+    "source": "ldraw_omr",
+    "part_count": 589,
+    "unique_parts": 153,
+    "unique_colors": 15,
+    "dimensions_studs": {
+      "width_x": 63.8,
+      "height_y": 68.8,
+      "depth_z": 95.0
+    },
+    "stability_score": 0.937,
+    "json_path": "data/filtered_architecture/models/omr_10159-1_City_Airport.json",
+    "ldr_path": "data/filtered_architecture/ldr/omr_10159-1_City_Airport.ldr",
+    "tags": [
+      "curated_architecture",
+      "physically_stable",
+      "sweet_spot_band"
+    ]
+  },
+  {
+    "model_id": "omr_1211-2_Small_House_Set",
+    "title": "1211-2 - main.ldr",
+    "author": "N. W. Perry [Plastikean]",
+    "source": "ldraw_omr",
+    "part_count": 114,
+    "unique_parts": 22,
+    "unique_colors": 3,
+    "dimensions_studs": {
+      "width_x": 7.0,
+      "height_y": 10.0,
+      "depth_z": 3.2
+    },
+    "stability_score": 0.86,
+    "json_path": "data/filtered_architecture/models/omr_1211-2_Small_House_Set.json",
+    "ldr_path": "data/filtered_architecture/ldr/omr_1211-2_Small_House_Set.ldr",
+    "tags": [
+      "curated_architecture",
+      "physically_stable",
+      "sweet_spot_band"
+    ]
+  },
+  {
+    "model_id": "omr_148-1_Central_Station",
+    "title": "148 - main.ldr",
+    "author": "Takeshi Takahashi [RainbowDolphin]",
+    "source": "ldraw_omr",
+    "part_count": 309,
+    "unique_parts": 47,
+    "unique_colors": 9,
+    "dimensions_studs": {
+      "width_x": 41.5,
+      "height_y": 49.0,
+      "depth_z": 27.5
+    },
+    "stability_score": 0.961,
+    "json_path": "data/filtered_architecture/models/omr_148-1_Central_Station.json",
+    "ldr_path": "data/filtered_architecture/ldr/omr_148-1_Central_Station.ldr",
+    "tags": [
+      "curated_architecture",
+      "physically_stable",
+      "sweet_spot_band"
+    ]
+  },
+  {
+    "model_id": "omr_1484-1_Weetabix_Town_House",
+    "title": "1484 - main.ldr",
+    "author": "Rijk van Voorst [Rijkjavik]",
+    "source": "ldraw_omr",
+    "part_count": 207,
+    "unique_parts": 77,
+    "unique_colors": 13,
+    "dimensions_studs": {
+      "width_x": 28.5,
+      "height_y": 37.0,
+      "depth_z": 19.5
+    },
+    "stability_score": 0.937,
+    "json_path": "data/filtered_architecture/models/omr_1484-1_Weetabix_Town_House.json",
+    "ldr_path": "data/filtered_architecture/ldr/omr_1484-1_Weetabix_Town_House.ldr",
+    "tags": [
+      "curated_architecture",
+      "physically_stable",
+      "sweet_spot_band"
+    ]
+  },
+  {
+    "model_id": "omr_1490-1_Town_Bank",
+    "title": "1490 - main.ldr",
+    "author": "Robert Paciorek [bercik]",
+    "source": "ldraw_omr",
+    "part_count": 200,
+    "unique_parts": 78,
+    "unique_colors": 11,
+    "dimensions_studs": {
+      "width_x": 31.7,
+      "height_y": 39.0,
+      "depth_z": 28.0
+    },
+    "stability_score": 0.905,
+    "json_path": "data/filtered_architecture/models/omr_1490-1_Town_Bank.json",
+    "ldr_path": "data/filtered_architecture/ldr/omr_1490-1_Town_Bank.ldr",
+    "tags": [
+      "curated_architecture",
+      "physically_stable",
+      "sweet_spot_band"
+    ]
+  },
+  {
+    "model_id": "omr_165-1_Cargo_Station",
+    "title": "165-1 - main.ldr",
+    "author": "Takeshi Takahashi [RainbowDolphin]",
+    "source": "ldraw_omr",
+    "part_count": 306,
+    "unique_parts": 46,
+    "unique_colors": 10,
+    "dimensions_studs": {
+      "width_x": 32.0,
+      "height_y": 53.0,
+      "depth_z": 31.0
+    },
+    "stability_score": 0.895,
+    "json_path": "data/filtered_architecture/models/omr_165-1_Cargo_Station.json",
+    "ldr_path": "data/filtered_architecture/ldr/omr_165-1_Cargo_Station.ldr",
+    "tags": [
+      "curated_architecture",
+      "physically_stable",
+      "sweet_spot_band"
+    ]
+  },
+  {
+    "model_id": "omr_1793-1_Space_Station_Zenon",
+    "title": "1793 - Space Station Zenon.ldr",
+    "author": "Damien Roux [Darats]",
+    "source": "ldraw_omr",
+    "part_count": 372,
+    "unique_parts": 108,
+    "unique_colors": 8,
+    "dimensions_studs": {
+      "width_x": 45.8,
+      "height_y": 54.0,
+      "depth_z": 38.2
+    },
+    "stability_score": 0.933,
+    "json_path": "data/filtered_architecture/models/omr_1793-1_Space_Station_Zenon.json",
+    "ldr_path": "data/filtered_architecture/ldr/omr_1793-1_Space_Station_Zenon.ldr",
+    "tags": [
+      "curated_architecture",
+      "physically_stable",
+      "sweet_spot_band"
+    ]
+  },
+  {
+    "model_id": "omr_1854-1_House_with_Roof-Windows_Velux",
+    "title": "1854 - main.ldr",
+    "author": "Robert Paciorek [bercik]",
+    "source": "ldraw_omr",
+    "part_count": 147,
+    "unique_parts": 63,
+    "unique_colors": 11,
+    "dimensions_studs": {
+      "width_x": 18.7,
+      "height_y": 31.0,
+      "depth_z": 16.2
+    },
+    "stability_score": 0.939,
+    "json_path": "data/filtered_architecture/models/omr_1854-1_House_with_Roof-Windows_Velux.json",
+    "ldr_path": "data/filtered_architecture/ldr/omr_1854-1_House_with_Roof-Windows_Velux.ldr",
+    "tags": [
+      "curated_architecture",
+      "physically_stable",
+      "sweet_spot_band"
+    ]
+  },
+  {
+    "model_id": "omr_21000-1_Sears_Tower",
+    "title": "21000 - Sears Tower.ldr",
+    "author": "Damien Roux [Darats]",
+    "source": "ldraw_omr",
+    "part_count": 69,
+    "unique_parts": 18,
+    "unique_colors": 3,
+    "dimensions_studs": {
+      "width_x": 9.0,
+      "height_y": 57.0,
+      "depth_z": 7.0
+    },
+    "stability_score": 1.0,
+    "json_path": "data/filtered_architecture/models/omr_21000-1_Sears_Tower.json",
+    "ldr_path": "data/filtered_architecture/ldr/omr_21000-1_Sears_Tower.ldr",
+    "tags": [
+      "curated_architecture",
+      "physically_stable",
+      "sweet_spot_band"
+    ]
+  },
+  {
+    "model_id": "omr_21000-2_Willis_Tower",
+    "title": "21000 - Willis Tower.ldr",
+    "author": "Damien Roux [Darats]",
+    "source": "ldraw_omr",
+    "part_count": 69,
+    "unique_parts": 18,
+    "unique_colors": 3,
+    "dimensions_studs": {
+      "width_x": 9.0,
+      "height_y": 57.0,
+      "depth_z": 7.0
+    },
+    "stability_score": 1.0,
+    "json_path": "data/filtered_architecture/models/omr_21000-2_Willis_Tower.json",
+    "ldr_path": "data/filtered_architecture/ldr/omr_21000-2_Willis_Tower.ldr",
+    "tags": [
+      "curated_architecture",
+      "physically_stable",
+      "sweet_spot_band"
+    ]
+  },
+  {
+    "model_id": "omr_21001-1_John_Hancock_Center",
+    "title": "21001 - John Hancock Center.ldr",
+    "author": "Merlijn Wissink [Legolijntje]",
+    "source": "ldraw_omr",
+    "part_count": 69,
+    "unique_parts": 21,
+    "unique_colors": 3,
+    "dimensions_studs": {
+      "width_x": 9.0,
+      "height_y": 49.0,
+      "depth_z": 7.0
+    },
+    "stability_score": 1.0,
+    "json_path": "data/filtered_architecture/models/omr_21001-1_John_Hancock_Center.json",
+    "ldr_path": "data/filtered_architecture/ldr/omr_21001-1_John_Hancock_Center.ldr",
+    "tags": [
+      "curated_architecture",
+      "physically_stable",
+      "sweet_spot_band"
+    ]
+  },
+  {
+    "model_id": "omr_21002-1_Empire_State_Building",
+    "title": "21002 - Empire State Building.ldr",
+    "author": "Orion Pobursky [OrionP]",
+    "source": "ldraw_omr",
+    "part_count": 77,
+    "unique_parts": 18,
+    "unique_colors": 3,
+    "dimensions_studs": {
+      "width_x": 9.0,
+      "height_y": 56.0,
+      "depth_z": 7.0
+    },
+    "stability_score": 1.0,
+    "json_path": "data/filtered_architecture/models/omr_21002-1_Empire_State_Building.json",
+    "ldr_path": "data/filtered_architecture/ldr/omr_21002-1_Empire_State_Building.ldr",
+    "tags": [
+      "curated_architecture",
+      "physically_stable",
+      "sweet_spot_band"
+    ]
+  },
+  {
+    "model_id": "omr_21004-1_Solomon_R_Guggenheim_Museum",
+    "title": "21004 - Solomon R. Guggenheim Museum.ldr",
+    "author": "Orion Pobursky [OrionP]",
+    "source": "ldraw_omr",
+    "part_count": 208,
+    "unique_parts": 50,
+    "unique_colors": 3,
+    "dimensions_studs": {
+      "width_x": 17.0,
+      "height_y": 31.0,
+      "depth_z": 9.0
+    },
+    "stability_score": 1.0,
+    "json_path": "data/filtered_architecture/models/omr_21004-1_Solomon_R_Guggenheim_Museum.json",
+    "ldr_path": "data/filtered_architecture/ldr/omr_21004-1_Solomon_R_Guggenheim_Museum.ldr",
+    "tags": [
+      "curated_architecture",
+      "physically_stable",
+      "sweet_spot_band"
+    ]
+  },
+  {
+    "model_id": "omr_21006-1_The_White_House",
+    "title": "21006 - The White House.ldr",
+    "author": "Damien Roux [Darats]",
+    "source": "ldraw_omr",
+    "part_count": 556,
+    "unique_parts": 57,
+    "unique_colors": 6,
+    "dimensions_studs": {
+      "width_x": 27.0,
+      "height_y": 30.0,
+      "depth_z": 17.0
+    },
+    "stability_score": 0.995,
+    "json_path": "data/filtered_architecture/models/omr_21006-1_The_White_House.json",
+    "ldr_path": "data/filtered_architecture/ldr/omr_21006-1_The_White_House.ldr",
+    "tags": [
+      "curated_architecture",
+      "physically_stable",
+      "sweet_spot_band"
+    ]
+  },
+  {
+    "model_id": "omr_21007-1_Rockefeller_Center",
+    "title": "21007 - Rockefeller Center.ldr",
+    "author": "Damien Roux [Darats]",
+    "source": "ldraw_omr",
+    "part_count": 240,
+    "unique_parts": 34,
+    "unique_colors": 4,
+    "dimensions_studs": {
+      "width_x": 12.0,
+      "height_y": 42.0,
+      "depth_z": 11.0
+    },
+    "stability_score": 1.0,
+    "json_path": "data/filtered_architecture/models/omr_21007-1_Rockefeller_Center.json",
+    "ldr_path": "data/filtered_architecture/ldr/omr_21007-1_Rockefeller_Center.ldr",
+    "tags": [
+      "curated_architecture",
+      "physically_stable",
+      "sweet_spot_band"
+    ]
+  },
+  {
+    "model_id": "omr_21008-1_Burj_Khalifa",
+    "title": "21008 - Burj Khalifa.ldr",
+    "author": "Orion Pobursky [OrionP]",
+    "source": "ldraw_omr",
+    "part_count": 209,
+    "unique_parts": 19,
+    "unique_colors": 3,
+    "dimensions_studs": {
+      "width_x": 11.0,
+      "height_y": 74.2,
+      "depth_z": 11.0
+    },
+    "stability_score": 0.99,
+    "json_path": "data/filtered_architecture/models/omr_21008-1_Burj_Khalifa.json",
+    "ldr_path": "data/filtered_architecture/ldr/omr_21008-1_Burj_Khalifa.ldr",
+    "tags": [
+      "curated_architecture",
+      "physically_stable",
+      "sweet_spot_band"
+    ]
+  },
+  {
+    "model_id": "omr_21009-1_Farnsworth_House",
+    "title": "21009 - Farnsworth House.ldr",
+    "author": "Orion Pobursky [OrionP]",
+    "source": "ldraw_omr",
+    "part_count": 545,
+    "unique_parts": 36,
+    "unique_colors": 8,
+    "dimensions_studs": {
+      "width_x": 37.0,
+      "height_y": 20.0,
+      "depth_z": 21.0
+    },
+    "stability_score": 1.0,
+    "json_path": "data/filtered_architecture/models/omr_21009-1_Farnsworth_House.json",
+    "ldr_path": "data/filtered_architecture/ldr/omr_21009-1_Farnsworth_House.ldr",
+    "tags": [
+      "curated_architecture",
+      "physically_stable",
+      "sweet_spot_band"
+    ]
+  },
+  {
+    "model_id": "omr_21011-1_Brandenburg_Gate",
+    "title": "21011 - Brandenburg Gate.ldr",
+    "author": "Orion Pobursky [OrionP]",
+    "source": "ldraw_omr",
+    "part_count": 362,
+    "unique_parts": 32,
+    "unique_colors": 5,
+    "dimensions_studs": {
+      "width_x": 27.0,
+      "height_y": 27.0,
+      "depth_z": 11.0
+    },
+    "stability_score": 1.0,
+    "json_path": "data/filtered_architecture/models/omr_21011-1_Brandenburg_Gate.json",
+    "ldr_path": "data/filtered_architecture/ldr/omr_21011-1_Brandenburg_Gate.ldr",
+    "tags": [
+      "curated_architecture",
+      "physically_stable",
+      "sweet_spot_band"
+    ]
+  },
+  {
+    "model_id": "omr_21012-1_Sydney_Opera_House",
+    "title": "21012 - Sydney Opera House.ldr",
+    "author": "Damien Roux [Darats]",
+    "source": "ldraw_omr",
+    "part_count": 270,
+    "unique_parts": 42,
+    "unique_colors": 7,
+    "dimensions_studs": {
+      "width_x": 19.0,
+      "height_y": 17.2,
+      "depth_z": 13.0
+    },
+    "stability_score": 0.937,
+    "json_path": "data/filtered_architecture/models/omr_21012-1_Sydney_Opera_House.json",
+    "ldr_path": "data/filtered_architecture/ldr/omr_21012-1_Sydney_Opera_House.ldr",
+    "tags": [
+      "curated_architecture",
+      "physically_stable",
+      "sweet_spot_band"
+    ]
+  },
+  {
+    "model_id": "omr_21013-1_Big_Ben",
+    "title": "21013 - Big Ben.ldr",
+    "author": "Greg Teft [gregteft]",
+    "source": "ldraw_omr",
+    "part_count": 346,
+    "unique_parts": 26,
+    "unique_colors": 6,
+    "dimensions_studs": {
+      "width_x": 11.0,
+      "height_y": 59.0,
+      "depth_z": 9.0
+    },
+    "stability_score": 1.0,
+    "json_path": "data/filtered_architecture/models/omr_21013-1_Big_Ben.json",
+    "ldr_path": "data/filtered_architecture/ldr/omr_21013-1_Big_Ben.ldr",
+    "tags": [
+      "curated_architecture",
+      "physically_stable",
+      "sweet_spot_band"
+    ]
+  },
+  {
+    "model_id": "omr_21015-1_The_Leaning_Tower_of_Pisa",
+    "title": "21015 - The Leaning Tower Of Pisa.ldr",
+    "author": "Damien Roux [Darats]",
+    "source": "ldraw_omr",
+    "part_count": 363,
+    "unique_parts": 36,
+    "unique_colors": 5,
+    "dimensions_studs": {
+      "width_x": 13.0,
+      "height_y": 77.4,
+      "depth_z": 13.0
+    },
+    "stability_score": 0.937,
+    "json_path": "data/filtered_architecture/models/omr_21015-1_The_Leaning_Tower_of_Pisa.json",
+    "ldr_path": "data/filtered_architecture/ldr/omr_21015-1_The_Leaning_Tower_of_Pisa.ldr",
+    "tags": [
+      "curated_architecture",
+      "physically_stable",
+      "sweet_spot_band"
+    ]
+  },
+  {
+    "model_id": "omr_21016-1_Sungnyemun",
+    "title": "21026 - Sungnyemun.ldr",
+    "author": "Merlijn Wissink [Legolijntje]",
+    "source": "ldraw_omr",
+    "part_count": 325,
+    "unique_parts": 37,
+    "unique_colors": 7,
+    "dimensions_studs": {
+      "width_x": 21.0,
+      "height_y": 32.0,
+      "depth_z": 9.0
+    },
+    "stability_score": 0.982,
+    "json_path": "data/filtered_architecture/models/omr_21016-1_Sungnyemun.json",
+    "ldr_path": "data/filtered_architecture/ldr/omr_21016-1_Sungnyemun.ldr",
+    "tags": [
+      "curated_architecture",
+      "physically_stable",
+      "sweet_spot_band"
+    ]
+  },
+  {
+    "model_id": "omr_21019-1_Eiffel_Tower",
+    "title": "21019 - The Eiffel Tower.ldr",
+    "author": "Damien Roux [Darats]",
+    "source": "ldraw_omr",
+    "part_count": 332,
+    "unique_parts": 49,
+    "unique_colors": 8,
+    "dimensions_studs": {
+      "width_x": 13.0,
+      "height_y": 94.0,
+      "depth_z": 13.0
+    },
+    "stability_score": 0.97,
+    "json_path": "data/filtered_architecture/models/omr_21019-1_Eiffel_Tower.json",
+    "ldr_path": "data/filtered_architecture/ldr/omr_21019-1_Eiffel_Tower.ldr",
+    "tags": [
+      "curated_architecture",
+      "physically_stable",
+      "sweet_spot_band"
+    ]
+  },
+  {
+    "model_id": "omr_21022-1_Lincoln_Memorial",
+    "title": "21022 - Lincoln Memorial.ldr",
+    "author": "Damien Roux [Darats]",
+    "source": "ldraw_omr",
+    "part_count": 273,
+    "unique_parts": 29,
+    "unique_colors": 7,
+    "dimensions_studs": {
+      "width_x": 15.0,
+      "height_y": 18.0,
+      "depth_z": 11.0
+    },
+    "stability_score": 1.0,
+    "json_path": "data/filtered_architecture/models/omr_21022-1_Lincoln_Memorial.json",
+    "ldr_path": "data/filtered_architecture/ldr/omr_21022-1_Lincoln_Memorial.ldr",
+    "tags": [
+      "curated_architecture",
+      "physically_stable",
+      "sweet_spot_band"
+    ]
+  },
+  {
+    "model_id": "omr_21023-1_Flatiron_Building",
+    "title": "21023 - Flatiron Building.ldr",
+    "author": "Damien Roux [Darats]",
+    "source": "ldraw_omr",
+    "part_count": 468,
+    "unique_parts": 37,
+    "unique_colors": 6,
+    "dimensions_studs": {
+      "width_x": 9.0,
+      "height_y": 48.0,
+      "depth_z": 13.0
+    },
+    "stability_score": 0.987,
+    "json_path": "data/filtered_architecture/models/omr_21023-1_Flatiron_Building.json",
+    "ldr_path": "data/filtered_architecture/ldr/omr_21023-1_Flatiron_Building.ldr",
+    "tags": [
+      "curated_architecture",
+      "physically_stable",
+      "sweet_spot_band"
+    ]
+  },
+  {
+    "model_id": "omr_21026-1_Venice",
+    "title": "21026 - Venice.ldr",
+    "author": "Damien Roux [Darats]",
+    "source": "ldraw_omr",
+    "part_count": 210,
+    "unique_parts": 46,
+    "unique_colors": 6,
+    "dimensions_studs": {
+      "width_x": 31.0,
+      "height_y": 41.0,
+      "depth_z": 4.3
+    },
+    "stability_score": 0.929,
+    "json_path": "data/filtered_architecture/models/omr_21026-1_Venice.json",
+    "ldr_path": "data/filtered_architecture/ldr/omr_21026-1_Venice.ldr",
+    "tags": [
+      "curated_architecture",
+      "physically_stable",
+      "sweet_spot_band"
+    ]
+  },
+  {
+    "model_id": "omr_21027-1_Berlin",
+    "title": "21027 - Berlin.ldr",
+    "author": "Damien Roux [Darats]",
+    "source": "ldraw_omr",
+    "part_count": 289,
+    "unique_parts": 56,
+    "unique_colors": 11,
+    "dimensions_studs": {
+      "width_x": 31.0,
+      "height_y": 58.7,
+      "depth_z": 6.3
+    },
+    "stability_score": 0.934,
+    "json_path": "data/filtered_architecture/models/omr_21027-1_Berlin.json",
+    "ldr_path": "data/filtered_architecture/ldr/omr_21027-1_Berlin.ldr",
+    "tags": [
+      "curated_architecture",
+      "physically_stable",
+      "sweet_spot_band"
+    ]
+  },
+  {
+    "model_id": "omr_21028-1_New_York_City",
+    "title": "21028 - New York City.ldr",
+    "author": "Damien Roux [Darats]",
+    "source": "ldraw_omr",
+    "part_count": 597,
+    "unique_parts": 56,
+    "unique_colors": 12,
+    "dimensions_studs": {
+      "width_x": 31.0,
+      "height_y": 69.0,
+      "depth_z": 5.3
+    },
+    "stability_score": 0.998,
+    "json_path": "data/filtered_architecture/models/omr_21028-1_New_York_City.json",
+    "ldr_path": "data/filtered_architecture/ldr/omr_21028-1_New_York_City.ldr",
+    "tags": [
+      "curated_architecture",
+      "physically_stable",
+      "sweet_spot_band"
+    ]
+  },
+  {
+    "model_id": "omr_21031-1_Burj_Khalifa",
+    "title": "21031 - Burj Khalifa.ldr",
+    "author": "Damien Roux [Darats]",
+    "source": "ldraw_omr",
+    "part_count": 341,
+    "unique_parts": 47,
+    "unique_colors": 6,
+    "dimensions_studs": {
+      "width_x": 11.0,
+      "height_y": 112.0,
+      "depth_z": 11.0
+    },
+    "stability_score": 0.991,
+    "json_path": "data/filtered_architecture/models/omr_21031-1_Burj_Khalifa.json",
+    "ldr_path": "data/filtered_architecture/ldr/omr_21031-1_Burj_Khalifa.ldr",
+    "tags": [
+      "curated_architecture",
+      "physically_stable",
+      "sweet_spot_band"
+    ]
+  },
+  {
+    "model_id": "omr_21033-1_Chicago",
+    "title": "21033 - Chicago.ldr",
+    "author": "Damien Roux [Darats]",
+    "source": "ldraw_omr",
+    "part_count": 443,
+    "unique_parts": 54,
+    "unique_colors": 13,
+    "dimensions_studs": {
+      "width_x": 6.3,
+      "height_y": 56.5,
+      "depth_z": 27.0
+    },
+    "stability_score": 0.989,
+    "json_path": "data/filtered_architecture/models/omr_21033-1_Chicago.json",
+    "ldr_path": "data/filtered_architecture/ldr/omr_21033-1_Chicago.ldr",
+    "tags": [
+      "curated_architecture",
+      "physically_stable",
+      "sweet_spot_band"
+    ]
+  },
+  {
+    "model_id": "omr_21036-1_Arc_de_Triomphe",
+    "title": "21036 - main.ldr",
+    "author": "Orion Pobursky [OrionP]",
+    "source": "ldraw_omr",
+    "part_count": 394,
+    "unique_parts": 50,
+    "unique_colors": 10,
+    "dimensions_studs": {
+      "width_x": 11.0,
+      "height_y": 35.0,
+      "depth_z": 17.0
+    },
+    "stability_score": 0.98,
+    "json_path": "data/filtered_architecture/models/omr_21036-1_Arc_de_Triomphe.json",
+    "ldr_path": "data/filtered_architecture/ldr/omr_21036-1_Arc_de_Triomphe.ldr",
+    "tags": [
+      "curated_architecture",
+      "physically_stable",
+      "sweet_spot_band"
+    ]
+  },
+  {
+    "model_id": "omr_21041-1_Great_Wall_of_China",
+    "title": "21041 - main.ldr",
+    "author": "Orion Pobursky [OrionP]",
+    "source": "ldraw_omr",
+    "part_count": 552,
+    "unique_parts": 56,
+    "unique_colors": 12,
+    "dimensions_studs": {
+      "width_x": 11.0,
+      "height_y": 37.0,
+      "depth_z": 33.0
+    },
+    "stability_score": 0.976,
+    "json_path": "data/filtered_architecture/models/omr_21041-1_Great_Wall_of_China.json",
+    "ldr_path": "data/filtered_architecture/ldr/omr_21041-1_Great_Wall_of_China.ldr",
+    "tags": [
+      "curated_architecture",
+      "physically_stable",
+      "sweet_spot_band"
+    ]
+  },
+  {
+    "model_id": "omr_21051-1_Tokyo",
+    "title": "21051 - Tokyo - main.ldr",
+    "author": "Orion Pobursky [OrionP]",
+    "source": "ldraw_omr",
+    "part_count": 542,
+    "unique_parts": 88,
+    "unique_colors": 29,
+    "dimensions_studs": {
+      "width_x": 33.0,
+      "height_y": 85.6,
+      "depth_z": 12.3
+    },
+    "stability_score": 0.989,
+    "json_path": "data/filtered_architecture/models/omr_21051-1_Tokyo.json",
+    "ldr_path": "data/filtered_architecture/ldr/omr_21051-1_Tokyo.ldr",
+    "tags": [
+      "curated_architecture",
+      "physically_stable",
+      "sweet_spot_band"
+    ]
+  },
+  {
+    "model_id": "omr_262-2_Complete_Children_s_Room_Set",
+    "title": "262-2 - Main.ldr",
+    "author": "Marc Giraudet [Mad_Marc]",
+    "source": "ldraw_omr",
+    "part_count": 258,
+    "unique_parts": 21,
+    "unique_colors": 6,
+    "dimensions_studs": {
+      "width_x": 19.5,
+      "height_y": 32.0,
+      "depth_z": 29.0
+    },
+    "stability_score": 0.996,
+    "json_path": "data/filtered_architecture/models/omr_262-2_Complete_Children_s_Room_Set.json",
+    "ldr_path": "data/filtered_architecture/ldr/omr_262-2_Complete_Children_s_Room_Set.ldr",
+    "tags": [
+      "curated_architecture",
+      "physically_stable",
+      "sweet_spot_band"
+    ]
+  },
+  {
+    "model_id": "omr_3061-1_City_Park_Caf",
+    "title": "3061 - main.ldr",
+    "author": "Philippe Hurbain [Philo]",
+    "source": "ldraw_omr",
+    "part_count": 257,
+    "unique_parts": 103,
+    "unique_colors": 26,
+    "dimensions_studs": {
+      "width_x": 22.8,
+      "height_y": 33.0,
+      "depth_z": 24.2
+    },
+    "stability_score": 0.977,
+    "json_path": "data/filtered_architecture/models/omr_3061-1_City_Park_Caf.json",
+    "ldr_path": "data/filtered_architecture/ldr/omr_3061-1_City_Park_Caf.ldr",
+    "tags": [
+      "curated_architecture",
+      "physically_stable",
+      "sweet_spot_band"
+    ]
+  },
+  {
+    "model_id": "omr_31009-1_Small_Cottage",
+    "title": "31009 - main.ldr",
+    "author": "Stefan Frenz [smf]",
+    "source": "ldraw_omr",
+    "part_count": 270,
+    "unique_parts": 65,
+    "unique_colors": 18,
+    "dimensions_studs": {
+      "width_x": 14.0,
+      "height_y": 45.0,
+      "depth_z": 21.0
+    },
+    "stability_score": 0.967,
+    "json_path": "data/filtered_architecture/models/omr_31009-1_Small_Cottage.json",
+    "ldr_path": "data/filtered_architecture/ldr/omr_31009-1_Small_Cottage.ldr",
+    "tags": [
+      "curated_architecture",
+      "physically_stable",
+      "sweet_spot_band"
+    ]
+  },
+  {
+    "model_id": "omr_31048-1_Lakeside_Lodge",
+    "title": "31048 - main.ldr",
+    "author": "Stefan Frenz [smf]",
+    "source": "ldraw_omr",
+    "part_count": 369,
+    "unique_parts": 90,
+    "unique_colors": 21,
+    "dimensions_studs": {
+      "width_x": 18.6,
+      "height_y": 32.9,
+      "depth_z": 28.6
+    },
+    "stability_score": 0.986,
+    "json_path": "data/filtered_architecture/models/omr_31048-1_Lakeside_Lodge.json",
+    "ldr_path": "data/filtered_architecture/ldr/omr_31048-1_Lakeside_Lodge.ldr",
+    "tags": [
+      "curated_architecture",
+      "physically_stable",
+      "sweet_spot_band"
+    ]
+  },
+  {
+    "model_id": "omr_341-2_Cathy_Cat_s_Morty_Mouse_s_Cottage",
+    "title": "341-2 - main.ldr",
+    "author": "Philippe Hurbain [Philo]",
+    "source": "ldraw_omr",
+    "part_count": 131,
+    "unique_parts": 31,
+    "unique_colors": 9,
+    "dimensions_studs": {
+      "width_x": 21.2,
+      "height_y": 76.0,
+      "depth_z": 30.8
+    },
+    "stability_score": 0.985,
+    "json_path": "data/filtered_architecture/models/omr_341-2_Cathy_Cat_s_Morty_Mouse_s_Cottage.json",
+    "ldr_path": "data/filtered_architecture/ldr/omr_341-2_Cathy_Cat_s_Morty_Mouse_s_Cottage.ldr",
+    "tags": [
+      "curated_architecture",
+      "physically_stable",
+      "sweet_spot_band"
+    ]
+  },
+  {
+    "model_id": "omr_345-1_House_with_Mini_Wheel_Car",
+    "title": "345 - Main.ldr",
+    "author": "Marc Giraudet [Mad_Marc]",
+    "source": "ldraw_omr",
+    "part_count": 152,
+    "unique_parts": 41,
+    "unique_colors": 7,
+    "dimensions_studs": {
+      "width_x": 28.1,
+      "height_y": 20.0,
+      "depth_z": 29.0
+    },
+    "stability_score": 0.947,
+    "json_path": "data/filtered_architecture/models/omr_345-1_House_with_Mini_Wheel_Car.json",
+    "ldr_path": "data/filtered_architecture/ldr/omr_345-1_House_with_Mini_Wheel_Car.ldr",
+    "tags": [
+      "curated_architecture",
+      "physically_stable",
+      "sweet_spot_band"
+    ]
+  },
+  {
+    "model_id": "omr_346-2_House_with_Car",
+    "title": "346-2 - Main.ldr",
+    "author": "Marc Giraudet [Mad_Marc]",
+    "source": "ldraw_omr",
+    "part_count": 165,
+    "unique_parts": 37,
+    "unique_colors": 7,
+    "dimensions_studs": {
+      "width_x": 21.6,
+      "height_y": 30.0,
+      "depth_z": 31.0
+    },
+    "stability_score": 0.982,
+    "json_path": "data/filtered_architecture/models/omr_346-2_House_with_Car.json",
+    "ldr_path": "data/filtered_architecture/ldr/omr_346-2_House_with_Car.ldr",
+    "tags": [
+      "curated_architecture",
+      "physically_stable",
+      "sweet_spot_band"
+    ]
+  },
+  {
+    "model_id": "omr_349-1_Swiss_Chalet",
+    "title": "349 - Main.ldr",
+    "author": "Marc Giraudet [Mad_Marc]",
+    "source": "ldraw_omr",
+    "part_count": 80,
+    "unique_parts": 20,
+    "unique_colors": 5,
+    "dimensions_studs": {
+      "width_x": 12.0,
+      "height_y": 29.0,
+      "depth_z": 18.0
+    },
+    "stability_score": 1.0,
+    "json_path": "data/filtered_architecture/models/omr_349-1_Swiss_Chalet.json",
+    "ldr_path": "data/filtered_architecture/ldr/omr_349-1_Swiss_Chalet.ldr",
+    "tags": [
+      "curated_architecture",
+      "physically_stable",
+      "sweet_spot_band"
+    ]
+  },
+  {
+    "model_id": "omr_358-1_Rocket_Base",
+    "title": "358 - Rocket Base.ldr",
+    "author": "Oliver Dammann [Nautilus]",
+    "source": "ldraw_omr",
+    "part_count": 249,
+    "unique_parts": 31,
+    "unique_colors": 6,
+    "dimensions_studs": {
+      "width_x": 26.5,
+      "height_y": 78.0,
+      "depth_z": 22.8
+    },
+    "stability_score": 1.0,
+    "json_path": "data/filtered_architecture/models/omr_358-1_Rocket_Base.json",
+    "ldr_path": "data/filtered_architecture/ldr/omr_358-1_Rocket_Base.ldr",
+    "tags": [
+      "curated_architecture",
+      "physically_stable",
+      "sweet_spot_band"
+    ]
+  },
+  {
+    "model_id": "omr_361-2_Garage",
+    "title": "361-2 - main.ldr",
+    "author": "Robert Paciorek [bercik]",
+    "source": "ldraw_omr",
+    "part_count": 85,
+    "unique_parts": 28,
+    "unique_colors": 8,
+    "dimensions_studs": {
+      "width_x": 13.9,
+      "height_y": 23.0,
+      "depth_z": 12.9
+    },
+    "stability_score": 0.976,
+    "json_path": "data/filtered_architecture/models/omr_361-2_Garage.json",
+    "ldr_path": "data/filtered_architecture/ldr/omr_361-2_Garage.ldr",
+    "tags": [
+      "curated_architecture",
+      "physically_stable",
+      "sweet_spot_band"
+    ]
+  },
+  {
+    "model_id": "omr_3667-1_Bakery",
+    "title": "3667 - Bakery.ldr",
+    "author": "Philippe Hurbain [Philo]",
+    "source": "ldraw_omr",
+    "part_count": 70,
+    "unique_parts": 30,
+    "unique_colors": 13,
+    "dimensions_studs": {
+      "width_x": 21.6,
+      "height_y": 37.0,
+      "depth_z": 14.2
+    },
+    "stability_score": 0.971,
+    "json_path": "data/filtered_architecture/models/omr_3667-1_Bakery.json",
+    "ldr_path": "data/filtered_architecture/ldr/omr_3667-1_Bakery.ldr",
+    "tags": [
+      "curated_architecture",
+      "physically_stable",
+      "sweet_spot_band"
+    ]
+  },
+  {
+    "model_id": "omr_3678-1_The_Fabuland_House",
+    "title": "3678 - main.ldr",
+    "author": "Philippe Hurbain [Philo]",
+    "source": "ldraw_omr",
+    "part_count": 152,
+    "unique_parts": 58,
+    "unique_colors": 12,
+    "dimensions_studs": {
+      "width_x": 35.2,
+      "height_y": 76.0,
+      "depth_z": 31.3
+    },
+    "stability_score": 0.961,
+    "json_path": "data/filtered_architecture/models/omr_3678-1_The_Fabuland_House.json",
+    "ldr_path": "data/filtered_architecture/ldr/omr_3678-1_The_Fabuland_House.ldr",
+    "tags": [
+      "curated_architecture",
+      "physically_stable",
+      "sweet_spot_band"
+    ]
+  },
+  {
+    "model_id": "omr_374-1_Fire_Station",
+    "title": "374 - main.ldr",
+    "author": "Takeshi Takahashi [RainbowDolphin]",
+    "source": "ldraw_omr",
+    "part_count": 363,
+    "unique_parts": 73,
+    "unique_colors": 12,
+    "dimensions_studs": {
+      "width_x": 37.0,
+      "height_y": 50.0,
+      "depth_z": 29.0
+    },
+    "stability_score": 0.97,
+    "json_path": "data/filtered_architecture/models/omr_374-1_Fire_Station.json",
+    "ldr_path": "data/filtered_architecture/ldr/omr_374-1_Fire_Station.ldr",
+    "tags": [
+      "curated_architecture",
+      "physically_stable",
+      "sweet_spot_band"
+    ]
+  },
+  {
+    "model_id": "omr_3741-1_Large_Locomotive_base_unit_without_color_trim_elements",
+    "title": "3741 - main.ldr",
+    "author": "TotalyWicked [TotalyWicked]",
+    "source": "ldraw_omr",
+    "part_count": 165,
+    "unique_parts": 51,
+    "unique_colors": 8,
+    "dimensions_studs": {
+      "width_x": 26.6,
+      "height_y": 27.0,
+      "depth_z": 5.0
+    },
+    "stability_score": 1.0,
+    "json_path": "data/filtered_architecture/models/omr_3741-1_Large_Locomotive_base_unit_without_color_trim_elements.json",
+    "ldr_path": "data/filtered_architecture/ldr/omr_3741-1_Large_Locomotive_base_unit_without_color_trim_elements.ldr",
+    "tags": [
+      "curated_architecture",
+      "physically_stable",
+      "sweet_spot_band"
+    ]
+  },
+  {
+    "model_id": "omr_376-2_Town_House_with_Garden",
+    "title": "376-2 - main.ldr",
+    "author": "Robert Paciorek [bercik]",
+    "source": "ldraw_omr",
+    "part_count": 232,
+    "unique_parts": 44,
+    "unique_colors": 7,
+    "dimensions_studs": {
+      "width_x": 34.8,
+      "height_y": 39.0,
+      "depth_z": 25.8
+    },
+    "stability_score": 0.978,
+    "json_path": "data/filtered_architecture/models/omr_376-2_Town_House_with_Garden.json",
+    "ldr_path": "data/filtered_architecture/ldr/omr_376-2_Town_House_with_Garden.ldr",
+    "tags": [
+      "curated_architecture",
+      "physically_stable",
+      "sweet_spot_band"
+    ]
+  },
+  {
+    "model_id": "omr_377-1_Shell_Service_Station",
+    "title": "377 - main.ldr",
+    "author": "Takeshi Takahashi [RainbowDolphin]",
+    "source": "ldraw_omr",
+    "part_count": 203,
+    "unique_parts": 54,
+    "unique_colors": 9,
+    "dimensions_studs": {
+      "width_x": 28.0,
+      "height_y": 26.0,
+      "depth_z": 29.0
+    },
+    "stability_score": 0.975,
+    "json_path": "data/filtered_architecture/models/omr_377-1_Shell_Service_Station.json",
+    "ldr_path": "data/filtered_architecture/ldr/omr_377-1_Shell_Service_Station.ldr",
+    "tags": [
+      "curated_architecture",
+      "physically_stable",
+      "sweet_spot_band"
+    ]
+  },
+  {
+    "model_id": "omr_3930-1_Stephanie_s_Outdoor_Bakery",
+    "title": "3930 - Stephanie's Outdoor Bakery.ldr",
+    "author": "Philippe Hurbain [Philo]",
+    "source": "ldraw_omr",
+    "part_count": 48,
+    "unique_parts": 32,
+    "unique_colors": 15,
+    "dimensions_studs": {
+      "width_x": 6.5,
+      "height_y": 19.4,
+      "depth_z": 13.0
+    },
+    "stability_score": 0.938,
+    "json_path": "data/filtered_architecture/models/omr_3930-1_Stephanie_s_Outdoor_Bakery.json",
+    "ldr_path": "data/filtered_architecture/ldr/omr_3930-1_Stephanie_s_Outdoor_Bakery.ldr",
+    "tags": [
+      "curated_architecture",
+      "physically_stable",
+      "sweet_spot_band"
+    ]
+  },
+  {
+    "model_id": "omr_3933-1_Olivia_s_Invention_Workshop",
+    "title": "3933 - main.ldr",
+    "author": "Takeshi Takahashi [RainbowDolphin]",
+    "source": "ldraw_omr",
+    "part_count": 92,
+    "unique_parts": 46,
+    "unique_colors": 18,
+    "dimensions_studs": {
+      "width_x": 22.0,
+      "height_y": 15.0,
+      "depth_z": 15.5
+    },
+    "stability_score": 0.978,
+    "json_path": "data/filtered_architecture/models/omr_3933-1_Olivia_s_Invention_Workshop.json",
+    "ldr_path": "data/filtered_architecture/ldr/omr_3933-1_Olivia_s_Invention_Workshop.ldr",
+    "tags": [
+      "curated_architecture",
+      "physically_stable",
+      "sweet_spot_band"
+    ]
+  },
+  {
+    "model_id": "omr_3938-1_Andrea_s_Bunny_House",
+    "title": "3938 - main.ldr",
+    "author": "Takeshi Takahashi [RainbowDolphin]",
+    "source": "ldraw_omr",
+    "part_count": 66,
+    "unique_parts": 41,
+    "unique_colors": 16,
+    "dimensions_studs": {
+      "width_x": 23.0,
+      "height_y": 15.6,
+      "depth_z": 9.0
+    },
+    "stability_score": 0.955,
+    "json_path": "data/filtered_architecture/models/omr_3938-1_Andrea_s_Bunny_House.json",
+    "ldr_path": "data/filtered_architecture/ldr/omr_3938-1_Andrea_s_Bunny_House.ldr",
+    "tags": [
+      "curated_architecture",
+      "physically_stable",
+      "sweet_spot_band"
+    ]
+  },
+  {
+    "model_id": "omr_40141-1_Bricktober_Hotel",
+    "title": "40141 - Main.ldr",
+    "author": "Christian Maglek\u00e6r",
+    "source": "ldraw_omr",
+    "part_count": 203,
+    "unique_parts": 30,
+    "unique_colors": 18,
+    "dimensions_studs": {
+      "width_x": 11.5,
+      "height_y": 35.0,
+      "depth_z": 10.1
+    },
+    "stability_score": 1.0,
+    "json_path": "data/filtered_architecture/models/omr_40141-1_Bricktober_Hotel.json",
+    "ldr_path": "data/filtered_architecture/ldr/omr_40141-1_Bricktober_Hotel.ldr",
+    "tags": [
+      "curated_architecture",
+      "physically_stable",
+      "sweet_spot_band"
+    ]
+  },
+  {
+    "model_id": "omr_40142-1_Bricktober_Train_Station",
+    "title": "40142 - Main.ldr",
+    "author": "Christian Maglek\u00e6r",
+    "source": "ldraw_omr",
+    "part_count": 180,
+    "unique_parts": 34,
+    "unique_colors": 16,
+    "dimensions_studs": {
+      "width_x": 10.5,
+      "height_y": 17.0,
+      "depth_z": 11.6
+    },
+    "stability_score": 1.0,
+    "json_path": "data/filtered_architecture/models/omr_40142-1_Bricktober_Train_Station.json",
+    "ldr_path": "data/filtered_architecture/ldr/omr_40142-1_Bricktober_Train_Station.ldr",
+    "tags": [
+      "curated_architecture",
+      "physically_stable",
+      "sweet_spot_band"
+    ]
+  },
+  {
+    "model_id": "omr_40143-1_Bricktober_Bakery",
+    "title": "40143 - Main.ldr",
+    "author": "Christian Maglek\u00e6r",
+    "source": "ldraw_omr",
+    "part_count": 234,
+    "unique_parts": 37,
+    "unique_colors": 20,
+    "dimensions_studs": {
+      "width_x": 9.0,
+      "height_y": 17.0,
+      "depth_z": 11.6
+    },
+    "stability_score": 0.966,
+    "json_path": "data/filtered_architecture/models/omr_40143-1_Bricktober_Bakery.json",
+    "ldr_path": "data/filtered_architecture/ldr/omr_40143-1_Bricktober_Bakery.ldr",
+    "tags": [
+      "curated_architecture",
+      "physically_stable",
+      "sweet_spot_band"
+    ]
+  },
+  {
+    "model_id": "omr_40144-1_Bricktober_Toys_R_Us_Store",
+    "title": "40144 - Main.ldr",
+    "author": "Christian Maglek\u00e6r",
+    "source": "ldraw_omr",
+    "part_count": 164,
+    "unique_parts": 34,
+    "unique_colors": 14,
+    "dimensions_studs": {
+      "width_x": 11.0,
+      "height_y": 14.0,
+      "depth_z": 11.6
+    },
+    "stability_score": 0.994,
+    "json_path": "data/filtered_architecture/models/omr_40144-1_Bricktober_Toys_R_Us_Store.json",
+    "ldr_path": "data/filtered_architecture/ldr/omr_40144-1_Bricktober_Toys_R_Us_Store.ldr",
+    "tags": [
+      "curated_architecture",
+      "physically_stable",
+      "sweet_spot_band"
+    ]
+  },
+  {
+    "model_id": "omr_40180-1_Bricktober_Theater",
+    "title": "40180 - Main.ldr",
+    "author": "Christian Maglek\u00e6r",
+    "source": "ldraw_omr",
+    "part_count": 164,
+    "unique_parts": 32,
+    "unique_colors": 16,
+    "dimensions_studs": {
+      "width_x": 7.0,
+      "height_y": 22.0,
+      "depth_z": 11.6
+    },
+    "stability_score": 0.994,
+    "json_path": "data/filtered_architecture/models/omr_40180-1_Bricktober_Theater.json",
+    "ldr_path": "data/filtered_architecture/ldr/omr_40180-1_Bricktober_Theater.ldr",
+    "tags": [
+      "curated_architecture",
+      "physically_stable",
+      "sweet_spot_band"
+    ]
+  },
+  {
+    "model_id": "omr_40181-1_Bricktober_Pizza_Place",
+    "title": "40181 - Main.ldr",
+    "author": "Christian Maglek\u00e6r",
+    "source": "ldraw_omr",
+    "part_count": 139,
+    "unique_parts": 28,
+    "unique_colors": 13,
+    "dimensions_studs": {
+      "width_x": 7.0,
+      "height_y": 15.0,
+      "depth_z": 11.6
+    },
+    "stability_score": 0.993,
+    "json_path": "data/filtered_architecture/models/omr_40181-1_Bricktober_Pizza_Place.json",
+    "ldr_path": "data/filtered_architecture/ldr/omr_40181-1_Bricktober_Pizza_Place.ldr",
+    "tags": [
+      "curated_architecture",
+      "physically_stable",
+      "sweet_spot_band"
+    ]
+  },
+  {
+    "model_id": "omr_40182-1_Bricktober_Fire_Station",
+    "title": "40182 - Main.ldr",
+    "author": "Christian Maglek\u00e6r",
+    "source": "ldraw_omr",
+    "part_count": 175,
+    "unique_parts": 40,
+    "unique_colors": 15,
+    "dimensions_studs": {
+      "width_x": 6.8,
+      "height_y": 25.0,
+      "depth_z": 11.6
+    },
+    "stability_score": 0.994,
+    "json_path": "data/filtered_architecture/models/omr_40182-1_Bricktober_Fire_Station.json",
+    "ldr_path": "data/filtered_architecture/ldr/omr_40182-1_Bricktober_Fire_Station.ldr",
+    "tags": [
+      "curated_architecture",
+      "physically_stable",
+      "sweet_spot_band"
+    ]
+  },
+  {
+    "model_id": "omr_40183-1_Bricktober_Town_Hall",
+    "title": "40183 - Main.ldr",
+    "author": "Christian Maglek\u00e6r",
+    "source": "ldraw_omr",
+    "part_count": 186,
+    "unique_parts": 36,
+    "unique_colors": 14,
+    "dimensions_studs": {
+      "width_x": 7.0,
+      "height_y": 27.0,
+      "depth_z": 11.6
+    },
+    "stability_score": 0.978,
+    "json_path": "data/filtered_architecture/models/omr_40183-1_Bricktober_Town_Hall.json",
+    "ldr_path": "data/filtered_architecture/ldr/omr_40183-1_Bricktober_Town_Hall.ldr",
+    "tags": [
+      "curated_architecture",
+      "physically_stable",
+      "sweet_spot_band"
+    ]
+  },
+  {
+    "model_id": "omr_40782-1_Tropical_Rainforest_Diorama",
+    "title": "40782 - main.ldr",
+    "author": "Rene Rechthaler [Blechtaler]",
+    "source": "ldraw_omr",
+    "part_count": 301,
+    "unique_parts": 61,
+    "unique_colors": 21,
+    "dimensions_studs": {
+      "width_x": 16.5,
+      "height_y": 25.5,
+      "depth_z": 13.7
+    },
+    "stability_score": 0.973,
+    "json_path": "data/filtered_architecture/models/omr_40782-1_Tropical_Rainforest_Diorama.json",
+    "ldr_path": "data/filtered_architecture/ldr/omr_40782-1_Tropical_Rainforest_Diorama.ldr",
+    "tags": [
+      "curated_architecture",
+      "physically_stable",
+      "sweet_spot_band"
+    ]
+  },
+  {
+    "model_id": "omr_40783-1_Coral_Reef_Diorama",
+    "title": "40783 - main.ldr",
+    "author": "Rene Rechthaler [Blechtaler]",
+    "source": "ldraw_omr",
+    "part_count": 285,
+    "unique_parts": 55,
+    "unique_colors": 31,
+    "dimensions_studs": {
+      "width_x": 13.0,
+      "height_y": 27.8,
+      "depth_z": 13.0
+    },
+    "stability_score": 0.895,
+    "json_path": "data/filtered_architecture/models/omr_40783-1_Coral_Reef_Diorama.json",
+    "ldr_path": "data/filtered_architecture/ldr/omr_40783-1_Coral_Reef_Diorama.ldr",
+    "tags": [
+      "curated_architecture",
+      "physically_stable",
+      "sweet_spot_band"
+    ]
+  },
+  {
+    "model_id": "omr_4205-1_Off_Road_Command_Center",
+    "title": "4205 - main.ldr",
+    "author": "Robert Paciorek [bercik]",
+    "source": "ldraw_omr",
+    "part_count": 415,
+    "unique_parts": 125,
+    "unique_colors": 22,
+    "dimensions_studs": {
+      "width_x": 55.5,
+      "height_y": 29.0,
+      "depth_z": 28.6
+    },
+    "stability_score": 0.973,
+    "json_path": "data/filtered_architecture/models/omr_4205-1_Off_Road_Command_Center.json",
+    "ldr_path": "data/filtered_architecture/ldr/omr_4205-1_Off_Road_Command_Center.ldr",
+    "tags": [
+      "curated_architecture",
+      "physically_stable",
+      "sweet_spot_band"
+    ]
+  },
+  {
+    "model_id": "omr_4555-1_Cargo_Station",
+    "title": "4555 - main.ldr",
+    "author": "Robert Paciorek [bercik]",
+    "source": "ldraw_omr",
+    "part_count": 390,
+    "unique_parts": 119,
+    "unique_colors": 12,
+    "dimensions_studs": {
+      "width_x": 41.1,
+      "height_y": 76.0,
+      "depth_z": 42.6
+    },
+    "stability_score": 0.969,
+    "json_path": "data/filtered_architecture/models/omr_4555-1_Cargo_Station.json",
+    "ldr_path": "data/filtered_architecture/ldr/omr_4555-1_Cargo_Station.ldr",
+    "tags": [
+      "curated_architecture",
+      "physically_stable",
+      "sweet_spot_band"
+    ]
+  },
+  {
+    "model_id": "omr_4557-1_Freight_Loading_Station",
+    "title": "4557 - main.ldr",
+    "author": "TotalyWicked [TotalyWicked]",
+    "source": "ldraw_omr",
+    "part_count": 251,
+    "unique_parts": 91,
+    "unique_colors": 14,
+    "dimensions_studs": {
+      "width_x": 15.3,
+      "height_y": 86.7,
+      "depth_z": 43.6
+    },
+    "stability_score": 0.976,
+    "json_path": "data/filtered_architecture/models/omr_4557-1_Freight_Loading_Station.json",
+    "ldr_path": "data/filtered_architecture/ldr/omr_4557-1_Freight_Loading_Station.ldr",
+    "tags": [
+      "curated_architecture",
+      "physically_stable",
+      "sweet_spot_band"
+    ]
+  },
+  {
+    "model_id": "omr_4886-1_Building_Bonanza",
+    "title": "4886 - main A.ldr",
+    "author": "Robert Paciorek [bercik]",
+    "source": "ldraw_omr",
+    "part_count": 196,
+    "unique_parts": 43,
+    "unique_colors": 10,
+    "dimensions_studs": {
+      "width_x": 15.0,
+      "height_y": 43.0,
+      "depth_z": 31.0
+    },
+    "stability_score": 1.0,
+    "json_path": "data/filtered_architecture/models/omr_4886-1_Building_Bonanza.json",
+    "ldr_path": "data/filtered_architecture/ldr/omr_4886-1_Building_Bonanza.ldr",
+    "tags": [
+      "curated_architecture",
+      "physically_stable",
+      "sweet_spot_band"
+    ]
+  },
+  {
+    "model_id": "omr_4996-1_Beach_House",
+    "title": "4996 - Main.ldr",
+    "author": "Marc Giraudet [Mad_Marc]",
+    "source": "ldraw_omr",
+    "part_count": 393,
+    "unique_parts": 67,
+    "unique_colors": 13,
+    "dimensions_studs": {
+      "width_x": 21.0,
+      "height_y": 84.0,
+      "depth_z": 15.0
+    },
+    "stability_score": 0.982,
+    "json_path": "data/filtered_architecture/models/omr_4996-1_Beach_House.json",
+    "ldr_path": "data/filtered_architecture/ldr/omr_4996-1_Beach_House.ldr",
+    "tags": [
+      "curated_architecture",
+      "physically_stable",
+      "sweet_spot_band"
+    ]
+  },
+  {
+    "model_id": "omr_560-1_Town_House_with_Garden",
+    "title": "560 - main.ldr",
+    "author": "Robert Paciorek [bercik]",
+    "source": "ldraw_omr",
+    "part_count": 232,
+    "unique_parts": 44,
+    "unique_colors": 7,
+    "dimensions_studs": {
+      "width_x": 34.8,
+      "height_y": 39.0,
+      "depth_z": 25.8
+    },
+    "stability_score": 0.978,
+    "json_path": "data/filtered_architecture/models/omr_560-1_Town_House_with_Garden.json",
+    "ldr_path": "data/filtered_architecture/ldr/omr_560-1_Town_House_with_Garden.ldr",
+    "tags": [
+      "curated_architecture",
+      "physically_stable",
+      "sweet_spot_band"
+    ]
+  },
+  {
+    "model_id": "omr_5766-1_Log_Cabin",
+    "title": "5766 - Main.ldr",
+    "author": "Marc Giraudet [Mad_Marc]",
+    "source": "ldraw_omr",
+    "part_count": 360,
+    "unique_parts": 74,
+    "unique_colors": 17,
+    "dimensions_studs": {
+      "width_x": 31.8,
+      "height_y": 39.0,
+      "depth_z": 18.0
+    },
+    "stability_score": 0.981,
+    "json_path": "data/filtered_architecture/models/omr_5766-1_Log_Cabin.json",
+    "ldr_path": "data/filtered_architecture/ldr/omr_5766-1_Log_Cabin.ldr",
+    "tags": [
+      "curated_architecture",
+      "physically_stable",
+      "sweet_spot_band"
+    ]
+  },
+  {
+    "model_id": "omr_5770-1_Lighthouse_Island",
+    "title": "5770 - main.ldr",
+    "author": "Takeshi Takahashi [RainbowDolphin]",
+    "source": "ldraw_omr",
+    "part_count": 534,
+    "unique_parts": 128,
+    "unique_colors": 19,
+    "dimensions_studs": {
+      "width_x": 31.5,
+      "height_y": 80.2,
+      "depth_z": 11.5
+    },
+    "stability_score": 0.951,
+    "json_path": "data/filtered_architecture/models/omr_5770-1_Lighthouse_Island.json",
+    "ldr_path": "data/filtered_architecture/ldr/omr_5770-1_Lighthouse_Island.ldr",
+    "tags": [
+      "curated_architecture",
+      "physically_stable",
+      "sweet_spot_band"
+    ]
+  },
+  {
+    "model_id": "omr_5891-1_Apple_Tree_House",
+    "title": "5891 - Main.ldr",
+    "author": "Marc Giraudet [Mad_Marc]",
+    "source": "ldraw_omr",
+    "part_count": 539,
+    "unique_parts": 81,
+    "unique_colors": 16,
+    "dimensions_studs": {
+      "width_x": 32.5,
+      "height_y": 50.0,
+      "depth_z": 28.0
+    },
+    "stability_score": 0.993,
+    "json_path": "data/filtered_architecture/models/omr_5891-1_Apple_Tree_House.json",
+    "ldr_path": "data/filtered_architecture/ldr/omr_5891-1_Apple_Tree_House.ldr",
+    "tags": [
+      "curated_architecture",
+      "physically_stable",
+      "sweet_spot_band"
+    ]
+  },
+  {
+    "model_id": "omr_6035-1_Castle_Guard",
+    "title": "6035 - main.ldr",
+    "author": "Takeshi Takahashi [RainbowDolphin]",
+    "source": "ldraw_omr",
+    "part_count": 61,
+    "unique_parts": 33,
+    "unique_colors": 8,
+    "dimensions_studs": {
+      "width_x": 9.8,
+      "height_y": 34.0,
+      "depth_z": 10.5
+    },
+    "stability_score": 0.934,
+    "json_path": "data/filtered_architecture/models/omr_6035-1_Castle_Guard.json",
+    "ldr_path": "data/filtered_architecture/ldr/omr_6035-1_Castle_Guard.ldr",
+    "tags": [
+      "curated_architecture",
+      "physically_stable",
+      "sweet_spot_band"
+    ]
+  },
+  {
+    "model_id": "omr_6040-1_Blacksmith_Shop",
+    "title": "6040 - main.ldr",
+    "author": "Stefan Frenz [smf]",
+    "source": "ldraw_omr",
+    "part_count": 99,
+    "unique_parts": 47,
+    "unique_colors": 8,
+    "dimensions_studs": {
+      "width_x": 19.5,
+      "height_y": 31.0,
+      "depth_z": 6.6
+    },
+    "stability_score": 0.97,
+    "json_path": "data/filtered_architecture/models/omr_6040-1_Blacksmith_Shop.json",
+    "ldr_path": "data/filtered_architecture/ldr/omr_6040-1_Blacksmith_Shop.ldr",
+    "tags": [
+      "curated_architecture",
+      "physically_stable",
+      "sweet_spot_band"
+    ]
+  },
+  {
+    "model_id": "omr_6041-1_Armor_Shop",
+    "title": "6041 - main.ldr",
+    "author": "Stefan Frenz [smf]",
+    "source": "ldraw_omr",
+    "part_count": 123,
+    "unique_parts": 54,
+    "unique_colors": 9,
+    "dimensions_studs": {
+      "width_x": 15.2,
+      "height_y": 29.0,
+      "depth_z": 19.9
+    },
+    "stability_score": 0.951,
+    "json_path": "data/filtered_architecture/models/omr_6041-1_Armor_Shop.json",
+    "ldr_path": "data/filtered_architecture/ldr/omr_6041-1_Armor_Shop.ldr",
+    "tags": [
+      "curated_architecture",
+      "physically_stable",
+      "sweet_spot_band"
+    ]
+  },
+  {
+    "model_id": "omr_6054-1_Forestmen_s_Hideout",
+    "title": "6054 - Main.ldr",
+    "author": "Johann Eisner [technicbasics]",
+    "source": "ldraw_omr",
+    "part_count": 214,
+    "unique_parts": 68,
+    "unique_colors": 11,
+    "dimensions_studs": {
+      "width_x": 24.0,
+      "height_y": 56.0,
+      "depth_z": 12.0
+    },
+    "stability_score": 0.949,
+    "json_path": "data/filtered_architecture/models/omr_6054-1_Forestmen_s_Hideout.json",
+    "ldr_path": "data/filtered_architecture/ldr/omr_6054-1_Forestmen_s_Hideout.ldr",
+    "tags": [
+      "curated_architecture",
+      "physically_stable",
+      "sweet_spot_band"
+    ]
+  },
+  {
+    "model_id": "omr_6059-1_Knight_s_Stronghold",
+    "title": "6059 - main.ldr",
+    "author": "Stefan Frenz [smf]",
+    "source": "ldraw_omr",
+    "part_count": 263,
+    "unique_parts": 79,
+    "unique_colors": 11,
+    "dimensions_studs": {
+      "width_x": 17.8,
+      "height_y": 55.2,
+      "depth_z": 35.5
+    },
+    "stability_score": 0.935,
+    "json_path": "data/filtered_architecture/models/omr_6059-1_Knight_s_Stronghold.json",
+    "ldr_path": "data/filtered_architecture/ldr/omr_6059-1_Knight_s_Stronghold.ldr",
+    "tags": [
+      "curated_architecture",
+      "physically_stable",
+      "sweet_spot_band"
+    ]
+  },
+  {
+    "model_id": "omr_6061-1_Siege_Tower",
+    "title": "6061 - main.ldr",
+    "author": "Stefan Frenz [smf]",
+    "source": "ldraw_omr",
+    "part_count": 341,
+    "unique_parts": 62,
+    "unique_colors": 10,
+    "dimensions_studs": {
+      "width_x": 22.2,
+      "height_y": 47.0,
+      "depth_z": 31.5
+    },
+    "stability_score": 0.968,
+    "json_path": "data/filtered_architecture/models/omr_6061-1_Siege_Tower.json",
+    "ldr_path": "data/filtered_architecture/ldr/omr_6061-1_Siege_Tower.ldr",
+    "tags": [
+      "curated_architecture",
+      "physically_stable",
+      "sweet_spot_band"
+    ]
+  },
+  {
+    "model_id": "omr_6066-1_Camouflaged_Outpost",
+    "title": "6066 - main.ldr",
+    "author": "Takeshi Takahashi [RainbowDolphin]",
+    "source": "ldraw_omr",
+    "part_count": 262,
+    "unique_parts": 77,
+    "unique_colors": 8,
+    "dimensions_studs": {
+      "width_x": 28.5,
+      "height_y": 52.9,
+      "depth_z": 21.5
+    },
+    "stability_score": 0.924,
+    "json_path": "data/filtered_architecture/models/omr_6066-1_Camouflaged_Outpost.json",
+    "ldr_path": "data/filtered_architecture/ldr/omr_6066-1_Camouflaged_Outpost.ldr",
+    "tags": [
+      "curated_architecture",
+      "physically_stable",
+      "sweet_spot_band"
+    ]
+  },
+  {
+    "model_id": "omr_6067-1_Guarded_Inn",
+    "title": "6067 - main.ldr",
+    "author": "Stefan Frenz [smf]",
+    "source": "ldraw_omr",
+    "part_count": 271,
+    "unique_parts": 81,
+    "unique_colors": 9,
+    "dimensions_studs": {
+      "width_x": 43.2,
+      "height_y": 53.9,
+      "depth_z": 22.2
+    },
+    "stability_score": 0.959,
+    "json_path": "data/filtered_architecture/models/omr_6067-1_Guarded_Inn.json",
+    "ldr_path": "data/filtered_architecture/ldr/omr_6067-1_Guarded_Inn.ldr",
+    "tags": [
+      "curated_architecture",
+      "physically_stable",
+      "sweet_spot_band"
+    ]
+  },
+  {
+    "model_id": "omr_6073-1_Knight_s_Castle",
+    "title": "6073 - main.ldr",
+    "author": "Stefan Frenz [smf]",
+    "source": "ldraw_omr",
+    "part_count": 568,
+    "unique_parts": 73,
+    "unique_colors": 10,
+    "dimensions_studs": {
+      "width_x": 27.0,
+      "height_y": 57.2,
+      "depth_z": 27.1
+    },
+    "stability_score": 0.965,
+    "json_path": "data/filtered_architecture/models/omr_6073-1_Knight_s_Castle.json",
+    "ldr_path": "data/filtered_architecture/ldr/omr_6073-1_Knight_s_Castle.ldr",
+    "tags": [
+      "curated_architecture",
+      "physically_stable",
+      "sweet_spot_band"
+    ]
+  },
+  {
+    "model_id": "omr_6074-1_Black_Falcon_s_Fortress",
+    "title": "6074 - main.ldr",
+    "author": "Stefan Frenz [smf]",
+    "source": "ldraw_omr",
+    "part_count": 567,
+    "unique_parts": 86,
+    "unique_colors": 10,
+    "dimensions_studs": {
+      "width_x": 31.2,
+      "height_y": 71.3,
+      "depth_z": 24.0
+    },
+    "stability_score": 0.968,
+    "json_path": "data/filtered_architecture/models/omr_6074-1_Black_Falcon_s_Fortress.json",
+    "ldr_path": "data/filtered_architecture/ldr/omr_6074-1_Black_Falcon_s_Fortress.ldr",
+    "tags": [
+      "curated_architecture",
+      "physically_stable",
+      "sweet_spot_band"
+    ]
+  },
+  {
+    "model_id": "omr_6349-1_Vacation_House",
+    "title": "6349 - main.ldr",
+    "author": "Robert Paciorek [bercik]",
+    "source": "ldraw_omr",
+    "part_count": 212,
+    "unique_parts": 78,
+    "unique_colors": 12,
+    "dimensions_studs": {
+      "width_x": 29.0,
+      "height_y": 37.0,
+      "depth_z": 27.2
+    },
+    "stability_score": 0.939,
+    "json_path": "data/filtered_architecture/models/omr_6349-1_Vacation_House.json",
+    "ldr_path": "data/filtered_architecture/ldr/omr_6349-1_Vacation_House.ldr",
+    "tags": [
+      "curated_architecture",
+      "physically_stable",
+      "sweet_spot_band"
+    ]
+  },
+  {
+    "model_id": "omr_6362-1_Post_Office",
+    "title": "6362 - main.ldr",
+    "author": "Robert Paciorek [bercik]",
+    "source": "ldraw_omr",
+    "part_count": 139,
+    "unique_parts": 54,
+    "unique_colors": 8,
+    "dimensions_studs": {
+      "width_x": 30.9,
+      "height_y": 28.0,
+      "depth_z": 16.1
+    },
+    "stability_score": 0.935,
+    "json_path": "data/filtered_architecture/models/omr_6362-1_Post_Office.json",
+    "ldr_path": "data/filtered_architecture/ldr/omr_6362-1_Post_Office.ldr",
+    "tags": [
+      "curated_architecture",
+      "physically_stable",
+      "sweet_spot_band"
+    ]
+  },
+  {
+    "model_id": "omr_6363-1_Auto_Service_Station",
+    "title": "6363 - main.ldr",
+    "author": "Robert Paciorek [bercik]",
+    "source": "ldraw_omr",
+    "part_count": 150,
+    "unique_parts": 54,
+    "unique_colors": 11,
+    "dimensions_studs": {
+      "width_x": 31.2,
+      "height_y": 28.0,
+      "depth_z": 18.1
+    },
+    "stability_score": 0.98,
+    "json_path": "data/filtered_architecture/models/omr_6363-1_Auto_Service_Station.json",
+    "ldr_path": "data/filtered_architecture/ldr/omr_6363-1_Auto_Service_Station.ldr",
+    "tags": [
+      "curated_architecture",
+      "physically_stable",
+      "sweet_spot_band"
+    ]
+  },
+  {
+    "model_id": "omr_6365-1_Summer_Cottage",
+    "title": "6365 - main.ldr",
+    "author": "Robert Paciorek [bercik]",
+    "source": "ldraw_omr",
+    "part_count": 155,
+    "unique_parts": 47,
+    "unique_colors": 9,
+    "dimensions_studs": {
+      "width_x": 21.1,
+      "height_y": 32.0,
+      "depth_z": 17.5
+    },
+    "stability_score": 0.994,
+    "json_path": "data/filtered_architecture/models/omr_6365-1_Summer_Cottage.json",
+    "ldr_path": "data/filtered_architecture/ldr/omr_6365-1_Summer_Cottage.ldr",
+    "tags": [
+      "curated_architecture",
+      "physically_stable",
+      "sweet_spot_band"
+    ]
+  },
+  {
+    "model_id": "omr_6369-1_Garage",
+    "title": "6369 - main.ldr",
+    "author": "Robert Paciorek [bercik]",
+    "source": "ldraw_omr",
+    "part_count": 143,
+    "unique_parts": 63,
+    "unique_colors": 12,
+    "dimensions_studs": {
+      "width_x": 22.7,
+      "height_y": 29.0,
+      "depth_z": 17.9
+    },
+    "stability_score": 0.951,
+    "json_path": "data/filtered_architecture/models/omr_6369-1_Garage.json",
+    "ldr_path": "data/filtered_architecture/ldr/omr_6369-1_Garage.ldr",
+    "tags": [
+      "curated_architecture",
+      "physically_stable",
+      "sweet_spot_band"
+    ]
+  },
+  {
+    "model_id": "omr_6372-1_Town_House",
+    "title": "6372 - main.ldr",
+    "author": "Robert Paciorek [bercik]",
+    "source": "ldraw_omr",
+    "part_count": 239,
+    "unique_parts": 59,
+    "unique_colors": 10,
+    "dimensions_studs": {
+      "width_x": 31.0,
+      "height_y": 43.0,
+      "depth_z": 14.0
+    },
+    "stability_score": 0.979,
+    "json_path": "data/filtered_architecture/models/omr_6372-1_Town_House.json",
+    "ldr_path": "data/filtered_architecture/ldr/omr_6372-1_Town_House.ldr",
+    "tags": [
+      "curated_architecture",
+      "physically_stable",
+      "sweet_spot_band"
+    ]
+  },
+  {
+    "model_id": "omr_6376-1_Breezeway_Cafe",
+    "title": "6376 - main.ldr",
+    "author": "Robert Paciorek [bercik]",
+    "source": "ldraw_omr",
+    "part_count": 221,
+    "unique_parts": 67,
+    "unique_colors": 12,
+    "dimensions_studs": {
+      "width_x": 29.8,
+      "height_y": 47.4,
+      "depth_z": 20.7
+    },
+    "stability_score": 0.955,
+    "json_path": "data/filtered_architecture/models/omr_6376-1_Breezeway_Cafe.json",
+    "ldr_path": "data/filtered_architecture/ldr/omr_6376-1_Breezeway_Cafe.ldr",
+    "tags": [
+      "curated_architecture",
+      "physically_stable",
+      "sweet_spot_band"
+    ]
+  },
+  {
+    "model_id": "omr_6378-1_Shell_Service_Station",
+    "title": "6378 - main.ldr",
+    "author": "Robert Paciorek [bercik]",
+    "source": "ldraw_omr",
+    "part_count": 348,
+    "unique_parts": 83,
+    "unique_colors": 12,
+    "dimensions_studs": {
+      "width_x": 29.7,
+      "height_y": 36.0,
+      "depth_z": 30.0
+    },
+    "stability_score": 0.954,
+    "json_path": "data/filtered_architecture/models/omr_6378-1_Shell_Service_Station.json",
+    "ldr_path": "data/filtered_architecture/ldr/omr_6378-1_Shell_Service_Station.ldr",
+    "tags": [
+      "curated_architecture",
+      "physically_stable",
+      "sweet_spot_band"
+    ]
+  },
+  {
+    "model_id": "omr_6379-1_Riding_Stable",
+    "title": "6379-1 - main.ldr",
+    "author": "Stefan Frenz [smf]",
+    "source": "ldraw_omr",
+    "part_count": 275,
+    "unique_parts": 72,
+    "unique_colors": 11,
+    "dimensions_studs": {
+      "width_x": 34.7,
+      "height_y": 41.0,
+      "depth_z": 28.5
+    },
+    "stability_score": 0.978,
+    "json_path": "data/filtered_architecture/models/omr_6379-1_Riding_Stable.json",
+    "ldr_path": "data/filtered_architecture/ldr/omr_6379-1_Riding_Stable.ldr",
+    "tags": [
+      "curated_architecture",
+      "physically_stable",
+      "sweet_spot_band"
+    ]
+  },
+  {
+    "model_id": "omr_6380-1_Emergency_Treatment_Center",
+    "title": "6380 - main.ldr",
+    "author": "Robert Paciorek [bercik]",
+    "source": "ldraw_omr",
+    "part_count": 333,
+    "unique_parts": 87,
+    "unique_colors": 15,
+    "dimensions_studs": {
+      "width_x": 29.0,
+      "height_y": 41.2,
+      "depth_z": 29.2
+    },
+    "stability_score": 0.913,
+    "json_path": "data/filtered_architecture/models/omr_6380-1_Emergency_Treatment_Center.json",
+    "ldr_path": "data/filtered_architecture/ldr/omr_6380-1_Emergency_Treatment_Center.ldr",
+    "tags": [
+      "curated_architecture",
+      "physically_stable",
+      "sweet_spot_band"
+    ]
+  },
+  {
+    "model_id": "omr_6382-1_Fire_Station",
+    "title": "6382 - main.ldr",
+    "author": "Robert Paciorek [bercik]",
+    "source": "ldraw_omr",
+    "part_count": 415,
+    "unique_parts": 86,
+    "unique_colors": 12,
+    "dimensions_studs": {
+      "width_x": 29.4,
+      "height_y": 45.0,
+      "depth_z": 30.5
+    },
+    "stability_score": 0.966,
+    "json_path": "data/filtered_architecture/models/omr_6382-1_Fire_Station.json",
+    "ldr_path": "data/filtered_architecture/ldr/omr_6382-1_Fire_Station.ldr",
+    "tags": [
+      "curated_architecture",
+      "physically_stable",
+      "sweet_spot_band"
+    ]
+  },
+  {
+    "model_id": "omr_6402-1_Sidewalk_Cafe",
+    "title": "6402 - main.ldr",
+    "author": "Robert Paciorek [bercik]",
+    "source": "ldraw_omr",
+    "part_count": 59,
+    "unique_parts": 36,
+    "unique_colors": 10,
+    "dimensions_studs": {
+      "width_x": 13.5,
+      "height_y": 20.0,
+      "depth_z": 7.0
+    },
+    "stability_score": 0.915,
+    "json_path": "data/filtered_architecture/models/omr_6402-1_Sidewalk_Cafe.json",
+    "ldr_path": "data/filtered_architecture/ldr/omr_6402-1_Sidewalk_Cafe.ldr",
+    "tags": [
+      "curated_architecture",
+      "physically_stable",
+      "sweet_spot_band"
+    ]
+  },
+  {
+    "model_id": "omr_6479-1_Emergency_Response_Center",
+    "title": "6479 - main.ldr",
+    "author": "TotalyWicked [TotalyWicked]",
+    "source": "ldraw_omr",
+    "part_count": 460,
+    "unique_parts": 165,
+    "unique_colors": 13,
+    "dimensions_studs": {
+      "width_x": 58.8,
+      "height_y": 53.2,
+      "depth_z": 42.1
+    },
+    "stability_score": 0.939,
+    "json_path": "data/filtered_architecture/models/omr_6479-1_Emergency_Response_Center.json",
+    "ldr_path": "data/filtered_architecture/ldr/omr_6479-1_Emergency_Response_Center.ldr",
+    "tags": [
+      "curated_architecture",
+      "physically_stable",
+      "sweet_spot_band"
+    ]
+  },
+  {
+    "model_id": "omr_6552-1_Rocky_River_Retreat",
+    "title": "6552 - main.ldr",
+    "author": "[Strikeman]",
+    "source": "ldraw_omr",
+    "part_count": 243,
+    "unique_parts": 113,
+    "unique_colors": 13,
+    "dimensions_studs": {
+      "width_x": 38.1,
+      "height_y": 40.0,
+      "depth_z": 32.2
+    },
+    "stability_score": 0.963,
+    "json_path": "data/filtered_architecture/models/omr_6552-1_Rocky_River_Retreat.json",
+    "ldr_path": "data/filtered_architecture/ldr/omr_6552-1_Rocky_River_Retreat.ldr",
+    "tags": [
+      "curated_architecture",
+      "physically_stable",
+      "sweet_spot_band"
+    ]
+  },
+  {
+    "model_id": "omr_6562-1_Gas_Stop_Shop",
+    "title": "6562 - main.ldr",
+    "author": "Robert Paciorek [bercik]",
+    "source": "ldraw_omr",
+    "part_count": 288,
+    "unique_parts": 88,
+    "unique_colors": 14,
+    "dimensions_studs": {
+      "width_x": 35.7,
+      "height_y": 35.0,
+      "depth_z": 18.2
+    },
+    "stability_score": 0.969,
+    "json_path": "data/filtered_architecture/models/omr_6562-1_Gas_Stop_Shop.json",
+    "ldr_path": "data/filtered_architecture/ldr/omr_6562-1_Gas_Stop_Shop.ldr",
+    "tags": [
+      "curated_architecture",
+      "physically_stable",
+      "sweet_spot_band"
+    ]
+  },
+  {
+    "model_id": "omr_6592-1_Vacation_Hideaway",
+    "title": "6592-1 - Vacation Hideaway.ldr",
+    "author": "Stefan Frenz [smf]",
+    "source": "ldraw_omr",
+    "part_count": 125,
+    "unique_parts": 51,
+    "unique_colors": 11,
+    "dimensions_studs": {
+      "width_x": 13.5,
+      "height_y": 28.0,
+      "depth_z": 15.5
+    },
+    "stability_score": 0.976,
+    "json_path": "data/filtered_architecture/models/omr_6592-1_Vacation_Hideaway.json",
+    "ldr_path": "data/filtered_architecture/ldr/omr_6592-1_Vacation_Hideaway.ldr",
+    "tags": [
+      "curated_architecture",
+      "physically_stable",
+      "sweet_spot_band"
+    ]
+  },
+  {
+    "model_id": "omr_6645-1_Street_Sweeper",
+    "title": "6645 - main.ldr",
+    "author": "Robert Paciorek [bercik]",
+    "source": "ldraw_omr",
+    "part_count": 127,
+    "unique_parts": 47,
+    "unique_colors": 11,
+    "dimensions_studs": {
+      "width_x": 16.8,
+      "height_y": 18.0,
+      "depth_z": 9.3
+    },
+    "stability_score": 0.937,
+    "json_path": "data/filtered_architecture/models/omr_6645-1_Street_Sweeper.json",
+    "ldr_path": "data/filtered_architecture/ldr/omr_6645-1_Street_Sweeper.ldr",
+    "tags": [
+      "curated_architecture",
+      "physically_stable",
+      "sweet_spot_band"
+    ]
+  },
+  {
+    "model_id": "omr_6649-1_Street_Sweeper",
+    "title": "6649 - main.ldr",
+    "author": "Robert Paciorek [bercik]",
+    "source": "ldraw_omr",
+    "part_count": 72,
+    "unique_parts": 41,
+    "unique_colors": 12,
+    "dimensions_studs": {
+      "width_x": 17.0,
+      "height_y": 18.0,
+      "depth_z": 8.9
+    },
+    "stability_score": 0.917,
+    "json_path": "data/filtered_architecture/models/omr_6649-1_Street_Sweeper.json",
+    "ldr_path": "data/filtered_architecture/ldr/omr_6649-1_Street_Sweeper.ldr",
+    "tags": [
+      "curated_architecture",
+      "physically_stable",
+      "sweet_spot_band"
+    ]
+  },
+  {
+    "model_id": "omr_6651-1_Post_Office_Van",
+    "title": "6651 - main.ldr",
+    "author": "Robert Paciorek [bercik]",
+    "source": "ldraw_omr",
+    "part_count": 52,
+    "unique_parts": 36,
+    "unique_colors": 7,
+    "dimensions_studs": {
+      "width_x": 17.4,
+      "height_y": 15.0,
+      "depth_z": 11.3
+    },
+    "stability_score": 0.942,
+    "json_path": "data/filtered_architecture/models/omr_6651-1_Post_Office_Van.json",
+    "ldr_path": "data/filtered_architecture/ldr/omr_6651-1_Post_Office_Van.ldr",
+    "tags": [
+      "curated_architecture",
+      "physically_stable",
+      "sweet_spot_band"
+    ]
+  },
+  {
+    "model_id": "omr_6683-1_Burger_Stand",
+    "title": "6683 - main.ldr",
+    "author": "Robert Paciorek [bercik]",
+    "source": "ldraw_omr",
+    "part_count": 79,
+    "unique_parts": 36,
+    "unique_colors": 8,
+    "dimensions_studs": {
+      "width_x": 12.5,
+      "height_y": 28.0,
+      "depth_z": 12.5
+    },
+    "stability_score": 0.949,
+    "json_path": "data/filtered_architecture/models/omr_6683-1_Burger_Stand.json",
+    "ldr_path": "data/filtered_architecture/ldr/omr_6683-1_Burger_Stand.ldr",
+    "tags": [
+      "curated_architecture",
+      "physically_stable",
+      "sweet_spot_band"
+    ]
+  },
+  {
+    "model_id": "omr_6689-1_Post-Station",
+    "title": "6689 - main.ldr",
+    "author": "Zolt\u00e1n K\u00e9ri [Zoltank82]",
+    "source": "ldraw_omr",
+    "part_count": 68,
+    "unique_parts": 32,
+    "unique_colors": 9,
+    "dimensions_studs": {
+      "width_x": 14.4,
+      "height_y": 28.0,
+      "depth_z": 7.7
+    },
+    "stability_score": 0.897,
+    "json_path": "data/filtered_architecture/models/omr_6689-1_Post-Station.json",
+    "ldr_path": "data/filtered_architecture/ldr/omr_6689-1_Post-Station.ldr",
+    "tags": [
+      "curated_architecture",
+      "physically_stable",
+      "sweet_spot_band"
+    ]
+  },
+  {
+    "model_id": "omr_6765-1_Gold_City_Junction",
+    "title": "6765 - Main model.ldr",
+    "author": "Willy Tschager [Holly Wood]",
+    "source": "ldraw_omr",
+    "part_count": 416,
+    "unique_parts": 144,
+    "unique_colors": 13,
+    "dimensions_studs": {
+      "width_x": 44.6,
+      "height_y": 46.0,
+      "depth_z": 39.4
+    },
+    "stability_score": 0.913,
+    "json_path": "data/filtered_architecture/models/omr_6765-1_Gold_City_Junction.json",
+    "ldr_path": "data/filtered_architecture/ldr/omr_6765-1_Gold_City_Junction.ldr",
+    "tags": [
+      "curated_architecture",
+      "physically_stable",
+      "sweet_spot_band"
+    ]
+  },
+  {
+    "model_id": "omr_6861-2_Super_Model_Building_Instruction",
+    "title": "6861 - Super Vehicle.ldr",
+    "author": "Damien Roux [Darats]",
+    "source": "ldraw_omr",
+    "part_count": 195,
+    "unique_parts": 74,
+    "unique_colors": 4,
+    "dimensions_studs": {
+      "width_x": 26.1,
+      "height_y": 25.2,
+      "depth_z": 22.3
+    },
+    "stability_score": 0.944,
+    "json_path": "data/filtered_architecture/models/omr_6861-2_Super_Model_Building_Instruction.json",
+    "ldr_path": "data/filtered_architecture/ldr/omr_6861-2_Super_Model_Building_Instruction.ldr",
+    "tags": [
+      "curated_architecture",
+      "physically_stable",
+      "sweet_spot_band"
+    ]
+  },
+  {
+    "model_id": "omr_6885-1_Saturn_Base_Main_Team_Crater_Crawler",
+    "title": "6885 - Crater Crawler.ldr",
+    "author": "Damien Roux [Darats]",
+    "source": "ldraw_omr",
+    "part_count": 110,
+    "unique_parts": 52,
+    "unique_colors": 8,
+    "dimensions_studs": {
+      "width_x": 16.5,
+      "height_y": 21.0,
+      "depth_z": 19.3
+    },
+    "stability_score": 0.9,
+    "json_path": "data/filtered_architecture/models/omr_6885-1_Saturn_Base_Main_Team_Crater_Crawler.json",
+    "ldr_path": "data/filtered_architecture/ldr/omr_6885-1_Saturn_Base_Main_Team_Crater_Crawler.ldr",
+    "tags": [
+      "curated_architecture",
+      "physically_stable",
+      "sweet_spot_band"
+    ]
+  },
+  {
+    "model_id": "omr_6951-1_Robot_Command_Center",
+    "title": "6951 - Robot Command Center.ldr",
+    "author": "Ignacio Fernandez Galvan [jellby]",
+    "source": "ldraw_omr",
+    "part_count": 324,
+    "unique_parts": 91,
+    "unique_colors": 11,
+    "dimensions_studs": {
+      "width_x": 20.0,
+      "height_y": 66.8,
+      "depth_z": 13.0
+    },
+    "stability_score": 0.926,
+    "json_path": "data/filtered_architecture/models/omr_6951-1_Robot_Command_Center.json",
+    "ldr_path": "data/filtered_architecture/ldr/omr_6951-1_Robot_Command_Center.ldr",
+    "tags": [
+      "curated_architecture",
+      "physically_stable",
+      "sweet_spot_band"
+    ]
+  },
+  {
+    "model_id": "omr_6955-1_Space_Lock-Up_Isolation_Base",
+    "title": "6955 - Space Lock-Up Isolation Base.ldr",
+    "author": "Damien Roux [Darats]",
+    "source": "ldraw_omr",
+    "part_count": 271,
+    "unique_parts": 91,
+    "unique_colors": 7,
+    "dimensions_studs": {
+      "width_x": 31.0,
+      "height_y": 51.4,
+      "depth_z": 34.5
+    },
+    "stability_score": 0.959,
+    "json_path": "data/filtered_architecture/models/omr_6955-1_Space_Lock-Up_Isolation_Base.json",
+    "ldr_path": "data/filtered_architecture/ldr/omr_6955-1_Space_Lock-Up_Isolation_Base.ldr",
+    "tags": [
+      "curated_architecture",
+      "physically_stable",
+      "sweet_spot_band"
+    ]
+  },
+  {
+    "model_id": "omr_6970-1_Beta_I_Command_Base",
+    "title": "6970 - Main Model.ldr",
+    "author": "Willy Tschager [Holly-Wood]",
+    "source": "ldraw_omr",
+    "part_count": 293,
+    "unique_parts": 82,
+    "unique_colors": 11,
+    "dimensions_studs": {
+      "width_x": 54.7,
+      "height_y": 54.7,
+      "depth_z": 29.1
+    },
+    "stability_score": 0.935,
+    "json_path": "data/filtered_architecture/models/omr_6970-1_Beta_I_Command_Base.json",
+    "ldr_path": "data/filtered_architecture/ldr/omr_6970-1_Beta_I_Command_Base.ldr",
+    "tags": [
+      "curated_architecture",
+      "physically_stable",
+      "sweet_spot_band"
+    ]
+  },
+  {
+    "model_id": "omr_6983-1_Ice_Station_Odyssey",
+    "title": "6983 - Ice Station Odyssey.ldr",
+    "author": "Damien Roux [Darats]",
+    "source": "ldraw_omr",
+    "part_count": 377,
+    "unique_parts": 136,
+    "unique_colors": 7,
+    "dimensions_studs": {
+      "width_x": 58.8,
+      "height_y": 63.7,
+      "depth_z": 60.3
+    },
+    "stability_score": 0.92,
+    "json_path": "data/filtered_architecture/models/omr_6983-1_Ice_Station_Odyssey.json",
+    "ldr_path": "data/filtered_architecture/ldr/omr_6983-1_Ice_Station_Odyssey.ldr",
+    "tags": [
+      "curated_architecture",
+      "physically_stable",
+      "sweet_spot_band"
+    ]
+  },
+  {
+    "model_id": "omr_7180-1_B-wing_at_Rebel_Control_Center",
+    "title": "7180 - B-Wing at Rebel Control Center.ldr",
+    "author": "Merlijn Wissink [Legolijntje]",
+    "source": "ldraw_omr",
+    "part_count": 361,
+    "unique_parts": 113,
+    "unique_colors": 16,
+    "dimensions_studs": {
+      "width_x": 36.0,
+      "height_y": 24.0,
+      "depth_z": 42.0
+    },
+    "stability_score": 0.958,
+    "json_path": "data/filtered_architecture/models/omr_7180-1_B-wing_at_Rebel_Control_Center.json",
+    "ldr_path": "data/filtered_architecture/ldr/omr_7180-1_B-wing_at_Rebel_Control_Center.ldr",
+    "tags": [
+      "curated_architecture",
+      "physically_stable",
+      "sweet_spot_band"
+    ]
+  },
+  {
+    "model_id": "omr_722-1_Universal_Building_Set",
+    "title": "722-1 - main.ldr",
+    "author": "Takeshi Takahashi [RainbowDolphin]",
+    "source": "ldraw_omr",
+    "part_count": 115,
+    "unique_parts": 33,
+    "unique_colors": 5,
+    "dimensions_studs": {
+      "width_x": 29.4,
+      "height_y": 29.5,
+      "depth_z": 15.5
+    },
+    "stability_score": 0.991,
+    "json_path": "data/filtered_architecture/models/omr_722-1_Universal_Building_Set.json",
+    "ldr_path": "data/filtered_architecture/ldr/omr_722-1_Universal_Building_Set.ldr",
+    "tags": [
+      "curated_architecture",
+      "physically_stable",
+      "sweet_spot_band"
+    ]
+  },
+  {
+    "model_id": "omr_7242-1_Street_Sweeper",
+    "title": "7242 - Main.ldr",
+    "author": "Marc Giraudet [Mad_Marc]",
+    "source": "ldraw_omr",
+    "part_count": 125,
+    "unique_parts": 52,
+    "unique_colors": 13,
+    "dimensions_studs": {
+      "width_x": 12.2,
+      "height_y": 16.6,
+      "depth_z": 10.7
+    },
+    "stability_score": 0.936,
+    "json_path": "data/filtered_architecture/models/omr_7242-1_Street_Sweeper.json",
+    "ldr_path": "data/filtered_architecture/ldr/omr_7242-1_Street_Sweeper.ldr",
+    "tags": [
+      "curated_architecture",
+      "physically_stable",
+      "sweet_spot_band"
+    ]
+  },
+  {
+    "model_id": "omr_733-1_Universal_Building_Set",
+    "title": "733-1 - main.ldr",
+    "author": "Takeshi Takahashi [RainbowDolphin]",
+    "source": "ldraw_omr",
+    "part_count": 363,
+    "unique_parts": 73,
+    "unique_colors": 10,
+    "dimensions_studs": {
+      "width_x": 30.3,
+      "height_y": 82.6,
+      "depth_z": 25.5
+    },
+    "stability_score": 0.978,
+    "json_path": "data/filtered_architecture/models/omr_733-1_Universal_Building_Set.json",
+    "ldr_path": "data/filtered_architecture/ldr/omr_733-1_Universal_Building_Set.ldr",
+    "tags": [
+      "curated_architecture",
+      "physically_stable",
+      "sweet_spot_band"
+    ]
+  },
+  {
+    "model_id": "omr_744-1_Universal_Building_Set",
+    "title": "744-1 - main.ldr",
+    "author": "Takeshi Takahashi [RainbowDolphin]",
+    "source": "ldraw_omr",
+    "part_count": 225,
+    "unique_parts": 58,
+    "unique_colors": 5,
+    "dimensions_studs": {
+      "width_x": 32.0,
+      "height_y": 66.0,
+      "depth_z": 13.0
+    },
+    "stability_score": 0.982,
+    "json_path": "data/filtered_architecture/models/omr_744-1_Universal_Building_Set.json",
+    "ldr_path": "data/filtered_architecture/ldr/omr_744-1_Universal_Building_Set.ldr",
+    "tags": [
+      "curated_architecture",
+      "physically_stable",
+      "sweet_spot_band"
+    ]
+  },
+  {
+    "model_id": "omr_75966-1_Hogwarts_Room_of_Requirement",
+    "title": "75966 - main.ldr",
+    "author": "Stefan Frenz [smf]",
+    "source": "ldraw_omr",
+    "part_count": 169,
+    "unique_parts": 57,
+    "unique_colors": 14,
+    "dimensions_studs": {
+      "width_x": 21.8,
+      "height_y": 23.0,
+      "depth_z": 9.8
+    },
+    "stability_score": 0.964,
+    "json_path": "data/filtered_architecture/models/omr_75966-1_Hogwarts_Room_of_Requirement.json",
+    "ldr_path": "data/filtered_architecture/ldr/omr_75966-1_Hogwarts_Room_of_Requirement.ldr",
+    "tags": [
+      "curated_architecture",
+      "physically_stable",
+      "sweet_spot_band"
+    ]
+  },
+  {
+    "model_id": "omr_7641-1_City_Corner",
+    "title": "7641 - Main.ldr",
+    "author": "Marc Giraudet [Mad_Marc]",
+    "source": "ldraw_omr",
+    "part_count": 506,
+    "unique_parts": 142,
+    "unique_colors": 17,
+    "dimensions_studs": {
+      "width_x": 46.7,
+      "height_y": 63.0,
+      "depth_z": 44.2
+    },
+    "stability_score": 0.968,
+    "json_path": "data/filtered_architecture/models/omr_7641-1_City_Corner.json",
+    "ldr_path": "data/filtered_architecture/ldr/omr_7641-1_City_Corner.ldr",
+    "tags": [
+      "curated_architecture",
+      "physically_stable",
+      "sweet_spot_band"
+    ]
+  },
+  {
+    "model_id": "omr_7743-1_Police_Command_Center",
+    "title": "7743 - Main.ldr",
+    "author": "Marc Giraudet [Mad_Marc]",
+    "source": "ldraw_omr",
+    "part_count": 547,
+    "unique_parts": 136,
+    "unique_colors": 16,
+    "dimensions_studs": {
+      "width_x": 35.1,
+      "height_y": 49.0,
+      "depth_z": 48.1
+    },
+    "stability_score": 0.976,
+    "json_path": "data/filtered_architecture/models/omr_7743-1_Police_Command_Center.json",
+    "ldr_path": "data/filtered_architecture/ldr/omr_7743-1_Police_Command_Center.ldr",
+    "tags": [
+      "curated_architecture",
+      "physically_stable",
+      "sweet_spot_band"
+    ]
+  },
+  {
+    "model_id": "omr_7796-1_House",
+    "title": "7796 - House.ldr",
+    "author": "Merlijn Wissink [legolijntje]",
+    "source": "ldraw_omr",
+    "part_count": 56,
+    "unique_parts": 14,
+    "unique_colors": 9,
+    "dimensions_studs": {
+      "width_x": 8.5,
+      "height_y": 19.0,
+      "depth_z": 4.5
+    },
+    "stability_score": 1.0,
+    "json_path": "data/filtered_architecture/models/omr_7796-1_House.json",
+    "ldr_path": "data/filtered_architecture/ldr/omr_7796-1_House.ldr",
+    "tags": [
+      "curated_architecture",
+      "physically_stable",
+      "sweet_spot_band"
+    ]
+  },
+  {
+    "model_id": "omr_7822-1_Railway_Station",
+    "title": "7822 - main.ldr",
+    "author": "Robert Paciorek [bercik]",
+    "source": "ldraw_omr",
+    "part_count": 400,
+    "unique_parts": 58,
+    "unique_colors": 10,
+    "dimensions_studs": {
+      "width_x": 64.0,
+      "height_y": 54.0,
+      "depth_z": 31.7
+    },
+    "stability_score": 0.985,
+    "json_path": "data/filtered_architecture/models/omr_7822-1_Railway_Station.json",
+    "ldr_path": "data/filtered_architecture/ldr/omr_7822-1_Railway_Station.ldr",
+    "tags": [
+      "curated_architecture",
+      "physically_stable",
+      "sweet_spot_band"
+    ]
+  },
+  {
+    "model_id": "omr_7823-1_Container_Crane_Depot",
+    "title": "7823 - main.ldr",
+    "author": "Robert Paciorek [bercik]",
+    "source": "ldraw_omr",
+    "part_count": 577,
+    "unique_parts": 105,
+    "unique_colors": 11,
+    "dimensions_studs": {
+      "width_x": 42.5,
+      "height_y": 66.2,
+      "depth_z": 34.1
+    },
+    "stability_score": 0.976,
+    "json_path": "data/filtered_architecture/models/omr_7823-1_Container_Crane_Depot.json",
+    "ldr_path": "data/filtered_architecture/ldr/omr_7823-1_Container_Crane_Depot.ldr",
+    "tags": [
+      "curated_architecture",
+      "physically_stable",
+      "sweet_spot_band"
+    ]
+  },
+  {
+    "model_id": "omr_7824-1_Railway_Station",
+    "title": "7824 - main.ldr",
+    "author": "Robert Paciorek [bercik]",
+    "source": "ldraw_omr",
+    "part_count": 505,
+    "unique_parts": 96,
+    "unique_colors": 10,
+    "dimensions_studs": {
+      "width_x": 64.0,
+      "height_y": 51.0,
+      "depth_z": 20.0
+    },
+    "stability_score": 0.962,
+    "json_path": "data/filtered_architecture/models/omr_7824-1_Railway_Station.json",
+    "ldr_path": "data/filtered_architecture/ldr/omr_7824-1_Railway_Station.ldr",
+    "tags": [
+      "curated_architecture",
+      "physically_stable",
+      "sweet_spot_band"
+    ]
+  },
+  {
+    "model_id": "omr_7839-1_Car_Transport_Depot",
+    "title": "7839 - main.ldr",
+    "author": "Rijk van Voorst [Rijkjavik]",
+    "source": "ldraw_omr",
+    "part_count": 354,
+    "unique_parts": 95,
+    "unique_colors": 12,
+    "dimensions_studs": {
+      "width_x": 51.1,
+      "height_y": 55.0,
+      "depth_z": 23.0
+    },
+    "stability_score": 0.972,
+    "json_path": "data/filtered_architecture/models/omr_7839-1_Car_Transport_Depot.json",
+    "ldr_path": "data/filtered_architecture/ldr/omr_7839-1_Car_Transport_Depot.ldr",
+    "tags": [
+      "curated_architecture",
+      "physically_stable",
+      "sweet_spot_band"
+    ]
+  },
+  {
+    "model_id": "omr_7997-1_Train_Station",
+    "title": "7997 - Main.ldr",
+    "author": "Marc Giraudet [Mad_Marc]",
+    "source": "ldraw_omr",
+    "part_count": 415,
+    "unique_parts": 113,
+    "unique_colors": 19,
+    "dimensions_studs": {
+      "width_x": 23.0,
+      "height_y": 61.0,
+      "depth_z": 49.8
+    },
+    "stability_score": 0.976,
+    "json_path": "data/filtered_architecture/models/omr_7997-1_Train_Station.json",
+    "ldr_path": "data/filtered_architecture/ldr/omr_7997-1_Train_Station.ldr",
+    "tags": [
+      "curated_architecture",
+      "physically_stable",
+      "sweet_spot_band"
+    ]
+  },
+  {
+    "model_id": "omr_8020-1_Universal_Building_Set",
+    "title": "8020 - main.ldr",
+    "author": "Michal Oravec [Bloodybeast]",
+    "source": "ldraw_omr",
+    "part_count": 111,
+    "unique_parts": 32,
+    "unique_colors": 8,
+    "dimensions_studs": {
+      "width_x": 12.1,
+      "height_y": 22.0,
+      "depth_z": 7.0
+    },
+    "stability_score": 0.955,
+    "json_path": "data/filtered_architecture/models/omr_8020-1_Universal_Building_Set.json",
+    "ldr_path": "data/filtered_architecture/ldr/omr_8020-1_Universal_Building_Set.ldr",
+    "tags": [
+      "curated_architecture",
+      "physically_stable",
+      "sweet_spot_band"
+    ]
+  },
+  {
+    "model_id": "omr_8024-1_Universal_Building_Set",
+    "title": "120270 - main.ldr",
+    "author": "Max Martin Richter [MMR1988]",
+    "source": "ldraw_omr",
+    "part_count": 286,
+    "unique_parts": 66,
+    "unique_colors": 8,
+    "dimensions_studs": {
+      "width_x": 13.0,
+      "height_y": 23.8,
+      "depth_z": 29.1
+    },
+    "stability_score": 0.93,
+    "json_path": "data/filtered_architecture/models/omr_8024-1_Universal_Building_Set.json",
+    "ldr_path": "data/filtered_architecture/ldr/omr_8024-1_Universal_Building_Set.ldr",
+    "tags": [
+      "curated_architecture",
+      "physically_stable",
+      "sweet_spot_band"
+    ]
+  },
+  {
+    "model_id": "omr_8054-1_Universal_Building_Set",
+    "title": "8054 - Universal Building Set with 4.5v motor Model A.ldr",
+    "author": "Victor Di Rienzo [tatubias]",
+    "source": "ldraw_omr",
+    "part_count": 88,
+    "unique_parts": 23,
+    "unique_colors": 3,
+    "dimensions_studs": {
+      "width_x": 10.5,
+      "height_y": 14.0,
+      "depth_z": 15.0
+    },
+    "stability_score": 0.943,
+    "json_path": "data/filtered_architecture/models/omr_8054-1_Universal_Building_Set.json",
+    "ldr_path": "data/filtered_architecture/ldr/omr_8054-1_Universal_Building_Set.ldr",
+    "tags": [
+      "curated_architecture",
+      "physically_stable",
+      "sweet_spot_band"
+    ]
+  },
+  {
+    "model_id": "omr_8135-1_Bridge_Chase",
+    "title": "8135 - 8135.mpd",
+    "author": "Massimo Maso [Sirio]",
+    "source": "ldraw_omr",
+    "part_count": 576,
+    "unique_parts": 121,
+    "unique_colors": 18,
+    "dimensions_studs": {
+      "width_x": 49.5,
+      "height_y": 30.0,
+      "depth_z": 53.9
+    },
+    "stability_score": 0.984,
+    "json_path": "data/filtered_architecture/models/omr_8135-1_Bridge_Chase.json",
+    "ldr_path": "data/filtered_architecture/ldr/omr_8135-1_Bridge_Chase.ldr",
+    "tags": [
+      "curated_architecture",
+      "physically_stable",
+      "sweet_spot_band"
+    ]
+  },
+  {
+    "model_id": "omr_8211-1_Brick_Street_Getaway",
+    "title": "8211 - Main",
+    "author": "Massimo Maso [Sirio]",
+    "source": "ldraw_omr",
+    "part_count": 539,
+    "unique_parts": 134,
+    "unique_colors": 17,
+    "dimensions_studs": {
+      "width_x": 36.6,
+      "height_y": 54.5,
+      "depth_z": 51.5
+    },
+    "stability_score": 0.954,
+    "json_path": "data/filtered_architecture/models/omr_8211-1_Brick_Street_Getaway.json",
+    "ldr_path": "data/filtered_architecture/ldr/omr_8211-1_Brick_Street_Getaway.ldr",
+    "tags": [
+      "curated_architecture",
+      "physically_stable",
+      "sweet_spot_band"
+    ]
+  },
+  {
+    "model_id": "omr_8810-1_Cafe_Racer",
+    "title": "8810 - main.ldr",
+    "author": "Max Martin Richter [MMR1988]",
+    "source": "ldraw_omr",
+    "part_count": 80,
+    "unique_parts": 36,
+    "unique_colors": 7,
+    "dimensions_studs": {
+      "width_x": 5.3,
+      "height_y": 24.2,
+      "depth_z": 13.5
+    },
+    "stability_score": 0.975,
+    "json_path": "data/filtered_architecture/models/omr_8810-1_Cafe_Racer.json",
+    "ldr_path": "data/filtered_architecture/ldr/omr_8810-1_Cafe_Racer.ldr",
+    "tags": [
+      "curated_architecture",
+      "physically_stable",
+      "sweet_spot_band"
+    ]
+  },
+  {
+    "model_id": "omr_894-1_Mobile_Ground_Tracking_Station",
+    "title": "894 - Mobile Ground Tracking Station.ldr",
+    "author": "Willy Tschager [Holly-Wood]",
+    "source": "ldraw_omr",
+    "part_count": 85,
+    "unique_parts": 48,
+    "unique_colors": 8,
+    "dimensions_studs": {
+      "width_x": 5.4,
+      "height_y": 19.5,
+      "depth_z": 14.5
+    },
+    "stability_score": 0.929,
+    "json_path": "data/filtered_architecture/models/omr_894-1_Mobile_Ground_Tracking_Station.json",
+    "ldr_path": "data/filtered_architecture/ldr/omr_894-1_Mobile_Ground_Tracking_Station.ldr",
+    "tags": [
+      "curated_architecture",
+      "physically_stable",
+      "sweet_spot_band"
+    ]
+  },
+  {
+    "model_id": "omr_926-1_Command_Centre",
+    "title": "926 - Command Centre - Main File.ldr",
+    "author": "Willy Tschager [Holly-Wood]",
+    "source": "ldraw_omr",
+    "part_count": 200,
+    "unique_parts": 62,
+    "unique_colors": 11,
+    "dimensions_studs": {
+      "width_x": 28.0,
+      "height_y": 45.7,
+      "depth_z": 24.5
+    },
+    "stability_score": 0.915,
+    "json_path": "data/filtered_architecture/models/omr_926-1_Command_Centre.json",
+    "ldr_path": "data/filtered_architecture/ldr/omr_926-1_Command_Centre.ldr",
+    "tags": [
+      "curated_architecture",
+      "physically_stable",
+      "sweet_spot_band"
+    ]
+  },
+  {
+    "model_id": "bricklink_485633_Woodland_Elf_House_in_Autumn",
+    "title": "FallFestivalDesign2023",
+    "author": "0 CustomBrick",
+    "source": "bricklink",
+    "part_count": 420,
+    "unique_parts": 83,
+    "unique_colors": 17,
+    "dimensions_studs": {
+      "width_x": 21.4,
+      "height_y": 52.7,
+      "depth_z": 11.0
+    },
+    "stability_score": 0.995,
+    "json_path": "data/filtered_architecture/models/bricklink_485633_Woodland_Elf_House_in_Autumn.json",
+    "ldr_path": "data/filtered_architecture/ldr/bricklink_485633_Woodland_Elf_House_in_Autumn.ldr",
+    "tags": [
+      "curated_architecture",
+      "physically_stable",
+      "sweet_spot_band"
+    ]
+  },
+  {
+    "model_id": "bricklink_592466_Fountain",
+    "title": "Fontaine",
+    "author": "0 CustomBrick",
+    "source": "bricklink",
+    "part_count": 155,
+    "unique_parts": 44,
+    "unique_colors": 3,
+    "dimensions_studs": {
+      "width_x": 12.0,
+      "height_y": 32.7,
+      "depth_z": 12.0
+    },
+    "stability_score": 0.884,
+    "json_path": "data/filtered_architecture/models/bricklink_592466_Fountain.json",
+    "ldr_path": "data/filtered_architecture/ldr/bricklink_592466_Fountain.ldr",
+    "tags": [
+      "curated_architecture",
+      "physically_stable",
+      "sweet_spot_band"
+    ]
+  },
+  {
+    "model_id": "bricklink_714098_Yellow_Medieval_House",
+    "title": "house 29 alt furniture",
+    "author": "0 CustomBrick",
+    "source": "bricklink",
+    "part_count": 422,
+    "unique_parts": 74,
+    "unique_colors": 15,
+    "dimensions_studs": {
+      "width_x": 41.2,
+      "height_y": 21.0,
+      "depth_z": 10.1
+    },
+    "stability_score": 0.986,
+    "json_path": "data/filtered_architecture/models/bricklink_714098_Yellow_Medieval_House.json",
+    "ldr_path": "data/filtered_architecture/ldr/bricklink_714098_Yellow_Medieval_House.ldr",
+    "tags": [
+      "curated_architecture",
+      "physically_stable",
+      "sweet_spot_band"
+    ]
+  },
+  {
+    "model_id": "bricklink_813418_Peasant_hovel",
+    "title": "peasant_hovel",
+    "author": "0 CustomBrick",
+    "source": "bricklink",
+    "part_count": 258,
+    "unique_parts": 58,
+    "unique_colors": 16,
+    "dimensions_studs": {
+      "width_x": 10.5,
+      "height_y": 34.0,
+      "depth_z": 8.6
+    },
+    "stability_score": 0.981,
+    "json_path": "data/filtered_architecture/models/bricklink_813418_Peasant_hovel.json",
+    "ldr_path": "data/filtered_architecture/ldr/bricklink_813418_Peasant_hovel.ldr",
+    "tags": [
+      "curated_architecture",
+      "physically_stable",
+      "sweet_spot_band"
+    ]
+  },
+  {
+    "model_id": "bricksafe_11037_Space-Church_studio-steps",
+    "title": "11037_Space-Church_instructions",
+    "author": "0 CustomBrick",
+    "source": "bricksafe",
+    "part_count": 403,
+    "unique_parts": 42,
+    "unique_colors": 24,
+    "dimensions_studs": {
+      "width_x": 16.4,
+      "height_y": 74.0,
+      "depth_z": 15.2
+    },
+    "stability_score": 0.995,
+    "json_path": "data/filtered_architecture/models/bricksafe_11037_Space-Church_studio-steps.json",
+    "ldr_path": "data/filtered_architecture/ldr/bricksafe_11037_Space-Church_studio-steps.ldr",
+    "tags": [
+      "curated_architecture",
+      "physically_stable",
+      "sweet_spot_band"
+    ]
+  },
+  {
+    "model_id": "bricksafe_11037_Space-Church_studio",
+    "title": "11037_Space-Church",
+    "author": "0 CustomBrick",
+    "source": "bricksafe",
+    "part_count": 405,
+    "unique_parts": 42,
+    "unique_colors": 24,
+    "dimensions_studs": {
+      "width_x": 16.4,
+      "height_y": 74.0,
+      "depth_z": 15.2
+    },
+    "stability_score": 0.995,
+    "json_path": "data/filtered_architecture/models/bricksafe_11037_Space-Church_studio.json",
+    "ldr_path": "data/filtered_architecture/ldr/bricksafe_11037_Space-Church_studio.ldr",
+    "tags": [
+      "curated_architecture",
+      "physically_stable",
+      "sweet_spot_band"
+    ]
+  },
+  {
+    "model_id": "bricksafe_21002_Empire_State_Building",
+    "title": "21002 Empire State Building.ldr",
+    "author": "C3POwen",
+    "source": "bricksafe",
+    "part_count": 77,
+    "unique_parts": 18,
+    "unique_colors": 3,
+    "dimensions_studs": {
+      "width_x": 9.0,
+      "height_y": 59.0,
+      "depth_z": 7.0
+    },
+    "stability_score": 1.0,
+    "json_path": "data/filtered_architecture/models/bricksafe_21002_Empire_State_Building.json",
+    "ldr_path": "data/filtered_architecture/ldr/bricksafe_21002_Empire_State_Building.ldr",
+    "tags": [
+      "curated_architecture",
+      "physically_stable",
+      "sweet_spot_band"
+    ]
+  },
+  {
+    "model_id": "bricksafe_21003_Seattle_Space_Needle",
+    "title": "21003 Seattle Space Needle.ldr",
+    "author": "C3POwen",
+    "source": "bricksafe",
+    "part_count": 120,
+    "unique_parts": 24,
+    "unique_colors": 4,
+    "dimensions_studs": {
+      "width_x": 9.0,
+      "height_y": 58.2,
+      "depth_z": 7.0
+    },
+    "stability_score": 1.0,
+    "json_path": "data/filtered_architecture/models/bricksafe_21003_Seattle_Space_Needle.json",
+    "ldr_path": "data/filtered_architecture/ldr/bricksafe_21003_Seattle_Space_Needle.ldr",
+    "tags": [
+      "curated_architecture",
+      "physically_stable",
+      "sweet_spot_band"
+    ]
+  },
+  {
+    "model_id": "bricksafe_21008_Burj_Khalifa",
+    "title": "21008 Burj Khalifa.ldr",
+    "author": "C3POwen",
+    "source": "bricksafe",
+    "part_count": 209,
+    "unique_parts": 19,
+    "unique_colors": 3,
+    "dimensions_studs": {
+      "width_x": 11.0,
+      "height_y": 74.0,
+      "depth_z": 11.0
+    },
+    "stability_score": 0.99,
+    "json_path": "data/filtered_architecture/models/bricksafe_21008_Burj_Khalifa.json",
+    "ldr_path": "data/filtered_architecture/ldr/bricksafe_21008_Burj_Khalifa.ldr",
+    "tags": [
+      "curated_architecture",
+      "physically_stable",
+      "sweet_spot_band"
+    ]
+  },
+  {
+    "model_id": "bricksafe_21013_Big_Ben",
+    "title": "21013 Big Ben.ldr",
+    "author": "C3POwen",
+    "source": "bricksafe",
+    "part_count": 346,
+    "unique_parts": 25,
+    "unique_colors": 6,
+    "dimensions_studs": {
+      "width_x": 11.0,
+      "height_y": 59.0,
+      "depth_z": 9.0
+    },
+    "stability_score": 1.0,
+    "json_path": "data/filtered_architecture/models/bricksafe_21013_Big_Ben.json",
+    "ldr_path": "data/filtered_architecture/ldr/bricksafe_21013_Big_Ben.ldr",
+    "tags": [
+      "curated_architecture",
+      "physically_stable",
+      "sweet_spot_band"
+    ]
+  },
+  {
+    "model_id": "bricksafe_21015_The_Leaning_Tower_of_Pisa",
+    "title": "21015 The Leaning Tower of Pisa.ldr",
+    "author": "C3POwen",
+    "source": "bricksafe",
+    "part_count": 363,
+    "unique_parts": 36,
+    "unique_colors": 5,
+    "dimensions_studs": {
+      "width_x": 13.0,
+      "height_y": 77.5,
+      "depth_z": 13.0
+    },
+    "stability_score": 0.937,
+    "json_path": "data/filtered_architecture/models/bricksafe_21015_The_Leaning_Tower_of_Pisa.json",
+    "ldr_path": "data/filtered_architecture/ldr/bricksafe_21015_The_Leaning_Tower_of_Pisa.ldr",
+    "tags": [
+      "curated_architecture",
+      "physically_stable",
+      "sweet_spot_band"
+    ]
+  },
+  {
+    "model_id": "bricksafe_21023_Flatiron_Building",
+    "title": "21023 Flatiron Building.ldr",
+    "author": "Owen Burgoyne [C3POwen]",
+    "source": "bricksafe",
+    "part_count": 472,
+    "unique_parts": 38,
+    "unique_colors": 6,
+    "dimensions_studs": {
+      "width_x": 9.0,
+      "height_y": 48.0,
+      "depth_z": 13.0
+    },
+    "stability_score": 0.987,
+    "json_path": "data/filtered_architecture/models/bricksafe_21023_Flatiron_Building.json",
+    "ldr_path": "data/filtered_architecture/ldr/bricksafe_21023_Flatiron_Building.ldr",
+    "tags": [
+      "curated_architecture",
+      "physically_stable",
+      "sweet_spot_band"
+    ]
+  },
+  {
+    "model_id": "bricksafe_226-2-c033_Castle_p10",
+    "title": "226-2-c033 Castle p10",
+    "author": "0 CustomBrick",
+    "source": "bricksafe",
+    "part_count": 103,
+    "unique_parts": 13,
+    "unique_colors": 5,
+    "dimensions_studs": {
+      "width_x": 21.5,
+      "height_y": 57.0,
+      "depth_z": 5.5
+    },
+    "stability_score": 1.0,
+    "json_path": "data/filtered_architecture/models/bricksafe_226-2-c033_Castle_p10.json",
+    "ldr_path": "data/filtered_architecture/ldr/bricksafe_226-2-c033_Castle_p10.ldr",
+    "tags": [
+      "curated_architecture",
+      "physically_stable",
+      "sweet_spot_band"
+    ]
+  },
+  {
+    "model_id": "bricksafe_226-2-c038_Bridge_house_p10",
+    "title": "226-2-c038 Bridge house p10",
+    "author": "0 CustomBrick",
+    "source": "bricksafe",
+    "part_count": 42,
+    "unique_parts": 8,
+    "unique_colors": 6,
+    "dimensions_studs": {
+      "width_x": 24.0,
+      "height_y": 54.0,
+      "depth_z": 4.0
+    },
+    "stability_score": 1.0,
+    "json_path": "data/filtered_architecture/models/bricksafe_226-2-c038_Bridge_house_p10.json",
+    "ldr_path": "data/filtered_architecture/ldr/bricksafe_226-2-c038_Bridge_house_p10.ldr",
+    "tags": [
+      "curated_architecture",
+      "physically_stable",
+      "sweet_spot_band"
+    ]
+  },
+  {
+    "model_id": "bricksafe_226-2-c091_House_p21",
+    "title": "226-2-c091 House p21",
+    "author": "0 CustomBrick",
+    "source": "bricksafe",
+    "part_count": 159,
+    "unique_parts": 25,
+    "unique_colors": 6,
+    "dimensions_studs": {
+      "width_x": 23.5,
+      "height_y": 42.5,
+      "depth_z": 12.6
+    },
+    "stability_score": 1.0,
+    "json_path": "data/filtered_architecture/models/bricksafe_226-2-c091_House_p21.json",
+    "ldr_path": "data/filtered_architecture/ldr/bricksafe_226-2-c091_House_p21.ldr",
+    "tags": [
+      "curated_architecture",
+      "physically_stable",
+      "sweet_spot_band"
+    ]
+  },
+  {
+    "model_id": "bricksafe_226-2-c179_Attached_houses_p30",
+    "title": "226-2-c179 Attached houses p30",
+    "author": "0 CustomBrick",
+    "source": "bricksafe",
+    "part_count": 269,
+    "unique_parts": 31,
+    "unique_colors": 9,
+    "dimensions_studs": {
+      "width_x": 38.7,
+      "height_y": 33.5,
+      "depth_z": 15.2
+    },
+    "stability_score": 0.978,
+    "json_path": "data/filtered_architecture/models/bricksafe_226-2-c179_Attached_houses_p30.json",
+    "ldr_path": "data/filtered_architecture/ldr/bricksafe_226-2-c179_Attached_houses_p30.ldr",
+    "tags": [
+      "curated_architecture",
+      "physically_stable",
+      "sweet_spot_band"
+    ]
+  },
+  {
+    "model_id": "bricksafe_226-2-c180_House_p30",
+    "title": "226-2-c180 House p30",
+    "author": "0 CustomBrick",
+    "source": "bricksafe",
+    "part_count": 138,
+    "unique_parts": 25,
+    "unique_colors": 6,
+    "dimensions_studs": {
+      "width_x": 24.9,
+      "height_y": 49.0,
+      "depth_z": 8.0
+    },
+    "stability_score": 1.0,
+    "json_path": "data/filtered_architecture/models/bricksafe_226-2-c180_House_p30.json",
+    "ldr_path": "data/filtered_architecture/ldr/bricksafe_226-2-c180_House_p30.ldr",
+    "tags": [
+      "curated_architecture",
+      "physically_stable",
+      "sweet_spot_band"
+    ]
+  },
+  {
+    "model_id": "bricksafe_226-2-c181_House_with_airport_tower_p31",
+    "title": "226-2-c181 House with airport tower p31",
+    "author": "0 CustomBrick",
+    "source": "bricksafe",
+    "part_count": 290,
+    "unique_parts": 37,
+    "unique_colors": 7,
+    "dimensions_studs": {
+      "width_x": 41.8,
+      "height_y": 99.0,
+      "depth_z": 16.0
+    },
+    "stability_score": 0.997,
+    "json_path": "data/filtered_architecture/models/bricksafe_226-2-c181_House_with_airport_tower_p31.json",
+    "ldr_path": "data/filtered_architecture/ldr/bricksafe_226-2-c181_House_with_airport_tower_p31.ldr",
+    "tags": [
+      "curated_architecture",
+      "physically_stable",
+      "sweet_spot_band"
+    ]
+  },
+  {
+    "model_id": "bricksafe_226-2-c185_House_p32",
+    "title": "226-2-c185 House p32",
+    "author": "0 CustomBrick",
+    "source": "bricksafe",
+    "part_count": 271,
+    "unique_parts": 41,
+    "unique_colors": 5,
+    "dimensions_studs": {
+      "width_x": 27.1,
+      "height_y": 50.5,
+      "depth_z": 13.0
+    },
+    "stability_score": 1.0,
+    "json_path": "data/filtered_architecture/models/bricksafe_226-2-c185_House_p32.json",
+    "ldr_path": "data/filtered_architecture/ldr/bricksafe_226-2-c185_House_p32.ldr",
+    "tags": [
+      "curated_architecture",
+      "physically_stable",
+      "sweet_spot_band"
+    ]
+  },
+  {
+    "model_id": "bricksafe_226-2-c186_House_p32",
+    "title": "226-2-c186 House p32",
+    "author": "0 CustomBrick",
+    "source": "bricksafe",
+    "part_count": 225,
+    "unique_parts": 37,
+    "unique_colors": 6,
+    "dimensions_studs": {
+      "width_x": 24.3,
+      "height_y": 54.0,
+      "depth_z": 16.5
+    },
+    "stability_score": 1.0,
+    "json_path": "data/filtered_architecture/models/bricksafe_226-2-c186_House_p32.json",
+    "ldr_path": "data/filtered_architecture/ldr/bricksafe_226-2-c186_House_p32.ldr",
+    "tags": [
+      "curated_architecture",
+      "physically_stable",
+      "sweet_spot_band"
+    ]
+  },
+  {
+    "model_id": "bricksafe_226-2-c187_House_p32",
+    "title": "226-2-c187 House p32",
+    "author": "0 CustomBrick",
+    "source": "bricksafe",
+    "part_count": 159,
+    "unique_parts": 34,
+    "unique_colors": 7,
+    "dimensions_studs": {
+      "width_x": 19.2,
+      "height_y": 52.5,
+      "depth_z": 9.0
+    },
+    "stability_score": 0.987,
+    "json_path": "data/filtered_architecture/models/bricksafe_226-2-c187_House_p32.json",
+    "ldr_path": "data/filtered_architecture/ldr/bricksafe_226-2-c187_House_p32.ldr",
+    "tags": [
+      "curated_architecture",
+      "physically_stable",
+      "sweet_spot_band"
+    ]
+  },
+  {
+    "model_id": "bricksafe_226-2-c188_House_p32",
+    "title": "226-2-c188 House p32",
+    "author": "0 CustomBrick",
+    "source": "bricksafe",
+    "part_count": 95,
+    "unique_parts": 31,
+    "unique_colors": 6,
+    "dimensions_studs": {
+      "width_x": 25.9,
+      "height_y": 27.5,
+      "depth_z": 14.2
+    },
+    "stability_score": 0.979,
+    "json_path": "data/filtered_architecture/models/bricksafe_226-2-c188_House_p32.json",
+    "ldr_path": "data/filtered_architecture/ldr/bricksafe_226-2-c188_House_p32.ldr",
+    "tags": [
+      "curated_architecture",
+      "physically_stable",
+      "sweet_spot_band"
+    ]
+  },
+  {
+    "model_id": "bricksafe_226-2-c191_House_p32",
+    "title": "226-2-c191 House p32",
+    "author": "0 CustomBrick",
+    "source": "bricksafe",
+    "part_count": 101,
+    "unique_parts": 22,
+    "unique_colors": 2,
+    "dimensions_studs": {
+      "width_x": 20.5,
+      "height_y": 28.0,
+      "depth_z": 6.0
+    },
+    "stability_score": 1.0,
+    "json_path": "data/filtered_architecture/models/bricksafe_226-2-c191_House_p32.json",
+    "ldr_path": "data/filtered_architecture/ldr/bricksafe_226-2-c191_House_p32.ldr",
+    "tags": [
+      "curated_architecture",
+      "physically_stable",
+      "sweet_spot_band"
+    ]
+  },
+  {
+    "model_id": "bricksafe_226-2-c192_House_p32",
+    "title": "226-2-c192 House p32",
+    "author": "0 CustomBrick",
+    "source": "bricksafe",
+    "part_count": 76,
+    "unique_parts": 17,
+    "unique_colors": 2,
+    "dimensions_studs": {
+      "width_x": 17.5,
+      "height_y": 28.0,
+      "depth_z": 6.5
+    },
+    "stability_score": 1.0,
+    "json_path": "data/filtered_architecture/models/bricksafe_226-2-c192_House_p32.json",
+    "ldr_path": "data/filtered_architecture/ldr/bricksafe_226-2-c192_House_p32.ldr",
+    "tags": [
+      "curated_architecture",
+      "physically_stable",
+      "sweet_spot_band"
+    ]
+  },
+  {
+    "model_id": "bricksafe_226-2-c193_House_p32",
+    "title": "226-2-c193 House p32",
+    "author": "0 CustomBrick",
+    "source": "bricksafe",
+    "part_count": 109,
+    "unique_parts": 28,
+    "unique_colors": 2,
+    "dimensions_studs": {
+      "width_x": 16.0,
+      "height_y": 31.0,
+      "depth_z": 10.5
+    },
+    "stability_score": 1.0,
+    "json_path": "data/filtered_architecture/models/bricksafe_226-2-c193_House_p32.json",
+    "ldr_path": "data/filtered_architecture/ldr/bricksafe_226-2-c193_House_p32.ldr",
+    "tags": [
+      "curated_architecture",
+      "physically_stable",
+      "sweet_spot_band"
+    ]
+  },
+  {
+    "model_id": "bricksafe_226-2-c194_Tower_p32",
+    "title": "226-2-c194 Tower p32",
+    "author": "0 CustomBrick",
+    "source": "bricksafe",
+    "part_count": 51,
+    "unique_parts": 14,
+    "unique_colors": 2,
+    "dimensions_studs": {
+      "width_x": 8.0,
+      "height_y": 32.0,
+      "depth_z": 4.2
+    },
+    "stability_score": 1.0,
+    "json_path": "data/filtered_architecture/models/bricksafe_226-2-c194_Tower_p32.json",
+    "ldr_path": "data/filtered_architecture/ldr/bricksafe_226-2-c194_Tower_p32.ldr",
+    "tags": [
+      "curated_architecture",
+      "physically_stable",
+      "sweet_spot_band"
+    ]
+  },
+  {
+    "model_id": "bricksafe_226-2-c199_House_p34",
+    "title": "226-2-c199 House p34",
+    "author": "0 CustomBrick",
+    "source": "bricksafe",
+    "part_count": 123,
+    "unique_parts": 23,
+    "unique_colors": 6,
+    "dimensions_studs": {
+      "width_x": 26.0,
+      "height_y": 48.0,
+      "depth_z": 9.7
+    },
+    "stability_score": 1.0,
+    "json_path": "data/filtered_architecture/models/bricksafe_226-2-c199_House_p34.json",
+    "ldr_path": "data/filtered_architecture/ldr/bricksafe_226-2-c199_House_p34.ldr",
+    "tags": [
+      "curated_architecture",
+      "physically_stable",
+      "sweet_spot_band"
+    ]
+  },
+  {
+    "model_id": "bricksafe_226-2-c201_House_with_windmill_p34",
+    "title": "226-2-c201 House with windmill p34",
+    "author": "0 CustomBrick",
+    "source": "bricksafe",
+    "part_count": 223,
+    "unique_parts": 39,
+    "unique_colors": 7,
+    "dimensions_studs": {
+      "width_x": 40.8,
+      "height_y": 51.5,
+      "depth_z": 12.9
+    },
+    "stability_score": 0.991,
+    "json_path": "data/filtered_architecture/models/bricksafe_226-2-c201_House_with_windmill_p34.json",
+    "ldr_path": "data/filtered_architecture/ldr/bricksafe_226-2-c201_House_with_windmill_p34.ldr",
+    "tags": [
+      "curated_architecture",
+      "physically_stable",
+      "sweet_spot_band"
+    ]
+  },
+  {
+    "model_id": "bricksafe_226-2-c205_Farm_with_windmill_p35",
+    "title": "226-2-c205 Farm with windmill p35",
+    "author": "0 CustomBrick",
+    "source": "bricksafe",
+    "part_count": 116,
+    "unique_parts": 23,
+    "unique_colors": 6,
+    "dimensions_studs": {
+      "width_x": 22.6,
+      "height_y": 43.5,
+      "depth_z": 14.1
+    },
+    "stability_score": 1.0,
+    "json_path": "data/filtered_architecture/models/bricksafe_226-2-c205_Farm_with_windmill_p35.json",
+    "ldr_path": "data/filtered_architecture/ldr/bricksafe_226-2-c205_Farm_with_windmill_p35.ldr",
+    "tags": [
+      "curated_architecture",
+      "physically_stable",
+      "sweet_spot_band"
+    ]
+  },
+  {
+    "model_id": "bricksafe_226-2-c215_Windmill_p36",
+    "title": "226-2-c215 Windmill p36",
+    "author": "0 CustomBrick",
+    "source": "bricksafe",
+    "part_count": 129,
+    "unique_parts": 22,
+    "unique_colors": 6,
+    "dimensions_studs": {
+      "width_x": 20.5,
+      "height_y": 64.5,
+      "depth_z": 11.1
+    },
+    "stability_score": 1.0,
+    "json_path": "data/filtered_architecture/models/bricksafe_226-2-c215_Windmill_p36.json",
+    "ldr_path": "data/filtered_architecture/ldr/bricksafe_226-2-c215_Windmill_p36.ldr",
+    "tags": [
+      "curated_architecture",
+      "physically_stable",
+      "sweet_spot_band"
+    ]
+  },
+  {
+    "model_id": "bricksafe_226-2-c220_Windmill_p38",
+    "title": "226-2-c220 Windmill p38",
+    "author": "0 CustomBrick",
+    "source": "bricksafe",
+    "part_count": 42,
+    "unique_parts": 11,
+    "unique_colors": 5,
+    "dimensions_studs": {
+      "width_x": 12.0,
+      "height_y": 34.0,
+      "depth_z": 3.4
+    },
+    "stability_score": 1.0,
+    "json_path": "data/filtered_architecture/models/bricksafe_226-2-c220_Windmill_p38.json",
+    "ldr_path": "data/filtered_architecture/ldr/bricksafe_226-2-c220_Windmill_p38.ldr",
+    "tags": [
+      "curated_architecture",
+      "physically_stable",
+      "sweet_spot_band"
+    ]
+  },
+  {
+    "model_id": "bricksafe_226-2-c223_Factory_with_windmill_p38",
+    "title": "226-2-c223 Factory with windmill p38",
+    "author": "0 CustomBrick",
+    "source": "bricksafe",
+    "part_count": 168,
+    "unique_parts": 45,
+    "unique_colors": 8,
+    "dimensions_studs": {
+      "width_x": 37.5,
+      "height_y": 33.6,
+      "depth_z": 14.0
+    },
+    "stability_score": 0.988,
+    "json_path": "data/filtered_architecture/models/bricksafe_226-2-c223_Factory_with_windmill_p38.json",
+    "ldr_path": "data/filtered_architecture/ldr/bricksafe_226-2-c223_Factory_with_windmill_p38.ldr",
+    "tags": [
+      "curated_architecture",
+      "physically_stable",
+      "sweet_spot_band"
+    ]
+  },
+  {
+    "model_id": "bricksafe_226-2-c245_Lighthouse_p46",
+    "title": "226-2-c245 Lighthouse p46",
+    "author": "0 CustomBrick",
+    "source": "bricksafe",
+    "part_count": 109,
+    "unique_parts": 15,
+    "unique_colors": 4,
+    "dimensions_studs": {
+      "width_x": 14.2,
+      "height_y": 62.0,
+      "depth_z": 7.0
+    },
+    "stability_score": 1.0,
+    "json_path": "data/filtered_architecture/models/bricksafe_226-2-c245_Lighthouse_p46.json",
+    "ldr_path": "data/filtered_architecture/ldr/bricksafe_226-2-c245_Lighthouse_p46.ldr",
+    "tags": [
+      "curated_architecture",
+      "physically_stable",
+      "sweet_spot_band"
+    ]
+  },
+  {
+    "model_id": "bricksafe_226-2-c267_Harbour_with_crane_and_lighthouse_p50",
+    "title": "226-2-c267 Harbour with crane and lighthouse p50",
+    "author": "0 CustomBrick",
+    "source": "bricksafe",
+    "part_count": 200,
+    "unique_parts": 45,
+    "unique_colors": 9,
+    "dimensions_studs": {
+      "width_x": 65.0,
+      "height_y": 39.8,
+      "depth_z": 17.8
+    },
+    "stability_score": 1.0,
+    "json_path": "data/filtered_architecture/models/bricksafe_226-2-c267_Harbour_with_crane_and_lighthouse_p50.json",
+    "ldr_path": "data/filtered_architecture/ldr/bricksafe_226-2-c267_Harbour_with_crane_and_lighthouse_p50.ldr",
+    "tags": [
+      "curated_architecture",
+      "physically_stable",
+      "sweet_spot_band"
+    ]
+  },
+  {
+    "model_id": "bricksafe_238-1-c020-c022_Windmills_and_cranes",
+    "title": "238-1-c20-c21 Windmills and cranes",
+    "author": "0 CustomBrick",
+    "source": "bricksafe",
+    "part_count": 372,
+    "unique_parts": 23,
+    "unique_colors": 5,
+    "dimensions_studs": {
+      "width_x": 61.5,
+      "height_y": 81.0,
+      "depth_z": 35.2
+    },
+    "stability_score": 1.0,
+    "json_path": "data/filtered_architecture/models/bricksafe_238-1-c020-c022_Windmills_and_cranes.json",
+    "ldr_path": "data/filtered_architecture/ldr/bricksafe_238-1-c020-c022_Windmills_and_cranes.ldr",
+    "tags": [
+      "curated_architecture",
+      "physically_stable",
+      "sweet_spot_band"
+    ]
+  },
+  {
+    "model_id": "bricksafe_309_Church_1958",
+    "title": "!LEOCAD MODEL COMMENT 309 - Church - 1958",
+    "author": "Community",
+    "source": "bricksafe",
+    "part_count": 149,
+    "unique_parts": 12,
+    "unique_colors": 2,
+    "dimensions_studs": {
+      "width_x": 7.0,
+      "height_y": 36.0,
+      "depth_z": 14.0
+    },
+    "stability_score": 1.0,
+    "json_path": "data/filtered_architecture/models/bricksafe_309_Church_1958.json",
+    "ldr_path": "data/filtered_architecture/ldr/bricksafe_309_Church_1958.ldr",
+    "tags": [
+      "curated_architecture",
+      "physically_stable",
+      "sweet_spot_band"
+    ]
+  },
+  {
+    "model_id": "bricksafe_31019_Jabbas-Palace_ldraw-mpd",
+    "title": "ROTSTEP 30 30 0 ABS",
+    "author": "Community",
+    "source": "bricksafe",
+    "part_count": 175,
+    "unique_parts": 51,
+    "unique_colors": 8,
+    "dimensions_studs": {
+      "width_x": 17.2,
+      "height_y": 24.0,
+      "depth_z": 5.5
+    },
+    "stability_score": 0.966,
+    "json_path": "data/filtered_architecture/models/bricksafe_31019_Jabbas-Palace_ldraw-mpd.json",
+    "ldr_path": "data/filtered_architecture/ldr/bricksafe_31019_Jabbas-Palace_ldraw-mpd.ldr",
+    "tags": [
+      "curated_architecture",
+      "physically_stable",
+      "sweet_spot_band"
+    ]
+  },
+  {
+    "model_id": "bricksafe_31019_Jabbas-Palace_ldraw",
+    "title": "Bricksafe 31019 Jabbas-Palace Ldraw",
+    "author": "Community",
+    "source": "bricksafe",
+    "part_count": 175,
+    "unique_parts": 51,
+    "unique_colors": 8,
+    "dimensions_studs": {
+      "width_x": 17.2,
+      "height_y": 24.0,
+      "depth_z": 5.5
+    },
+    "stability_score": 0.966,
+    "json_path": "data/filtered_architecture/models/bricksafe_31019_Jabbas-Palace_ldraw.json",
+    "ldr_path": "data/filtered_architecture/ldr/bricksafe_31019_Jabbas-Palace_ldraw.ldr",
+    "tags": [
+      "curated_architecture",
+      "physically_stable",
+      "sweet_spot_band"
+    ]
+  },
+  {
+    "model_id": "bricksafe_350_SpanishVilla_1971",
+    "title": "!LEOCAD MODEL DESCRIPTION 350 - Spanish Villa - 1971",
+    "author": "Community",
+    "source": "bricksafe",
+    "part_count": 125,
+    "unique_parts": 24,
+    "unique_colors": 4,
+    "dimensions_studs": {
+      "width_x": 27.0,
+      "height_y": 44.0,
+      "depth_z": 11.5
+    },
+    "stability_score": 1.0,
+    "json_path": "data/filtered_architecture/models/bricksafe_350_SpanishVilla_1971.json",
+    "ldr_path": "data/filtered_architecture/ldr/bricksafe_350_SpanishVilla_1971.ldr",
+    "tags": [
+      "curated_architecture",
+      "physically_stable",
+      "sweet_spot_band"
+    ]
+  },
+  {
+    "model_id": "bricksafe_356_ItalianVilla_1973",
+    "title": "!LEOCAD MODEL DESCRIPTION 356 - Italian Villa - 1973",
+    "author": "Community",
+    "source": "bricksafe",
+    "part_count": 150,
+    "unique_parts": 25,
+    "unique_colors": 6,
+    "dimensions_studs": {
+      "width_x": 26.5,
+      "height_y": 42.0,
+      "depth_z": 14.0
+    },
+    "stability_score": 1.0,
+    "json_path": "data/filtered_architecture/models/bricksafe_356_ItalianVilla_1973.json",
+    "ldr_path": "data/filtered_architecture/ldr/bricksafe_356_ItalianVilla_1973.ldr",
+    "tags": [
+      "curated_architecture",
+      "physically_stable",
+      "sweet_spot_band"
+    ]
+  },
+  {
+    "model_id": "bricksafe_4000015_LOM_Building_B",
+    "title": "4000015 LOM Building B.ldr",
+    "author": "C3POwen",
+    "source": "bricksafe",
+    "part_count": 215,
+    "unique_parts": 34,
+    "unique_colors": 15,
+    "dimensions_studs": {
+      "width_x": 23.0,
+      "height_y": 8.0,
+      "depth_z": 15.4
+    },
+    "stability_score": 1.0,
+    "json_path": "data/filtered_architecture/models/bricksafe_4000015_LOM_Building_B.json",
+    "ldr_path": "data/filtered_architecture/ldr/bricksafe_4000015_LOM_Building_B.ldr",
+    "tags": [
+      "curated_architecture",
+      "physically_stable",
+      "sweet_spot_band"
+    ]
+  },
+  {
+    "model_id": "bricksafe_6000-1-c167_p77_Castle_guard",
+    "title": "6000-1-p77 Castle guard",
+    "author": "0 CustomBrick",
+    "source": "bricksafe",
+    "part_count": 41,
+    "unique_parts": 19,
+    "unique_colors": 6,
+    "dimensions_studs": {
+      "width_x": 23.9,
+      "height_y": 22.5,
+      "depth_z": 7.0
+    },
+    "stability_score": 1.0,
+    "json_path": "data/filtered_architecture/models/bricksafe_6000-1-c167_p77_Castle_guard.json",
+    "ldr_path": "data/filtered_architecture/ldr/bricksafe_6000-1-c167_p77_Castle_guard.ldr",
+    "tags": [
+      "curated_architecture",
+      "physically_stable",
+      "sweet_spot_band"
+    ]
+  },
+  {
+    "model_id": "bricksafe_Arcade_machine_with_background",
+    "title": "Arcade machine with background",
+    "author": "0 CustomBrick",
+    "source": "bricksafe",
+    "part_count": 50,
+    "unique_parts": 30,
+    "unique_colors": 9,
+    "dimensions_studs": {
+      "width_x": 15.8,
+      "height_y": 35.2,
+      "depth_z": 13.0
+    },
+    "stability_score": 0.96,
+    "json_path": "data/filtered_architecture/models/bricksafe_Arcade_machine_with_background.json",
+    "ldr_path": "data/filtered_architecture/ldr/bricksafe_Arcade_machine_with_background.ldr",
+    "tags": [
+      "curated_architecture",
+      "physically_stable",
+      "sweet_spot_band"
+    ]
+  },
+  {
+    "model_id": "bricksafe_Castle_ruin_with_minidoll",
+    "title": "Castle ruin with minidoll",
+    "author": "0 CustomBrick",
+    "source": "bricksafe",
+    "part_count": 64,
+    "unique_parts": 42,
+    "unique_colors": 14,
+    "dimensions_studs": {
+      "width_x": 12.5,
+      "height_y": 17.0,
+      "depth_z": 11.1
+    },
+    "stability_score": 1.0,
+    "json_path": "data/filtered_architecture/models/bricksafe_Castle_ruin_with_minidoll.json",
+    "ldr_path": "data/filtered_architecture/ldr/bricksafe_Castle_ruin_with_minidoll.ldr",
+    "tags": [
+      "curated_architecture",
+      "physically_stable",
+      "sweet_spot_band"
+    ]
+  },
+  {
+    "model_id": "bricksafe_Cube_Apartments_-_Mini_Modular",
+    "title": "Cube Apartments - Mini Modular.ldr",
+    "author": "slfroden",
+    "source": "bricksafe",
+    "part_count": 349,
+    "unique_parts": 47,
+    "unique_colors": 11,
+    "dimensions_studs": {
+      "width_x": 7.6,
+      "height_y": 58.2,
+      "depth_z": 7.2
+    },
+    "stability_score": 0.977,
+    "json_path": "data/filtered_architecture/models/bricksafe_Cube_Apartments_-_Mini_Modular.json",
+    "ldr_path": "data/filtered_architecture/ldr/bricksafe_Cube_Apartments_-_Mini_Modular.ldr",
+    "tags": [
+      "curated_architecture",
+      "physically_stable",
+      "sweet_spot_band"
+    ]
+  },
+  {
+    "model_id": "bricksafe_Desert_House_5_MF_afdjhsf",
+    "title": "Desert House 5 MF",
+    "author": "0 CustomBrick",
+    "source": "bricksafe",
+    "part_count": 336,
+    "unique_parts": 30,
+    "unique_colors": 7,
+    "dimensions_studs": {
+      "width_x": 15.0,
+      "height_y": 40.0,
+      "depth_z": 15.0
+    },
+    "stability_score": 1.0,
+    "json_path": "data/filtered_architecture/models/bricksafe_Desert_House_5_MF_afdjhsf.json",
+    "ldr_path": "data/filtered_architecture/ldr/bricksafe_Desert_House_5_MF_afdjhsf.ldr",
+    "tags": [
+      "curated_architecture",
+      "physically_stable",
+      "sweet_spot_band"
+    ]
+  },
+  {
+    "model_id": "bricksafe_Guarded_Inn_6067_Variant",
+    "title": "Lego_Schaenke_v3.ldr",
+    "author": "LDraw",
+    "source": "bricksafe",
+    "part_count": 199,
+    "unique_parts": 51,
+    "unique_colors": 9,
+    "dimensions_studs": {
+      "width_x": 18.5,
+      "height_y": 52.0,
+      "depth_z": 12.0
+    },
+    "stability_score": 0.985,
+    "json_path": "data/filtered_architecture/models/bricksafe_Guarded_Inn_6067_Variant.json",
+    "ldr_path": "data/filtered_architecture/ldr/bricksafe_Guarded_Inn_6067_Variant.ldr",
+    "tags": [
+      "curated_architecture",
+      "physically_stable",
+      "sweet_spot_band"
+    ]
+  },
+  {
+    "model_id": "bricksafe_Midiscale_Modular_-_The_Sweet_Suite",
+    "title": "The Sweet Suites",
+    "author": "Trekkie99",
+    "source": "bricksafe",
+    "part_count": 546,
+    "unique_parts": 90,
+    "unique_colors": 30,
+    "dimensions_studs": {
+      "width_x": 8.0,
+      "height_y": 34.0,
+      "depth_z": 15.0
+    },
+    "stability_score": 0.989,
+    "json_path": "data/filtered_architecture/models/bricksafe_Midiscale_Modular_-_The_Sweet_Suite.json",
+    "ldr_path": "data/filtered_architecture/ldr/bricksafe_Midiscale_Modular_-_The_Sweet_Suite.ldr",
+    "tags": [
+      "curated_architecture",
+      "physically_stable",
+      "sweet_spot_band"
+    ]
+  },
+  {
+    "model_id": "bricksafe_Mini_ABU_SIMBEL_TEMPLES_MF_adglkshj",
+    "title": "Mini ABU SIMBEL TEMPLES MF",
+    "author": "0 CustomBrick",
+    "source": "bricksafe",
+    "part_count": 202,
+    "unique_parts": 39,
+    "unique_colors": 3,
+    "dimensions_studs": {
+      "width_x": 14.4,
+      "height_y": 23.2,
+      "depth_z": 15.2
+    },
+    "stability_score": 0.97,
+    "json_path": "data/filtered_architecture/models/bricksafe_Mini_ABU_SIMBEL_TEMPLES_MF_adglkshj.json",
+    "ldr_path": "data/filtered_architecture/ldr/bricksafe_Mini_ABU_SIMBEL_TEMPLES_MF_adglkshj.ldr",
+    "tags": [
+      "curated_architecture",
+      "physically_stable",
+      "sweet_spot_band"
+    ]
+  },
+  {
+    "model_id": "bricksafe_Mini_El_Castillo_Chichen_Itza_pyramid_MF_agwtwt",
+    "title": "Mini El Castillo Chichen Itza pyramid MF",
+    "author": "0 CustomBrick",
+    "source": "bricksafe",
+    "part_count": 201,
+    "unique_parts": 23,
+    "unique_colors": 4,
+    "dimensions_studs": {
+      "width_x": 14.4,
+      "height_y": 22.2,
+      "depth_z": 15.2
+    },
+    "stability_score": 1.0,
+    "json_path": "data/filtered_architecture/models/bricksafe_Mini_El_Castillo_Chichen_Itza_pyramid_MF_agwtwt.json",
+    "ldr_path": "data/filtered_architecture/ldr/bricksafe_Mini_El_Castillo_Chichen_Itza_pyramid_MF_agwtwt.ldr",
+    "tags": [
+      "curated_architecture",
+      "physically_stable",
+      "sweet_spot_band"
+    ]
+  },
+  {
+    "model_id": "bricksafe_Mini_London_street_MF_aheyyw",
+    "title": "Mini London street MF",
+    "author": "0 CustomBrick",
+    "source": "bricksafe",
+    "part_count": 203,
+    "unique_parts": 37,
+    "unique_colors": 9,
+    "dimensions_studs": {
+      "width_x": 14.4,
+      "height_y": 30.2,
+      "depth_z": 15.2
+    },
+    "stability_score": 1.0,
+    "json_path": "data/filtered_architecture/models/bricksafe_Mini_London_street_MF_aheyyw.json",
+    "ldr_path": "data/filtered_architecture/ldr/bricksafe_Mini_London_street_MF_aheyyw.ldr",
+    "tags": [
+      "curated_architecture",
+      "physically_stable",
+      "sweet_spot_band"
+    ]
+  },
+  {
+    "model_id": "bricksafe_Mini_National_Theater_and_Concert_Hall_Taipei_MF_afqrqw",
+    "title": "Mini National Theater and Concert Hall Taipei MF",
+    "author": "0 CustomBrick",
+    "source": "bricksafe",
+    "part_count": 319,
+    "unique_parts": 29,
+    "unique_colors": 10,
+    "dimensions_studs": {
+      "width_x": 14.4,
+      "height_y": 17.2,
+      "depth_z": 15.2
+    },
+    "stability_score": 0.987,
+    "json_path": "data/filtered_architecture/models/bricksafe_Mini_National_Theater_and_Concert_Hall_Taipei_MF_afqrqw.json",
+    "ldr_path": "data/filtered_architecture/ldr/bricksafe_Mini_National_Theater_and_Concert_Hall_Taipei_MF_afqrqw.ldr",
+    "tags": [
+      "curated_architecture",
+      "physically_stable",
+      "sweet_spot_band"
+    ]
+  },
+  {
+    "model_id": "bricksafe_Mini_Temple_of_Heaven_MF_afwtrw",
+    "title": "Mini Temple of Heaven MF",
+    "author": "0 CustomBrick",
+    "source": "bricksafe",
+    "part_count": 146,
+    "unique_parts": 28,
+    "unique_colors": 10,
+    "dimensions_studs": {
+      "width_x": 14.4,
+      "height_y": 21.5,
+      "depth_z": 15.2
+    },
+    "stability_score": 1.0,
+    "json_path": "data/filtered_architecture/models/bricksafe_Mini_Temple_of_Heaven_MF_afwtrw.json",
+    "ldr_path": "data/filtered_architecture/ldr/bricksafe_Mini_Temple_of_Heaven_MF_afwtrw.ldr",
+    "tags": [
+      "curated_architecture",
+      "physically_stable",
+      "sweet_spot_band"
+    ]
+  },
+  {
+    "model_id": "bricksafe_Mini_The_Lotus_Temple_located_in_New_Delhi_MF_aafwr",
+    "title": "Mini The Lotus Temple, located in New Delhi MF",
+    "author": "0 CustomBrick",
+    "source": "bricksafe",
+    "part_count": 301,
+    "unique_parts": 28,
+    "unique_colors": 6,
+    "dimensions_studs": {
+      "width_x": 14.4,
+      "height_y": 22.2,
+      "depth_z": 15.2
+    },
+    "stability_score": 1.0,
+    "json_path": "data/filtered_architecture/models/bricksafe_Mini_The_Lotus_Temple_located_in_New_Delhi_MF_aafwr.json",
+    "ldr_path": "data/filtered_architecture/ldr/bricksafe_Mini_The_Lotus_Temple_located_in_New_Delhi_MF_aafwr.ldr",
+    "tags": [
+      "curated_architecture",
+      "physically_stable",
+      "sweet_spot_band"
+    ]
+  },
+  {
+    "model_id": "bricksafe_Mixels_Medivals_Dragon_Castle",
+    "title": "Mixels Medivals Dragon & Castle",
+    "author": "1 70 -60.000000 -8.000000 -20.000000 0.000000 0.000000 -1.000000 0.000000 1.000000 0.000000 1.000000 0.000000 0.000000 3020.dat",
+    "source": "bricksafe",
+    "part_count": 126,
+    "unique_parts": 49,
+    "unique_colors": 8,
+    "dimensions_studs": {
+      "width_x": 29.0,
+      "height_y": 34.7,
+      "depth_z": 22.6
+    },
+    "stability_score": 0.992,
+    "json_path": "data/filtered_architecture/models/bricksafe_Mixels_Medivals_Dragon_Castle.json",
+    "ldr_path": "data/filtered_architecture/ldr/bricksafe_Mixels_Medivals_Dragon_Castle.ldr",
+    "tags": [
+      "curated_architecture",
+      "physically_stable",
+      "sweet_spot_band"
+    ]
+  },
+  {
+    "model_id": "bricksafe_Picture_Palace_Resteraunt",
+    "title": "Picture Palace Resteraunt",
+    "author": "0 CustomBrick",
+    "source": "bricksafe",
+    "part_count": 112,
+    "unique_parts": 15,
+    "unique_colors": 5,
+    "dimensions_studs": {
+      "width_x": 23.1,
+      "height_y": 18.0,
+      "depth_z": 23.0
+    },
+    "stability_score": 1.0,
+    "json_path": "data/filtered_architecture/models/bricksafe_Picture_Palace_Resteraunt.json",
+    "ldr_path": "data/filtered_architecture/ldr/bricksafe_Picture_Palace_Resteraunt.ldr",
+    "tags": [
+      "curated_architecture",
+      "physically_stable",
+      "sweet_spot_band"
+    ]
+  },
+  {
+    "model_id": "bricksafe_Street_lamps_MF_agreytwe",
+    "title": "Street lamps MF",
+    "author": "0 CustomBrick",
+    "source": "bricksafe",
+    "part_count": 178,
+    "unique_parts": 22,
+    "unique_colors": 2,
+    "dimensions_studs": {
+      "width_x": 17.8,
+      "height_y": 28.9,
+      "depth_z": 39.4
+    },
+    "stability_score": 1.0,
+    "json_path": "data/filtered_architecture/models/bricksafe_Street_lamps_MF_agreytwe.json",
+    "ldr_path": "data/filtered_architecture/ldr/bricksafe_Street_lamps_MF_agreytwe.ldr",
+    "tags": [
+      "curated_architecture",
+      "physically_stable",
+      "sweet_spot_band"
+    ]
+  },
+  {
+    "model_id": "bricksafe_XB011001B_Drug_StoreList",
+    "title": "XB011001B Drug Store",
+    "author": "0 CustomBrick",
+    "source": "bricksafe",
+    "part_count": 346,
+    "unique_parts": 47,
+    "unique_colors": 11,
+    "dimensions_studs": {
+      "width_x": 9.0,
+      "height_y": 33.0,
+      "depth_z": 9.5
+    },
+    "stability_score": 0.997,
+    "json_path": "data/filtered_architecture/models/bricksafe_XB011001B_Drug_StoreList.json",
+    "ldr_path": "data/filtered_architecture/ldr/bricksafe_XB011001B_Drug_StoreList.ldr",
+    "tags": [
+      "curated_architecture",
+      "physically_stable",
+      "sweet_spot_band"
+    ]
+  },
+  {
+    "model_id": "bricksafe_XB011001D_Jewelry_StoreList",
+    "title": "XB011001D Jewelry Store",
+    "author": "0 CustomBrick",
+    "source": "bricksafe",
+    "part_count": 272,
+    "unique_parts": 38,
+    "unique_colors": 15,
+    "dimensions_studs": {
+      "width_x": 9.0,
+      "height_y": 25.0,
+      "depth_z": 9.9
+    },
+    "stability_score": 0.985,
+    "json_path": "data/filtered_architecture/models/bricksafe_XB011001D_Jewelry_StoreList.json",
+    "ldr_path": "data/filtered_architecture/ldr/bricksafe_XB011001D_Jewelry_StoreList.ldr",
+    "tags": [
+      "curated_architecture",
+      "physically_stable",
+      "sweet_spot_band"
+    ]
+  },
+  {
+    "model_id": "bricksafe_desert_house_6_MF_adfgsdg",
+    "title": "desert house 6 MF",
+    "author": "0 CustomBrick",
+    "source": "bricksafe",
+    "part_count": 359,
+    "unique_parts": 39,
+    "unique_colors": 6,
+    "dimensions_studs": {
+      "width_x": 16.6,
+      "height_y": 39.0,
+      "depth_z": 15.7
+    },
+    "stability_score": 1.0,
+    "json_path": "data/filtered_architecture/models/bricksafe_desert_house_6_MF_adfgsdg.json",
+    "ldr_path": "data/filtered_architecture/ldr/bricksafe_desert_house_6_MF_adfgsdg.ldr",
+    "tags": [
+      "curated_architecture",
+      "physically_stable",
+      "sweet_spot_band"
+    ]
+  },
+  {
+    "model_id": "bricksafe_desert_house_7_MF_adsgsg",
+    "title": "desert house 7 MF",
+    "author": "0 CustomBrick",
+    "source": "bricksafe",
+    "part_count": 257,
+    "unique_parts": 25,
+    "unique_colors": 6,
+    "dimensions_studs": {
+      "width_x": 15.0,
+      "height_y": 43.0,
+      "depth_z": 15.0
+    },
+    "stability_score": 1.0,
+    "json_path": "data/filtered_architecture/models/bricksafe_desert_house_7_MF_adsgsg.json",
+    "ldr_path": "data/filtered_architecture/ldr/bricksafe_desert_house_7_MF_adsgsg.ldr",
+    "tags": [
+      "curated_architecture",
+      "physically_stable",
+      "sweet_spot_band"
+    ]
+  },
+  {
+    "model_id": "bricksafe_halloween-castle",
+    "title": "halloween-castle",
+    "author": "1 72 0.000000 -8.000000 -20.000000 1.000000 0.000000 0.000000 0.000000 1.000000 0.000000 0.000000 0.000000 1.000000 41539.dat",
+    "source": "bricksafe",
+    "part_count": 152,
+    "unique_parts": 28,
+    "unique_colors": 4,
+    "dimensions_studs": {
+      "width_x": 7.0,
+      "height_y": 67.0,
+      "depth_z": 8.0
+    },
+    "stability_score": 0.961,
+    "json_path": "data/filtered_architecture/models/bricksafe_halloween-castle.json",
+    "ldr_path": "data/filtered_architecture/ldr/bricksafe_halloween-castle.ldr",
+    "tags": [
+      "curated_architecture",
+      "physically_stable",
+      "sweet_spot_band"
+    ]
+  },
+  {
+    "model_id": "bricksafe_mini_Colosseum_MF_adgsdg",
+    "title": "mini Colosseum MF",
+    "author": "0 CustomBrick",
+    "source": "bricksafe",
+    "part_count": 265,
+    "unique_parts": 22,
+    "unique_colors": 6,
+    "dimensions_studs": {
+      "width_x": 14.4,
+      "height_y": 17.2,
+      "depth_z": 15.2
+    },
+    "stability_score": 0.985,
+    "json_path": "data/filtered_architecture/models/bricksafe_mini_Colosseum_MF_adgsdg.json",
+    "ldr_path": "data/filtered_architecture/ldr/bricksafe_mini_Colosseum_MF_adgsdg.ldr",
+    "tags": [
+      "curated_architecture",
+      "physically_stable",
+      "sweet_spot_band"
+    ]
+  },
+  {
+    "model_id": "bricksafe_mini_Gediminas_Castle_Tower_MF_agetg",
+    "title": "mini Gediminas Castle Tower MF",
+    "author": "0 CustomBrick",
+    "source": "bricksafe",
+    "part_count": 330,
+    "unique_parts": 35,
+    "unique_colors": 10,
+    "dimensions_studs": {
+      "width_x": 14.4,
+      "height_y": 46.5,
+      "depth_z": 15.2
+    },
+    "stability_score": 0.994,
+    "json_path": "data/filtered_architecture/models/bricksafe_mini_Gediminas_Castle_Tower_MF_agetg.json",
+    "ldr_path": "data/filtered_architecture/ldr/bricksafe_mini_Gediminas_Castle_Tower_MF_agetg.ldr",
+    "tags": [
+      "curated_architecture",
+      "physically_stable",
+      "sweet_spot_band"
+    ]
+  },
+  {
+    "model_id": "bricksafe_mini_Saint_Basils_Cathedral_MF_ajsdkfhwe",
+    "title": "mini Saint Basil's Cathedral MF",
+    "author": "0 CustomBrick",
+    "source": "bricksafe",
+    "part_count": 276,
+    "unique_parts": 43,
+    "unique_colors": 12,
+    "dimensions_studs": {
+      "width_x": 14.4,
+      "height_y": 32.2,
+      "depth_z": 15.2
+    },
+    "stability_score": 1.0,
+    "json_path": "data/filtered_architecture/models/bricksafe_mini_Saint_Basils_Cathedral_MF_ajsdkfhwe.json",
+    "ldr_path": "data/filtered_architecture/ldr/bricksafe_mini_Saint_Basils_Cathedral_MF_ajsdkfhwe.ldr",
+    "tags": [
+      "curated_architecture",
+      "physically_stable",
+      "sweet_spot_band"
+    ]
+  },
+  {
+    "model_id": "bricksafe_mini_pyramid_MF_afsfqr",
+    "title": "mini pyramid MF",
+    "author": "0 CustomBrick",
+    "source": "bricksafe",
+    "part_count": 133,
+    "unique_parts": 23,
+    "unique_colors": 5,
+    "dimensions_studs": {
+      "width_x": 14.4,
+      "height_y": 18.2,
+      "depth_z": 15.2
+    },
+    "stability_score": 0.992,
+    "json_path": "data/filtered_architecture/models/bricksafe_mini_pyramid_MF_afsfqr.json",
+    "ldr_path": "data/filtered_architecture/ldr/bricksafe_mini_pyramid_MF_afsfqr.ldr",
+    "tags": [
+      "curated_architecture",
+      "physically_stable",
+      "sweet_spot_band"
+    ]
+  }
+]

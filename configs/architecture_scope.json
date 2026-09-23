@@ -1,0 +1,50 @@
+{
+  "name": "bricksmith_architecture_v1",
+  "description": "Expanded SNOT-capable LEGO Architecture parts library and palette",
+  "version": "1.0.0",
+  "metric_units": "LDU (20 LDU = 1 stud, 8 LDU = 1 plate height, 24 LDU = 1 brick height)",
+  "part_categories": {
+    "standard_bricks": [
+      "3005", "3004", "3622", "3010", "3009", "3008",
+      "3003", "3002", "3001", "2456", "3007", "2357"
+    ],
+    "standard_plates": [
+      "3024", "3023", "3623", "3710", "3666", "3460",
+      "3022", "3021", "3020", "3795", "3034", "3031", "3032", "3030"
+    ],
+    "jumper_plates": [
+      "3794b", "15573", "87580", "34103"
+    ],
+    "snot_brackets_and_modified_bricks": [
+      "99781", "99780", "36840", "36841",
+      "4070", "87087", "22885", "47905"
+    ],
+    "slopes_and_cornices": [
+      "54200", "3039", "3040", "15068", "11477"
+    ],
+    "tiles_and_texture": [
+      "3070b", "3069b", "63864", "2431", "6636", "4162",
+      "2412b", "99563"
+    ],
+    "columns_and_arches": [
+      "3062b", "3941", "85861", "4085c", "3659", "6091"
+    ]
+  },
+  "allowed_orientations": [
+    "upright_orthogonal",
+    "snot_horizontal_x",
+    "snot_horizontal_z"
+  ],
+  "colors": {
+    "0": "Black (Baseplates, framing, modern trim)",
+    "15": "White (Classical facades, modernist walls, villas)",
+    "71": "Light Bluish Gray / Medium Stone Gray (Masonry, concrete)",
+    "72": "Dark Bluish Gray / Dark Stone Gray (Foundations, slate roofs)",
+    "19": "Tan / Sand Yellow (Limestone, sandstone, terracotta)",
+    "70": "Reddish Brown (Wood trim, brickwork)",
+    "28": "Dark Green (Landscape, park surrounds)",
+    "378": "Sand Green (Patina copper, Statue of Liberty, classic roofs)",
+    "47": "Trans-Light Blue (Glazing, windows, water)",
+    "297": "Warm Gold / Pearl Gold (Finials, spires, art deco ornamentation)"
+  }
+}
