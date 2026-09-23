@@ -7,10 +7,10 @@
 ## Milestone Overview
 
 ```
-Phase 0: Foundations & Port Verification
+Phase 0: Foundations & Port Verification [COMPLETED]
    │
    ▼
-Phase 1: Port-Graph Engine & Micro-Architecture Catalog (SNOT, Jumpers)
+Phase 1: Port-Graph Engine & Micro-Architecture Catalog (SNOT, Jumpers) [ACTIVE]
    │
    ▼
 Phase 2: Modular Decomposition ("Numbered Bags") & 3D Envelope Prior
@@ -24,33 +24,35 @@ Phase 4: Production Pipeline: Prompt-to-Box (LDraw + BOM + Instructions)
 
 ---
 
-## Phase 0: Foundations, Invariants & Verification Engine (CURRENT)
+## Phase 0: Foundations, Invariants & Verification Engine (COMPLETE)
 **Goal:** Establish clean data pipelines, verification infrastructure, and exact test baselines.
 
 * [x] **0.1 Repository Setup:** Clean layout, symlinked LDraw catalog (24,500+ parts) and BrickNet collision meshes (21,000+ parts).
 * [x] **0.2 Reference Dataset:** Curate 200 gold-standard LEGO Architecture sets in `data/reference_sets/`.
-* [ ] **0.3 Physics & Verification Engine (`bricksmith.physics`):** Port and verify HiGHS LP compressive static equilibrium, MeshLib collision detection, and vertical insertion clearance.
-* [ ] **0.4 CAD & Manufacturing IO (`bricksmith.io`):** Robust LDraw parser/writer and Pick-a-Brick / BrickLink CSV BOM exporter.
-* [ ] **0.5 Multi-View Software Rasterizer (`bricksmith.rendering`):** Fast multi-view and 2x2 comparison sheet axonometric renderer.
-* **Gate 0:** 100% of curated reference sets pass LDraw roundtrip, validation, and BOM extraction without errors.
+* [x] **0.3 Physics & Verification Engine (`bricksmith.physics`):** Port and verify HiGHS LP compressive static equilibrium, MeshLib collision detection, and vertical insertion clearance.
+* [x] **0.4 CAD & Manufacturing IO (`bricksmith.io`):** Robust LDraw parser/writer and Pick-a-Brick / BrickLink CSV BOM exporter.
+* [x] **0.5 Multi-View Software Rasterizer (`bricksmith.rendering`):** Fast multi-view and presentation axonometric renderer.
+* **Gate 0:** 100% of curated reference sets pass LDraw roundtrip, validation, and BOM extraction without errors. [PASSED]
 
 ---
 
-## Phase 1: Port-Graph Engine & Micro-Architecture Vocabulary
+## Phase 1: Port-Graph Engine & Micro-Architecture Vocabulary (CURRENT ACTIVE)
 **Goal:** Formalize discrete port-socket connections and build the SNOT/jumper catalog.
 
-* [ ] **1.1 Expanded Architecture Catalog (`configs/architecture_scope.json`):**
+* [x] **1.1 Expanded Architecture Catalog (`configs/architecture_scope.json`):**
   - Standard bricks & plates ($1 \times 1$ up to $2 \times 8$).
   - Jumper plates (`3794b`, `15573`) for half-stud staggered rhythms.
   - SNOT brackets (`99781`, `99780`, `36840`, `36841`) and headlight bricks (`4070`, `87087`) for sideways facade tiling.
   - Slopes & Cheese slopes (`54200`, `3039`, `3040`, `15068`) for cornices and pitched roofs.
   - Grille tiles (`2412b`) and smooth tiles (`3069b`, `3070b`, `6636`) for finished micro-textures.
-* [ ] **1.2 Assembly Graph Engine (`bricksmith.core.graph`):**
+* [x] **1.2 Assembly Graph Engine (`bricksmith.core.graph`):**
   - Implement rigid port kinematics: calculating absolute transforms from relative port connections.
   - Collision-aware port mating verification.
-* [ ] **1.3 BFS Spanning Tree Codec (`bricksmith.core.tree`):**
+* [x] **1.3 BFS Spanning Tree Codec (`bricksmith.core.tree`):**
   - Bidirectional parser: `LDR -> AssemblyGraph -> BFSTree Path Text -> LDR`.
   - Validate round-trip fidelity on reference architecture models.
+* [ ] **1.4 Large-Scale BFS Tree Corpus Generation:**
+  - Batch convert all 200 reference architecture models into tokenized training paths.
 * **Gate 1:** Zero geometric drift on BFS tree reconstruction over 50 held-out reference architecture models.
 
 ---
