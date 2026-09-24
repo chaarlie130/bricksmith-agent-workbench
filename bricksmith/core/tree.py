@@ -191,7 +191,13 @@ class BFSTreeCodec:
     def decode(tree_nodes_or_text: Union[List[TreeNode], str], name: str = "reconstructed") -> AssemblyGraph:
         """Decode a BFS spanning tree path sequence or list of TreeNodes back into an AssemblyGraph."""
         if isinstance(tree_nodes_or_text, str):
-            tree_nodes = BFSTreeCodec.deserialize_path_text(tree_nodes_or_text)
+            if "STEP:" in tree_nodes_or_text:
+                tree_nodes = BFSTreeCodec.deserialize_path_text(tree_nodes_or_text)
+            else:
+                # Compact parent-relative attachment digits (no absolute pose).
+                from bricksmith.training.codec import tree_nodes_from_target_text
+
+                tree_nodes = tree_nodes_from_target_text(tree_nodes_or_text)
         else:
             tree_nodes = tree_nodes_or_text
 

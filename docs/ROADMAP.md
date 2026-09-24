@@ -76,11 +76,11 @@ Phase 4: Production Pipeline: Prompt-to-Box (LDraw + BOM + Instructions)
 ## Phase 3: Neural Attachment Generator & Guided Decoding
 **Goal:** Train and steer the generative model to place pieces via BFS graph prediction.
 
-* [ ] **3.1 Dataset Preparation:**
+* [x] **3.1 Dataset Preparation:**
   - Tokenize reference architecture sets and synthetic modular sub-structures into BFS path sequences.
-* [ ] **3.2 Fine-Tuning Setup:**
+* [x] **3.2 Fine-Tuning Setup:**
   - Fine-tune small local models (e.g., Qwen-3.5-9B or LLaMA-3.2-3B via MLX on Apple Silicon) on attachment path prediction conditioned on coarse geometry.
-* [ ] **3.3 Validity-Constrained Logit Masking:**
+* [x] **3.3 Validity-Constrained Logit Masking:**
   - Replace expensive rollback with dynamic forward masking: mask out part/port tokens that would cause physical collisions or boundary overruns before sampling.
 * [ ] **3.4 PVPO Reinforcement Alignment:**
   - Post-train with coupled rewards (physical equilibrium + geometric/semantic fidelity) to prevent "PhysHack" degeneration.
