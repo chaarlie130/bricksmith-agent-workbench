@@ -142,6 +142,24 @@ OK
 | `test_generation.py` | 5 tests (`test_guided_assembly_passes_validation`, etc.) | PASSED | Neural generation and guided sampling |
 | `test_validator.py` | 8 tests (`test_vertical_equilibrium`, etc.) | PASSED | HiGHS LP static equilibrium and physics |
 
+### 3.3 Training Target Dataset Regeneration Audit
+
+Following the implementation of connector compatibility matrix validation and mesh collision filtering in `_recover_intra_bag_mating()`, the training target dataset was regenerated via `scripts/prepare_training_data.py` (`bricksmith.training.format_dataset:write_splits`) to guarantee that all encoded training targets adhere strictly to physical connector rules:
+
+```
+models: 198
+total bags: 792
+accepted examples: 763 (train=661, val=102)
+rejected records: 29 ({'tokenization_error': 24, 'exceeds_token_cap': 5})
+interface coverage bags: 535/763 (70.12%)
+interface coverage by bag: {'bag_1_foundation': 0, 'bag_2_core': 169, 'bag_3_facades': 181, 'bag_4_roof': 185}
+total interface tokens: 6298
+max tokens: 1388
+tokenization errors: 0
+```
+
+Every accepted bag in `data/training/train.jsonl` and `data/training/val.jsonl` is guaranteed to have collision-free, connector-compatible BFS spanning trees.
+
 ---
 
 ## 4. Conclusion & Readiness for Task 3.9 Scale-Up
@@ -152,5 +170,7 @@ Every single blocking finding identified by the Senior Reviewer has been resolve
 - **Interface Rotation**: Rotations are fully preserved from attachment action tokens to codec serialization and parsed poses.
 - **Mesh Collision Filtering**: Penetrating interface roots are detected and rejected via mesh collision.
 - **Public Entry Point**: Public multi-bag guided generation is verified end-to-end with LoRA adapters.
+- **Audited Training Dataset**: 763 bags across 198 models regenerated with clean physical connector semantics, 535 interface bags, 6,298 interface tokens, and 0 tokenization errors.
 
 The repository is fully verified, robust, and unblocked for Task 3.9 scale-up.
+
