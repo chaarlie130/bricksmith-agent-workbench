@@ -70,6 +70,49 @@ class TestTrainingFormat(unittest.TestCase):
             )
         self.assertEqual(seen, set(BAG_NAMES))
 
+    def test_conditioning_prompt_shared_consistency(self):
+        """Task 1 verification: training and inference prompts must match byte-for-byte."""
+        import numpy as np
+        from bricksmith.generation.assemble import _prompt
+        from bricksmith.geometry.bounds import calculate_bounds
+        from bricksmith.geometry.envelope import generate_occupancy_grid
+        from bricksmith.training.codec import coarse_voxel_hex
+        from bricksmith.training.format_dataset import format_conditioning_prompt
+
+        graph = graph_from_record(self.record)
+        bags = partition_into_bags(graph)
+        foundation = bags["bag_1_foundation"]
+
+        bounds = calculate_bounds(foundation)
+        grid = generate_occupancy_grid(foundation, resolution_studs=4.0)
+        voxels = coarse_voxel_hex(grid)
+        w = max(1, int(round(float(bounds.width_studs))))
+        d = max(1, int(round(float(bounds.depth_studs))))
+        h = max(1, int(round(float(bounds.height_studs))))
+
+        canonical_prompt = format_conditioning_prompt(
+            width=w,
+            depth=d,
+            height=h,
+            aspect_ratio_str=bounds.aspect_ratio_str,
+            bag_name="bag_1_foundation",
+            coarse_voxel_tokens=voxels,
+        )
+
+        inference_prompt = _prompt(
+            module_min=bounds.min_ldu,
+            module_max=bounds.max_ldu,
+            bag_name="bag_1_foundation",
+            aspect_ratio_str=bounds.aspect_ratio_str,
+            voxel_tokens=voxels,
+        )
+
+        self.assertEqual(canonical_prompt, inference_prompt)
+        self.assertNotIn("PART", inference_prompt)
+        self.assertNotIn("COLOR", inference_prompt)
+        self.assertNotIn("PARENT", inference_prompt)
+        self.assertTrue(inference_prompt.endswith("[TARGET: Discrete BFS Spanning Tree Path Tokens for that Bag]\n"))
+
 
 if __name__ == "__main__":
     unittest.main()

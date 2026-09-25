@@ -1,11 +1,24 @@
 """Modular topological decomposition ("Numbered Bags") engine for BrickSmith."""
 from __future__ import annotations
 
+from dataclasses import dataclass
 from typing import Dict, List, Optional, Set
 import numpy as np
 
 from bricksmith.core.graph import AssemblyGraph
-from bricksmith.core.connector import PortConnection
+from bricksmith.core.connector import ConnectorType, PortConnection
+
+
+@dataclass
+class CrossBagConnection:
+    """An active interlocking connection spanning two construction bags."""
+    source_bag: str
+    source_brick_id: int
+    source_port_id: str
+    target_bag: str
+    target_brick_id: int
+    target_port_id: str
+    connection_type: ConnectorType
 
 
 BAG_NAMES = [
@@ -162,10 +175,37 @@ def partition_into_bags(graph: AssemblyGraph) -> Dict[str, AssemblyGraph]:
                 if has_edge:
                     break
 
+    # Map brick to bag index and collect cross-bag interface connections
+    brick_to_bag: Dict[int, int] = {}
+    for i, bset in enumerate(bag_sets):
+        for bid in bset:
+            brick_to_bag[bid] = i
+
+    all_cross_bag: List[CrossBagConnection] = []
+    for c in graph.connections:
+        bag_s = brick_to_bag.get(c.source_brick_id)
+        bag_t = brick_to_bag.get(c.target_brick_id)
+        if bag_s is not None and bag_t is not None and bag_s != bag_t:
+            all_cross_bag.append(
+                CrossBagConnection(
+                    source_bag=BAG_NAMES[bag_s],
+                    source_brick_id=c.source_brick_id,
+                    source_port_id=c.source_port_id,
+                    target_bag=BAG_NAMES[bag_t],
+                    target_brick_id=c.target_brick_id,
+                    target_port_id=c.target_port_id,
+                    connection_type=c.connection_type,
+                )
+            )
+
     # Build resulting AssemblyGraph objects
     res_graphs: Dict[str, AssemblyGraph] = {}
     for i, name in enumerate(BAG_NAMES):
         subg = AssemblyGraph(name=name)
+        subg.interface_connections = [
+            conn for conn in all_cross_bag
+            if conn.source_bag == name or conn.target_bag == name
+        ]
         for bid in sorted(bag_sets[i]):
             p = parts[bid]
             subg.add_part(
@@ -187,3 +227,29 @@ def partition_into_bags(graph: AssemblyGraph) -> Dict[str, AssemblyGraph]:
         res_graphs[name] = subg
 
     return res_graphs
+
+
+def get_cross_bag_connections(graph: AssemblyGraph, bags: Dict[str, AssemblyGraph]) -> List[CrossBagConnection]:
+    """Extract all valid active connections that span between two distinct bags."""
+    brick_to_bag: Dict[int, str] = {}
+    for name, bag in bags.items():
+        for bid in bag.parts:
+            brick_to_bag[bid] = name
+
+    cross: List[CrossBagConnection] = []
+    for c in graph.connections:
+        bag_s = brick_to_bag.get(c.source_brick_id)
+        bag_t = brick_to_bag.get(c.target_brick_id)
+        if bag_s and bag_t and bag_s != bag_t:
+            cross.append(
+                CrossBagConnection(
+                    source_bag=bag_s,
+                    source_brick_id=c.source_brick_id,
+                    source_port_id=c.source_port_id,
+                    target_bag=bag_t,
+                    target_brick_id=c.target_brick_id,
+                    target_port_id=c.target_port_id,
+                    connection_type=c.connection_type,
+                )
+            )
+    return cross

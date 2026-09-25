@@ -13,7 +13,9 @@ from bricksmith.core.tree import BFSTreeCodec
 from bricksmith.decomposition.modularizer import partition_into_bags
 from bricksmith.generation.assemble import generate_guided_assembly, module_box_from_studs
 from bricksmith.geometry.bounds import calculate_bounds
+from bricksmith.geometry.envelope import generate_occupancy_grid
 from bricksmith.io.ldraw import save_ldr
+from bricksmith.training.codec import coarse_voxel_hex
 from bricksmith.training.format_dataset import CORPUS_PATH, TRAIN_PATH, VAL_PATH, graph_from_record
 
 
@@ -46,7 +48,9 @@ def bound_from_model(model_id: str) -> tuple:
             width = max(16.0, math.ceil(bounds.width_studs))
             depth = max(16.0, math.ceil(bounds.depth_studs))
             height = max(18.0, math.ceil(bounds.height_studs))
-            return model_id, module_box_from_studs(width, depth, height)
+            grid = generate_occupancy_grid(host, resolution_studs=4.0)
+            voxels = coarse_voxel_hex(grid)
+            return model_id, module_box_from_studs(width, depth, height), bounds.aspect_ratio_str, voxels
     raise SystemExit(f"{model_id} is not in the BFS corpus")
 
 
@@ -64,8 +68,10 @@ def main() -> None:
     if args.width and args.depth and args.height:
         model_id = held_out_model_id()
         module_min, module_max = module_box_from_studs(args.width, args.depth, args.height)
+        aspect_ratio_str = None
+        voxels = None
     else:
-        model_id, (module_min, module_max) = bound_from_model(held_out_model_id())
+        model_id, (module_min, module_max), aspect_ratio_str, voxels = bound_from_model(held_out_model_id())
     print(f"held-out model: {model_id}")
     graph = generate_guided_assembly(
         module_min,
@@ -73,6 +79,8 @@ def main() -> None:
         seed=args.seed,
         adapter_path=str(args.adapter_path),
         target_pieces=args.pieces,
+        aspect_ratio_str=aspect_ratio_str,
+        voxel_tokens=voxels,
     )
     save_ldr(graph, args.output, title=graph.name)
     print("realized with BFSTreeCodec.decode")

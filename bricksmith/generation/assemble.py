@@ -25,6 +25,8 @@ from bricksmith.generation.sampler import (
     sample_codec_continuation,
 )
 from bricksmith.physics.validator import frame, world_properties
+from bricksmith.training.codec import coarse_voxel_hex
+from bricksmith.training.format_dataset import format_conditioning_prompt
 from bricknet.data import load_catalog, load_connector_list
 
 # Plates and bricks wider than 1 stud. 1x1 stems are intentionally absent.
@@ -137,37 +139,131 @@ def _fits(part: PlacedPart, module_min: np.ndarray, module_max: np.ndarray) -> b
     )
 
 
+def _point_in_hull_2d(point: np.ndarray, hull_points: np.ndarray, margin: float = 0.5) -> bool:
+    """Return True if 2D point lies inside or within margin of the convex hull of hull_points."""
+    if len(hull_points) == 0:
+        return False
+    min_pt = np.min(hull_points, axis=0) - margin
+    max_pt = np.max(hull_points, axis=0) + margin
+    if np.any(point < min_pt) or np.any(point > max_pt):
+        return False
+
+    unique_pts = np.unique(hull_points, axis=0)
+    if len(unique_pts) < 3:
+        return bool(np.all(point >= min_pt) and np.all(point <= max_pt))
+
+    try:
+        from scipy.spatial import Delaunay
+        delaunay = Delaunay(unique_pts)
+        return bool(delaunay.find_simplex(point) >= 0)
+    except Exception:
+        return bool(np.all(point >= min_pt) and np.all(point <= max_pt))
+
+
+def _is_supported(
+    child: PlacedPart,
+    placed: Sequence[PlacedPart],
+    parent_index: Optional[int] = None,
+    contact_tol_y: float = 1.0,
+    overlap_tol_xz: float = 0.5,
+) -> bool:
+    """True if child is physically supported by the ensemble of placed parts below it.
+
+    Supports:
+    1. Direct footprint containment on the designated parent (fast path).
+    2. Multi-support ensemble check: gathers all contact regions from parts directly beneath
+       the child (|y_bottom - y_top| <= contact_tol_y). Verifies that the child's (X, Z) center
+       of mass lies inside the 2D convex hull of the aggregate supporting contact points.
+       This enables running bonds (staggered bricks across multiple lower bricks) and lintels/arches
+       across multiple columns without toppling under gravity.
+    3. Valid non-vertical / side attachments (e.g. SNOT) where parent carries child via rigid interlocking.
+    """
+    if parent_index is not None and 0 <= parent_index < len(placed):
+        parent = placed[parent_index]
+        # Fast path: child footprint completely inside parent footprint
+        if (
+            child.bounds_min[0] >= parent.bounds_min[0] - 0.5
+            and child.bounds_max[0] <= parent.bounds_max[0] + 0.5
+            and child.bounds_min[2] >= parent.bounds_min[2] - 0.5
+            and child.bounds_max[2] <= parent.bounds_max[2] + 0.5
+        ):
+            return True
+
+    # In LDraw, +Y points down. Bottom of child is bounds_max[1].
+    # Supporting parts below have their top surface at bounds_min[1].
+    child_bottom_y = child.bounds_max[1]
+    contact_corners: list[list[float]] = []
+
+    for part in placed:
+        part_top_y = part.bounds_min[1]
+        if abs(child_bottom_y - part_top_y) <= contact_tol_y:
+            ox_min = max(float(child.bounds_min[0]), float(part.bounds_min[0]))
+            ox_max = min(float(child.bounds_max[0]), float(part.bounds_max[0]))
+            oz_min = max(float(child.bounds_min[2]), float(part.bounds_min[2]))
+            oz_max = min(float(child.bounds_max[2]), float(part.bounds_max[2]))
+
+            if ox_max - ox_min > overlap_tol_xz and oz_max - oz_min > overlap_tol_xz:
+                contact_corners.extend([
+                    [ox_min, oz_min],
+                    [ox_max, oz_min],
+                    [ox_min, oz_max],
+                    [ox_max, oz_max],
+                ])
+
+    if not contact_corners:
+        if parent_index is not None and 0 <= parent_index < len(placed):
+            parent = placed[parent_index]
+            if np.all(child.bounds_min < parent.bounds_max + 1.0) and np.all(child.bounds_max > parent.bounds_min - 1.0):
+                return True
+        return False
+
+    contact_pts = np.asarray(contact_corners, dtype=np.float64)
+    child_com = 0.5 * np.array(
+        [child.bounds_min[0] + child.bounds_max[0], child.bounds_min[2] + child.bounds_max[2]],
+        dtype=np.float64,
+    )
+    return _point_in_hull_2d(child_com, contact_pts, margin=0.5)
+
+
 def _supported(parent: PlacedPart, child: PlacedPart) -> bool:
-    """Child footprint sits inside the parent's footprint, so the stud joint can carry it."""
-    return bool(
-        child.bounds_min[0] >= parent.bounds_min[0] - 0.5
-        and child.bounds_max[0] <= parent.bounds_max[0] + 0.5
-        and child.bounds_min[2] >= parent.bounds_min[2] - 0.5
-        and child.bounds_max[2] <= parent.bounds_max[2] + 0.5
-    )
+    """Legacy alias: checks whether child is supported by parent."""
+    return _is_supported(child, [parent], parent_index=0)
 
 
-def _prompt(module_min: np.ndarray, module_max: np.ndarray, chosen: str = "") -> str:
+def _prompt(
+    module_min: np.ndarray,
+    module_max: np.ndarray,
+    bag_name: str = "bag_1_foundation",
+    aspect_ratio_str: Optional[str] = None,
+    voxel_tokens: Optional[str] = None,
+) -> str:
+    """Canonical conditioning prompt with real bounds, aspect ratio, and coarse voxels."""
     size = np.maximum(module_max - module_min, 1.0)
-    width = max(1, int(round(float(size[0] / 20.0))))
-    depth = max(1, int(round(float(size[2] / 20.0))))
-    height = max(1, int(round(float(size[1] / 20.0))))
-    text = (
-        f"[INPUT: Bounding Box {width}x{depth}x{height} + Aspect Ratio 1.00:1.00:1.00"
-        " + Target Bag Name bag_1_foundation + Coarse Voxel Tokens 0]\n"
-        "[TARGET: Discrete BFS Spanning Tree Path Tokens for that Bag]\n"
-    )
-    if chosen:
-        text += chosen + "\n"
-    return text
+    w_ldu = float(size[0])
+    h_ldu = float(abs(size[1]))
+    d_ldu = float(size[2])
+    width = max(1, int(round(w_ldu / 20.0)))
+    depth = max(1, int(round(d_ldu / 20.0)))
+    height = max(1, int(round(h_ldu / 20.0)))
 
+    if aspect_ratio_str is None:
+        m = max(w_ldu, d_ldu, h_ldu)
+        if m < 1e-6:
+            aspect_ratio_str = "1.00:1.00:1.00"
+        else:
+            aspect_ratio_str = f"{round(w_ldu / m, 4):.2f}:{round(d_ldu / m, 4):.2f}:{round(h_ldu / m, 4):.2f}"
 
-def _action_text(token: AttachmentToken) -> str:
-    parent = -1 if token.parent_index is None else token.parent_index
-    return (
-        f"PART {token.part_id} COLOR {token.color_id} PARENT {parent} "
-        f"PARENT_PORT {token.parent_port or 'ROOT'} SELF_PORT {token.self_port or 'ROOT'} "
-        f"ROT {token.rotation_offset}"
+    if voxel_tokens is None:
+        shape = np.maximum(np.ceil(np.array([w_ldu, h_ldu, d_ldu]) / 80.0).astype(int), 1)
+        voxel_tokens = coarse_voxel_hex(np.ones(shape, dtype=bool))
+
+    return format_conditioning_prompt(
+        width=width,
+        depth=depth,
+        height=height,
+        aspect_ratio_str=aspect_ratio_str,
+        bag_name=bag_name,
+        coarse_voxel_tokens=voxel_tokens,
     )
 
 
@@ -260,8 +356,7 @@ def _child_actions(
         if blocked[index]:
             continue
         child = place_token(token, placed_parts)
-        parent = placed_parts[token.parent_index]
-        if not _supported(parent, child):
+        if not _is_supported(child, placed_parts, token.parent_index):
             blocked[index] = True
     return candidates, blocked
 
@@ -272,6 +367,9 @@ def generate_guided_assembly(
     seed: int = 0,
     adapter_path: Optional[str] = None,
     target_pieces: int = 8,
+    bag_name: str = "bag_1_foundation",
+    aspect_ratio_str: Optional[str] = None,
+    voxel_tokens: Optional[str] = None,
 ):
     """Sample a grounded plate and further attachments from masked codec token ids."""
     from mlx_lm.utils import load
@@ -292,11 +390,19 @@ def generate_guided_assembly(
     if not plates:
         raise RuntimeError("no plate fits inside the module box")
 
+    prompt = _prompt(
+        module_min,
+        module_max,
+        bag_name=bag_name,
+        aspect_ratio_str=aspect_ratio_str,
+        voxel_tokens=voxel_tokens,
+    )
+
     plate_tokens = [token for token, _numeric in plates]
     plate = _sample_action(
         model,
         tokenizer,
-        _prompt(module_min, module_max),
+        prompt,
         [],
         plate_tokens,
         [False] * len(plate_tokens),
@@ -305,7 +411,6 @@ def generate_guided_assembly(
     plate_numeric = next(numeric for token, numeric in plates if token is plate)
     chosen: list[AttachmentToken] = [plate]
     chosen_ids: list[int] = [plate_numeric]
-    history = _action_text(plate)
     for step in range(1, target_pieces):
         children, child_blocked = _child_actions(chosen, chosen_ids, module_min, module_max)
         if not children or not any(not flag for flag in child_blocked):
@@ -313,7 +418,7 @@ def generate_guided_assembly(
         child = _sample_action(
             model,
             tokenizer,
-            _prompt(module_min, module_max, history),
+            prompt,
             chosen,
             children,
             child_blocked,
@@ -322,7 +427,6 @@ def generate_guided_assembly(
         catalog = load_catalog()
         chosen.append(child)
         chosen_ids.append(int(catalog.stem_to_id[child.part_id]))
-        history = history + "\n" + _action_text(child)
 
     graph = realize_assembly(chosen, name="guided_assembly")
     print("BFSTreeCodec.decode")

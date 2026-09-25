@@ -85,6 +85,22 @@ def is_validation_model(model_id: str) -> bool:
     return zlib.crc32(model_id.encode("utf-8")) % 10 == 0
 
 
+def format_conditioning_prompt(
+    width: int,
+    depth: int,
+    height: int,
+    aspect_ratio_str: str,
+    bag_name: str,
+    coarse_voxel_tokens: str,
+) -> str:
+    """Canonical conditioning prompt prefix matching the training dataset byte-for-byte."""
+    return (
+        f"[INPUT: Bounding Box {width}x{depth}x{height} + Aspect Ratio {aspect_ratio_str}"
+        f" + Target Bag Name {bag_name} + Coarse Voxel Tokens {coarse_voxel_tokens}]\n"
+        "[TARGET: Discrete BFS Spanning Tree Path Tokens for that Bag]\n"
+    )
+
+
 def example_text(bag, bag_name: str, codebook: Codebook) -> str:
     """One conditioning block plus the bag's parent-relative attachment target."""
     tree = BFSTreeCodec.encode(bag)
@@ -95,12 +111,15 @@ def example_text(bag, bag_name: str, codebook: Codebook) -> str:
     width = max(1, int(round(float(bounds.width_studs))))
     depth = max(1, int(round(float(bounds.depth_studs))))
     height = max(1, int(round(float(bounds.height_studs))))
-    return (
-        f"[INPUT: Bounding Box {width}x{depth}x{height} + Aspect Ratio {bounds.aspect_ratio_str}"
-        f" + Target Bag Name {bag_name} + Coarse Voxel Tokens {voxels}]\n"
-        "[TARGET: Discrete BFS Spanning Tree Path Tokens for that Bag]\n"
-        f"{payload}\n"
+    prompt = format_conditioning_prompt(
+        width=width,
+        depth=depth,
+        height=height,
+        aspect_ratio_str=bounds.aspect_ratio_str,
+        bag_name=bag_name,
+        coarse_voxel_tokens=voxels,
     )
+    return f"{prompt}{payload}\n"
 
 
 def iter_bag_examples(

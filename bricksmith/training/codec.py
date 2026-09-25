@@ -124,9 +124,14 @@ def port_code(name: Optional[str]) -> int:
         return 2
     if name.startswith("port_") and name[5:].isdigit():
         code = 3 + int(name[5:])
-        if code > 999:
-            raise TokenizationError(f"port index does not fit in 3 digits: {name}")
+        if code > 499:
+            raise TokenizationError(f"port index does not fit in allocated range: {name}")
         return code
+    if name.startswith("iface_") and name[6:].isdigit():
+        idx = int(name[6:])
+        if idx > 499:
+            raise TokenizationError(f"interface port index does not fit in 3-digit code range: {name}")
+        return 500 + idx
     raise TokenizationError(f"unsupported port name: {name}")
 
 
@@ -137,9 +142,11 @@ def port_name(code: int) -> Optional[str]:
         return "stud_0"
     if code == 2:
         return "tube_0"
-    if code < 3:
-        raise TokenizationError(f"bad port code {code}")
-    return f"port_{code - 3}"
+    if 3 <= code < 500:
+        return f"port_{code - 3}"
+    if 500 <= code <= 999:
+        return f"iface_{code - 500}"
+    raise TokenizationError(f"bad port code {code}")
 
 
 def _pack_tail(conn: Optional[ConnectorType], rotation_quarters: int) -> int:
@@ -282,17 +289,19 @@ def parse_attachment_digits(digits: str, codebook: Codebook) -> List[TreeNode]:
         if global_part >= len(codebook.part_ids):
             raise TokenizationError("part index out of range")
         conn, quarters = _unpack_tail(tail)
+        p_name = port_name(port_locals[pp_i])
+        s_name = port_name(port_locals[sp_i])
         if parent_code == 0:
             parent_step = None
-            parent_port = None
-            self_port = None
-            conn_out = None
+            parent_port = p_name
+            self_port = s_name
+            conn_out = conn if (p_name is not None or s_name is not None) else None
         else:
             parent_step = step - parent_code
             if parent_step < 0:
                 raise TokenizationError(f"parent delta {parent_code} runs before step {step}")
-            parent_port = port_name(port_locals[pp_i])
-            self_port = port_name(port_locals[sp_i])
+            parent_port = p_name
+            self_port = s_name
             conn_out = conn
         nodes.append(
             TreeNode(

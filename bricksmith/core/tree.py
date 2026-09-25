@@ -2,11 +2,23 @@
 from __future__ import annotations
 
 from dataclasses import dataclass
-from typing import List, Optional
+from typing import List, Optional, Sequence, Union
 import numpy as np
 
 from bricksmith.core.graph import AssemblyGraph
-from bricksmith.core.connector import ConnectorType
+from bricksmith.core.connector import ConnectorType, Polarity
+
+
+@dataclass
+class InterfacePortSpec:
+    """An available upward interface port on an existing assembly."""
+    index: int
+    brick_id: int
+    part_id: str
+    port_id: str
+    connector_type: ConnectorType
+    world_transform: np.ndarray
+    port_frame: np.ndarray
 
 
 @dataclass
@@ -189,7 +201,13 @@ class BFSTreeCodec:
         return tree_nodes
 
     @staticmethod
-    def decode(tree_nodes_or_text: Union[List[TreeNode], str], name: str = "reconstructed") -> AssemblyGraph:
+    def decode(
+        tree_nodes_or_text: Union[List[TreeNode], str],
+        name: str = "reconstructed",
+        interface_assembly: Optional[AssemblyGraph] = None,
+        interface_ports: Optional[Sequence[InterfacePortSpec]] = None,
+        anchor_transform: Optional[np.ndarray] = None,
+    ) -> AssemblyGraph:
         """Decode a BFS spanning tree path sequence or list of TreeNodes back into an AssemblyGraph."""
         if isinstance(tree_nodes_or_text, str):
             if "STEP:" in tree_nodes_or_text:
@@ -202,7 +220,11 @@ class BFSTreeCodec:
         else:
             tree_nodes = tree_nodes_or_text
 
+        if interface_assembly is not None and interface_ports is None:
+            interface_ports = get_available_interface_ports(interface_assembly)
+
         graph = AssemblyGraph(name=name)
+        graph.interface_connections = []
         step_to_inst: dict[int, int] = {}
 
         for node in tree_nodes:
@@ -231,6 +253,28 @@ class BFSTreeCodec:
                             node_transform = parent_part.transform @ pf @ yaw_matrix(rot_deg) @ np.linalg.inv(cf)
                     except Exception:
                         pass
+            elif node.parent_step_index is None and node.parent_port and node.parent_port.startswith("iface_"):
+                iface_idx = int(node.parent_port.split("_")[1])
+                if interface_ports is not None and 0 <= iface_idx < len(interface_ports):
+                    iface = interface_ports[iface_idx]
+                    try:
+                        from bricknet.data import load_catalog
+                        from bricksmith.physics.validator import frame
+                        from bricksmith.generation.sampler import yaw_matrix
+
+                        catalog = load_catalog()
+                        if node.part_id in catalog.stem_to_id:
+                            c_num = catalog.stem_to_id[node.part_id]
+                            s_port = node.self_port or "port_0"
+                            s_idx = int(s_port.split("_")[1]) if "_" in s_port else 0
+                            cf = frame(c_num, s_idx)
+                            rot_deg = int(getattr(node, "rotation_quarters", 0)) * 90
+                            node_transform = iface.world_transform @ yaw_matrix(rot_deg) @ np.linalg.inv(cf)
+                    except Exception:
+                        pass
+            elif node.parent_step_index is None and anchor_transform is not None:
+                if np.allclose(node_transform, np.eye(4)):
+                    node_transform = anchor_transform.copy()
 
             inst_id = graph.add_part(
                 part_id=node.part_id,
@@ -252,5 +296,126 @@ class BFSTreeCodec:
                     target_port=s_port,
                     conn_type=c_type,
                 )
+            elif node.parent_step_index is None and node.parent_port and node.parent_port.startswith("iface_"):
+                iface_idx = int(node.parent_port.split("_")[1])
+                if interface_ports is not None and 0 <= iface_idx < len(interface_ports):
+                    iface = interface_ports[iface_idx]
+                    s_port = node.self_port or "port_0"
+                    c_type = node.conn_type or ConnectorType.STUD
+                    from bricksmith.core.connector import PortConnection
+                    graph.interface_connections.append(
+                        PortConnection(
+                            source_brick_id=iface.brick_id,
+                            source_port_id=iface.port_id,
+                            target_brick_id=inst_id,
+                            target_port_id=s_port,
+                            connection_type=c_type,
+                        )
+                    )
 
         return graph
+
+
+def get_available_interface_ports(graph: AssemblyGraph) -> List[InterfacePortSpec]:
+    """Find all unoccupied upward-facing stud ports on an assembly, sorted deterministically."""
+    from bricknet.data import load_catalog, load_connector_list
+    from bricksmith.physics.validator import frame
+
+    catalog = load_catalog()
+    conn_list = load_connector_list()
+
+    occupied = set()
+    for c in graph.connections:
+        occupied.add((c.source_brick_id, c.source_port_id))
+        occupied.add((c.target_brick_id, c.target_port_id))
+
+    available = []
+    for bid, part in sorted(graph.parts.items()):
+        if part.part_id not in catalog.stem_to_id:
+            continue
+        numeric = catalog.stem_to_id[part.part_id]
+        if numeric >= len(conn_list):
+            continue
+        for idx, meta in enumerate(conn_list[numeric]):
+            kind = meta[0]
+            port_id = f"port_{idx}"
+            if kind == "stud" and (bid, port_id) not in occupied:
+                pf = frame(numeric, idx)
+                world_t = part.transform @ pf
+                world_pos = world_t[:3, 3]
+                available.append((world_pos, bid, part.part_id, port_id, world_t, pf))
+
+    available.sort(key=lambda item: (
+        round(float(item[0][1]), 2),
+        round(float(item[0][0]), 2),
+        round(float(item[0][2]), 2),
+        item[1],
+        item[3],
+    ))
+
+    result = []
+    for idx, (world_pos, bid, part_id, port_id, world_t, pf) in enumerate(available):
+        result.append(
+            InterfacePortSpec(
+                index=idx,
+                brick_id=bid,
+                part_id=part_id,
+                port_id=port_id,
+                connector_type=ConnectorType.STUD,
+                world_transform=world_t,
+                port_frame=pf,
+            )
+        )
+    return result
+
+
+def merge_assemblies(
+    base_graph: AssemblyGraph,
+    bag_graph: AssemblyGraph,
+    name: str = "merged",
+) -> AssemblyGraph:
+    """Merge two assembly graphs across their validated bag interface connections."""
+    merged = AssemblyGraph(name=name)
+    # 1. Copy base_graph parts and connections
+    for bid, p in base_graph.parts.items():
+        merged.add_part(part_id=p.part_id, color_id=p.color_id, transform=p.transform.copy(), instance_id=bid)
+    for c in base_graph.connections:
+        merged.connect(
+            source_id=c.source_brick_id,
+            source_port=c.source_port_id,
+            target_id=c.target_brick_id,
+            target_port=c.target_port_id,
+            conn_type=c.connection_type,
+        )
+
+    # 2. Add bag_graph parts (re-indexing if instance IDs collide)
+    bag_id_map: dict[int, int] = {}
+    for bid, p in bag_graph.parts.items():
+        new_id = bid if bid not in merged.parts else max(merged.parts.keys(), default=0) + 1
+        bag_id_map[bid] = new_id
+        merged.add_part(part_id=p.part_id, color_id=p.color_id, transform=p.transform.copy(), instance_id=new_id)
+
+    # 3. Add bag_graph internal connections
+    for c in bag_graph.connections:
+        merged.connect(
+            source_id=bag_id_map[c.source_brick_id],
+            source_port=c.source_port_id,
+            target_id=bag_id_map[c.target_brick_id],
+            target_port=c.target_port_id,
+            conn_type=c.connection_type,
+        )
+
+    # 4. Add cross-bag interface connections
+    for ic in getattr(bag_graph, "interface_connections", []):
+        parent_id = ic.source_brick_id
+        child_id = bag_id_map.get(ic.target_brick_id, ic.target_brick_id)
+        if parent_id in merged.parts and child_id in merged.parts:
+            merged.connect(
+                source_id=parent_id,
+                source_port=ic.source_port_id,
+                target_id=child_id,
+                target_port=ic.target_port_id,
+                conn_type=ic.connection_type,
+            )
+
+    return merged

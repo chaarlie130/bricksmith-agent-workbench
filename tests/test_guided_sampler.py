@@ -279,6 +279,41 @@ class TestGuidedSampler(unittest.TestCase):
             )
         )
 
+    def test_ensemble_contact_support_filter_allows_running_bonds_and_lintels(self):
+        """Task 3 verification: ensemble contact-hull support permits running bonds and lintels."""
+        from bricksmith.generation.assemble import _is_supported
+        from bricksmith.generation.sampler import PlacedPart
+
+        def make_part(pid, bmin, bmax):
+            return PlacedPart(
+                part_id=pid,
+                color_id=0,
+                transform=np.eye(4),
+                bounds_min=np.array(bmin, dtype=np.float64),
+                bounds_max=np.array(bmax, dtype=np.float64),
+                ports=[],
+            )
+
+        # 1. Running bond: 1x4 brick resting across two 1x2 bricks
+        b1 = make_part("3004", [-20, 0, -10], [20, 24, 10])
+        b2 = make_part("3004", [20, 0, -10], [60, 24, 10])
+        child_running = make_part("3010", [-20, -24, -10], [60, 0, 10])
+        self.assertTrue(_is_supported(child_running, [b1, b2], parent_index=0))
+
+        # 2. Multi-column lintel: 1x4 beam bridging across two separate columns
+        col1 = make_part("3004", [-40, 0, -10], [-20, 24, 10])
+        col2 = make_part("3004", [20, 0, -10], [40, 24, 10])
+        lintel = make_part("3010", [-40, -24, -10], [40, 0, 10])
+        self.assertTrue(_is_supported(lintel, [col1, col2], parent_index=0))
+
+        # 3. Direct vertical stack on single parent (fast path)
+        stacked = make_part("3004", [-20, -24, -10], [20, 0, 10])
+        self.assertTrue(_is_supported(stacked, [b1], parent_index=0))
+
+        # 4. Overhanging cantilever with COM hanging over empty space (must be rejected)
+        cantilever = make_part("3010", [-40, -24, -10], [40, 0, 10])
+        self.assertFalse(_is_supported(cantilever, [col1], parent_index=0))
+
 
 if __name__ == "__main__":
     unittest.main()
