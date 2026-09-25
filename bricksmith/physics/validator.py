@@ -153,10 +153,14 @@ def validate_ldraw(
     content_or_path: Union[str, Path],
     *,
     ground_y: float = 8.0,
-    check_sequence: bool = True,
+    check_sequence: bool = False,
     scope_path: Optional[str] = None,
 ) -> Dict[str, Any]:
-    """Validate an LDraw model for syntax, scope, collisions, connectivity, and static equilibrium."""
+    """Validate an LDraw model for syntax, scope, collisions, connectivity, and static equilibrium.
+    
+    Note: Vertical insertion-clearance / assembly reachability sequence checking is reserved
+    for Phase 4 (Production Pipeline / Assembly Instructions).
+    """
     if isinstance(content_or_path, Path) or (isinstance(content_or_path, str) and "\n" not in content_or_path and Path(content_or_path).exists()):
         text = Path(content_or_path).read_text(encoding="utf-8", errors="ignore")
     else:

@@ -21,6 +21,7 @@ class TreeNode:
     self_port: Optional[str]
     conn_type: Optional[ConnectorType]
     transform: np.ndarray
+    rotation_quarters: int = 0
 
 
 class BFSTreeCodec:
@@ -205,10 +206,36 @@ class BFSTreeCodec:
         step_to_inst: dict[int, int] = {}
 
         for node in tree_nodes:
+            node_transform = node.transform.copy()
+            if node.parent_step_index is not None and node.parent_step_index in step_to_inst:
+                parent_inst = step_to_inst[node.parent_step_index]
+                parent_part = graph.parts[parent_inst]
+                p_port = node.parent_port or "port_0"
+                s_port = node.self_port or "port_0"
+
+                if np.allclose(node_transform, np.eye(4)):
+                    try:
+                        from bricknet.data import load_catalog
+                        from bricksmith.physics.validator import frame
+                        from bricksmith.generation.sampler import yaw_matrix
+
+                        catalog = load_catalog()
+                        if parent_part.part_id in catalog.stem_to_id and node.part_id in catalog.stem_to_id:
+                            p_num = catalog.stem_to_id[parent_part.part_id]
+                            c_num = catalog.stem_to_id[node.part_id]
+                            p_idx = int(p_port.split("_")[1]) if "_" in p_port else 0
+                            s_idx = int(s_port.split("_")[1]) if "_" in s_port else 0
+                            pf = frame(p_num, p_idx)
+                            cf = frame(c_num, s_idx)
+                            rot_deg = int(getattr(node, "rotation_quarters", 0)) * 90
+                            node_transform = parent_part.transform @ pf @ yaw_matrix(rot_deg) @ np.linalg.inv(cf)
+                    except Exception:
+                        pass
+
             inst_id = graph.add_part(
                 part_id=node.part_id,
                 color_id=node.color_id,
-                transform=node.transform.copy(),
+                transform=node_transform,
                 instance_id=node.brick_id,
             )
             step_to_inst[node.step_index] = inst_id

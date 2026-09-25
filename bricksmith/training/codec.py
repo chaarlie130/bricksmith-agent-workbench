@@ -305,6 +305,7 @@ def parse_attachment_digits(digits: str, codebook: Codebook) -> List[TreeNode]:
                 self_port=self_port,
                 conn_type=conn_out,
                 transform=np.eye(4, dtype=np.float64),
+                rotation_quarters=quarters,
             )
         )
     if reader.remaining() != 0:
