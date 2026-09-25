@@ -1,16 +1,16 @@
 # Verification & Review Remediation Report: Phase 3 Modular Generation & Kinematics
 
 **Date:** September 25, 2026  
-**Status:** All Senior Reviewer Findings Addressed & Fully Verified  
+**Status:** Remediations Implemented, Tested, and Audited  
 **Test Suite:** 41/41 Passing Tests (`PYTHONPATH=. .venv/bin/python -m unittest discover -s tests`)  
-**Data Integrity:** 616 Accepted Bags (543 train, 73 val) with 419 Interface-Covered Bags, 0 Foundation Multiple Roots, 0 Later Unanchored Roots, and Complete Rejected-Record Accounting (176 rejected)  
-**Kinematic Fidelity:** Strict Acceptance Test Permitting Only the Ground Baseplate Anchor; 100% Zero-Error Reconstruction on 4-Bag Modular Assembly and 187 Base-Connected Pieces on Woodland Elf House; Production Decoder Quarantines All Unsupported Geometry; Fail-Loud Collision Verification
+**Dataset Split Audit:** 616 Accepted Bags (543 train, 73 val) across 197 models, with 419 Interface-Covered Bags, 0 Foundation Multiple Roots, 0 Later Unanchored Roots, and 176 Tracked Rejections  
+**Kinematic Checks:** 187 base-connected pieces on Woodland Elf House reconstruct with < 1e-4 LDU coordinate error under the single baseplate anchor contract; production decoder quarantines unanchored roots; collision verification failures propagate loudly.
 
 ---
 
 ## 1. Executive Summary
 
-Following the comprehensive review of Phase 3 (Modular BFS Neural Generation and Kinematic Reconstruction), we conducted an in-depth overhaul of the tokenization codec, kinematics solver, dataset formatting pipeline, multi-bag generation entry points, physical support filters, connector compatibility rules, and token roundtrip boundary. Every identified architectural gap and potential failure mode has been systematically eliminated without procedural fallbacks, continuous coordinate approximations, or synthetic shortcuts.
+This report documents remediations made in response to the Senior Reviewer's findings regarding Task 3.9 and Phase 3 (Modular BFS Neural Generation and Kinematic Reconstruction). Changes target the tokenization codec, kinematics solver, dataset formatting pipeline, multi-bag generation entry points, support filters, connector compatibility rules, and token roundtrip boundary. Each issue is paired with reproduction tests and pipeline-level enforcement.
 
 | Review Finding | Root Cause | Remediation | Verification Evidence |
 | :--- | :--- | :--- | :--- |
@@ -174,14 +174,14 @@ Every accepted bag in `data/training/train.jsonl` and `data/training/val.jsonl` 
 
 ---
 
-## 4. Conclusion & Readiness for Task 3.9 Scale-Up
+## 4. Current State & Verification Summary
 
-Every single blocking finding identified by the Senior Reviewer has been resolved and verified with exhaustive test coverage:
-- **No Unanchored Roots in Training Targets**: Foundation bags have exactly 1 root; all later bags connect strictly through interface ports. Zero unanchored roots exist in the regenerated dataset.
-- **Production Decoder Quarantine**: Unanchored roots are quarantined into `unsupported_parts` and excluded from `parts` (reconstructed assembly state), or rejected under `strict=True`.
-- **Conditioning Subassembly Alignment**: Conditioning prompts (bounding boxes, voxels, aspect ratio) are computed strictly on the retained reconstructable subassembly.
-- **Fail-Loud Collision Verification**: Collision checks cannot fail silently; crash conditions raise immediately.
-- **Single Base Anchor Contract**: Acceptance test permits only the initial grounded baseplate anchor in Bag 1; Bags 2, 3, and 4 receive zero anchors. All 187 base-connected pieces in Elf House reconstruct with $< 1e-4$ LDU error.
-- **Public Entry Point**: Public multi-bag guided generation is verified end-to-end with LoRA adapters.
+The remediations address the issues identified during review:
+- **Dataset Root Constraints**: Foundation bags have at most 1 base anchor root; subsequent bags contain only roots that attach to prior interface ports. Across 616 accepted examples in `train.jsonl` and `val.jsonl`, multiple roots in foundation bags are 0 (down from 194), and unanchored roots in later bags are 0 (down from 8,208 across 412 bags).
+- **Decoder Quarantine & Strict Mode**: `BFSTreeCodec.decode()` routes unanchored roots and unattached child steps into `graph.unsupported_parts` rather than placing them at the coordinate origin, and raises `ValueError` when `strict=True`.
+- **Conditioning Subassembly Alignment**: Conditioning features (bounding box, voxel occupancy, aspect ratio) are computed strictly on the retained reconstructable subassembly.
+- **Fail-Loud Collision Verification**: Broad exception suppression around `colliding_pairs()` was removed; engine exceptions propagate loudly, and overlapping parts return `None`.
+- **Single Base Anchor Contract**: Tested on Woodland Elf House using only the single initial grounded baseplate anchor in Bag 1; all 187 base-connected pieces reconstruct with $< 1e-4$ LDU coordinate error from saved tokens alone, while 217 unattached foliage/furniture parts are excluded from the reconstructed state.
+- **Multi-Bag Integration**: Public multi-bag API passes integration testing with model and LoRA weights under `validate_ldraw`.
 
-The codebase and dataset are fully verified, robust, and ready for Task 3.9 scale-up.
+All 41 tests pass. Detailed logs and dataset splits are available for independent inspection and verification.
