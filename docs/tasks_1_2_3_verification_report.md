@@ -151,7 +151,7 @@ accepted examples: 616 (train=543, val=73)
 rejected records: 176 ({'unattached_bag': 167, 'tokenization_error': 8, 'exceeds_token_cap': 1})
 interface coverage bags: 419/616 (68.02%)
 interface coverage by bag: {'bag_1_foundation': 0, 'bag_2_core': 136, 'bag_3_facades': 141, 'bag_4_roof': 142}
-total interface tokens: 4924
+total interface tokens: 3458
 max tokens: 1391
 foundation bags with multiple unanchored roots: 0 (down from 194)
 later bags containing unanchored, non-interface roots: 0 (down from 412)
