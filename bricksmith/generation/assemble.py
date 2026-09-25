@@ -383,6 +383,9 @@ def _interface_actions(
         return []
 
     base_placed = []
+    base_ids = []
+    base_transforms = []
+    catalog = load_catalog()
     for bid, p in sorted(base_assembly.parts.items()):
         _, _, p_lo, p_hi = world_properties(p.part_id, p.transform)
         base_placed.append(
@@ -395,6 +398,11 @@ def _interface_actions(
                 ports=[],
             )
         )
+        if p.part_id in catalog.stem_to_id:
+            base_ids.append(catalog.stem_to_id[p.part_id])
+            base_transforms.append(p.transform)
+
+    from bricksmith.generation.sampler import meshes_penetrate
 
     actions = []
     for iface in ifaces:
@@ -424,11 +432,24 @@ def _interface_actions(
                         anchor_transform=anchor_t,
                     )
                     child_placed = place_token(token, [])
-                    if _fits(child_placed, module_min, module_max) and not any(
+                    if not _fits(child_placed, module_min, module_max):
+                        continue
+                    if any(
                         _overlaps(child_placed.bounds_min, child_placed.bounds_max, bp.bounds_min, bp.bounds_max)
                         for bp in base_placed
                     ):
-                        actions.append((token, numeric))
+                        continue
+                    if base_ids:
+                        from bricknet.collision import colliding_pairs
+
+                        pairs = colliding_pairs(
+                            np.asarray(base_ids + [numeric]),
+                            np.stack(base_transforms + [child_placed.transform]),
+                        )
+                        child_idx = len(base_ids)
+                        if any(i == child_idx or j == child_idx for i, j in pairs):
+                            continue
+                    actions.append((token, numeric))
     return actions
 
 

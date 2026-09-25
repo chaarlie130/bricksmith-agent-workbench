@@ -267,6 +267,11 @@ def attachment_nodes(actions: Sequence[AttachmentToken]) -> list[TreeNode]:
     for step, token in enumerate(actions):
         part = place_token(token, placed)
         placed.append(part)
+        conn = (
+            ConnectorType.STUD
+            if (token.parent_index is not None or (token.parent_port and token.parent_port.startswith("iface_")))
+            else None
+        )
         nodes.append(
             TreeNode(
                 step_index=step,
@@ -276,8 +281,9 @@ def attachment_nodes(actions: Sequence[AttachmentToken]) -> list[TreeNode]:
                 parent_step_index=token.parent_index,
                 parent_port=token.parent_port,
                 self_port=token.self_port,
-                conn_type=ConnectorType.STUD if token.parent_index is not None else None,
+                conn_type=conn,
                 transform=part.transform.copy(),
+                rotation_quarters=int(round(token.rotation_offset / 90.0)) % 4,
             )
         )
     return nodes

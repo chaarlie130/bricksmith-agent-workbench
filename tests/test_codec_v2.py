@@ -10,6 +10,7 @@ from pathlib import Path
 import numpy as np
 
 from bricknet.data import load_catalog
+from bricknet.collision import colliding_pairs
 from bricksmith.core.connector import ConnectorType, Polarity, Port
 from bricksmith.core.graph import AssemblyGraph
 from bricksmith.core.tree import (
@@ -20,8 +21,19 @@ from bricksmith.core.tree import (
     merge_assemblies,
 )
 from bricksmith.decomposition.modularizer import BAG_NAMES, partition_into_bags
-from bricksmith.generation.assemble import _child_actions, _interface_actions, _is_supported
-from bricksmith.generation.sampler import PlacedPart, PortSpec, yaw_matrix
+from bricksmith.generation.assemble import (
+    _child_actions,
+    _interface_actions,
+    _is_supported,
+    generate_guided_assembly,
+)
+from bricksmith.generation.sampler import (
+    AttachmentToken,
+    PlacedPart,
+    PortSpec,
+    attachment_nodes,
+    yaw_matrix,
+)
 from bricksmith.physics.validator import frame, validate_ldraw, world_properties
 from bricksmith.training.codec import (
     TokenizationError,
@@ -278,7 +290,14 @@ class TestCodecV2AndKinematics(unittest.TestCase):
         self.assertTrue(res["checks"]["mesh_collision_free"], "Collisions detected")
 
     def test_woodland_elf_house_cross_bag_zero_error_reconstruction(self):
-        """Review Finding 3: Verified connector recovery on Elf House eliminates 8-60 LDU errors."""
+        """Review Finding 1: Strict encode -> serialize -> parse -> decode roundtrip on Elf House.
+
+        Requires:
+        - Strict representation boundary: parsed tokens have transform=None
+        - Every single piece's position and rotation error is < 1e-4 LDU
+        - Reconstructed earlier bags accumulated across steps (not original CAD)
+        - Permitted root anchors only for unattached ground roots (interface roots derive poses from interface)
+        """
         with CORPUS_PATH.open(encoding="utf-8") as handle:
             record = json.loads(handle.readline())
 
@@ -286,20 +305,64 @@ class TestCodecV2AndKinematics(unittest.TestCase):
         bags = partition_into_bags(graph)
         accumulated = None
 
+        all_parts = sorted({p.part_id for p in graph.parts.values()})
+        all_colors = sorted({p.color_id for p in graph.parts.values()})
+        codebook = build_codebook(all_parts, all_colors)
+
+        total_verified_pieces = 0
+
         for bag_name in BAG_NAMES:
             bag = bags[bag_name]
             tree = BFSTreeCodec.encode(bag, interface_assembly=accumulated)
-            decoded_bag = BFSTreeCodec.decode(tree, interface_assembly=accumulated)
 
-            # Check that all roots match ground truth translation with zero error (< 1e-4 LDU)
-            for node in tree:
-                if node.parent_step_index is None:
-                    orig_t = bag.parts[node.brick_id].transform
-                    dec_t = decoded_bag.parts[node.brick_id].transform
-                    err = float(np.linalg.norm(orig_t[:3, 3] - dec_t[:3, 3]))
-                    self.assertLess(err, 1e-4, f"{bag_name} root {node.brick_id} translation error {err} >= 1e-4")
+            # Strict representation boundary: serialize and parse tokens
+            tokens = serialize_tree(tree, codebook, version=2)
+            parsed = parse_attachment_digits(tokens, codebook)
 
-            accumulated = bag if accumulated is None else merge_assemblies(accumulated, bag)
+            # Confirm parser does not cheat by retaining poses
+            for p_node in parsed:
+                self.assertIsNone(p_node.transform, "Parsed token node must not contain transform")
+
+            # Re-associate brick_id from tree sequence
+            for p, t in zip(parsed, tree):
+                p.brick_id = t.brick_id
+
+            # Permitted root anchors ONLY for unattached ground roots
+            # (Interface roots must reconstruct purely from interface attachment kinematics)
+            anchors = {
+                t.brick_id: bag.parts[t.brick_id].transform
+                for t in tree
+                if t.parent_step_index is None and (t.parent_port is None or not t.parent_port.startswith("iface_"))
+            }
+
+            decoded_bag = BFSTreeCodec.decode(
+                parsed,
+                interface_assembly=accumulated,
+                anchor_transforms=anchors,
+            )
+
+            # Compare every piece's position and rotation
+            for bid, orig_part in bag.parts.items():
+                self.assertIn(bid, decoded_bag.parts)
+                dec_part = decoded_bag.parts[bid]
+                pos_err = float(np.linalg.norm(orig_part.position - dec_part.position))
+                rot_err = float(np.linalg.norm(orig_part.rotation - dec_part.rotation))
+                self.assertLess(
+                    pos_err,
+                    1e-4,
+                    f"{bag_name} part {bid} ({orig_part.part_id}) position error {pos_err} >= 1e-4 LDU",
+                )
+                self.assertLess(
+                    rot_err,
+                    1e-4,
+                    f"{bag_name} part {bid} ({orig_part.part_id}) rotation error {rot_err} >= 1e-4",
+                )
+                total_verified_pieces += 1
+
+            # Accumulate the RECONSTRUCTED earlier bag, NOT original CAD
+            accumulated = decoded_bag if accumulated is None else merge_assemblies(accumulated, decoded_bag)
+
+        self.assertEqual(total_verified_pieces, 404, "Expected all 404 Elf House pieces verified with zero error")
 
     def test_chained_guided_generation_multi_bag_context(self):
         """Review Findings 1 & 2: Multi-bag generation branch runs without ImportError and checks base collisions."""
@@ -371,6 +434,116 @@ class TestCodecV2AndKinematics(unittest.TestCase):
         self.assertGreater(vol, 0.0)
         self.assertTrue(np.all(np.isfinite(com)))
         self.assertTrue(np.all(lo <= hi))
+
+    def test_interface_root_rotation_preserves_distinct_tokens(self):
+        """Review Finding 2: Interface root rotations preserve distinct tokens and reconstructed poses."""
+        base = AssemblyGraph("base")
+        base.add_part("3020", 0, np.eye(4), instance_id=1)
+        ifaces = get_available_interface_ports(base)
+        iface = ifaces[0]
+
+        p_3004 = self.catalog.stem_to_id["3004"]
+        cf = frame(p_3004, 2)
+        anchor_t_0 = iface.world_transform @ np.eye(4) @ np.linalg.inv(cf)
+        anchor_t_180 = iface.world_transform @ yaw_matrix(180) @ np.linalg.inv(cf)
+
+        tok0 = AttachmentToken("3004", 0, None, "iface_0", "port_2", 0.0, anchor_transform=anchor_t_0)
+        tok180 = AttachmentToken("3004", 0, None, "iface_0", "port_2", 180.0, anchor_transform=anchor_t_180)
+
+        nodes0 = attachment_nodes([tok0])
+        nodes180 = attachment_nodes([tok180])
+
+        self.assertEqual(nodes0[0].rotation_quarters, 0)
+        self.assertEqual(nodes180[0].rotation_quarters, 2)
+
+        codebook = build_codebook(["3020", "3004"], [0])
+        s0 = serialize_tree(nodes0, codebook, version=2)
+        s180 = serialize_tree(nodes180, codebook, version=2)
+
+        # Serialized tokens must differ (ending with rotation digit 0 vs 2)
+        self.assertNotEqual(s0, s180)
+        self.assertTrue(s0.endswith("0"))
+        self.assertTrue(s180.endswith("2"))
+
+        # Parsed rotation quarters must be preserved
+        p0 = parse_attachment_digits(s0, codebook)
+        p180 = parse_attachment_digits(s180, codebook)
+        self.assertEqual(p0[0].rotation_quarters, 0)
+        self.assertEqual(p180[0].rotation_quarters, 2)
+
+        # Decoded positions must differ
+        dec0 = BFSTreeCodec.decode(p0, interface_assembly=base)
+        dec180 = BFSTreeCodec.decode(p180, interface_assembly=base)
+        pos0 = dec0.parts[1].position
+        pos180 = dec180.parts[1].position
+        self.assertFalse(np.allclose(pos0, pos180, atol=1.0))
+        np.testing.assert_allclose(pos0, np.array([-40.0, -24.0, -10.0]), atol=1e-3)
+        np.testing.assert_allclose(pos180, np.array([-20.0, -24.0, -10.0]), atol=1e-3)
+
+    def test_interface_root_mask_rejects_mesh_penetration(self):
+        """Review Finding 3: _interface_actions rejects mesh penetration (e.g. 15573 jumper on 3020)."""
+        base = AssemblyGraph("base")
+        base.add_part("3020", 0, np.eye(4), instance_id=1)
+
+        module_min = np.array([-100.0, -100.0, -100.0])
+        module_max = np.array([100.0, 100.0, 100.0])
+
+        actions = _interface_actions(base, module_min, module_max)
+        self.assertGreater(len(actions), 0)
+
+        # Confirm that penetrating jumper attachment (15573 on iface_0 with port_2, yaw 0) is blocked
+        penetrating = any(
+            tok.part_id == "15573"
+            and tok.parent_port == "iface_0"
+            and tok.self_port == "port_2"
+            and tok.rotation_offset == 0.0
+            for tok, _pid in actions
+        )
+        self.assertFalse(penetrating, "Penetrating 15573 jumper must be rejected by interface action mask")
+
+        # Explicitly verify that colliding_pairs detects this mesh collision
+        ifaces = get_available_interface_ports(base)
+        iface0 = ifaces[0]
+        id_3020 = self.catalog.stem_to_id["3020"]
+        id_15573 = self.catalog.stem_to_id["15573"]
+        cf = frame(id_15573, 2)
+        child_t = iface0.world_transform @ np.eye(4) @ np.linalg.inv(cf)
+        pairs = colliding_pairs(np.asarray([id_3020, id_15573]), np.stack([np.eye(4), child_t]))
+        self.assertIn((0, 1), pairs, "colliding_pairs must detect penetration between 3020 and 15573 at this pose")
+
+    def test_public_guided_assembly_multi_bag_integration(self):
+        """Review Entry Point: Public generate_guided_assembly across bags passes full physics validation."""
+        box_min = [-80.0, -96.0, -80.0]
+        box_max = [80.0, 48.0, 80.0]
+
+        bag1 = generate_guided_assembly(
+            seed=42,
+            module_min=box_min,
+            module_max=box_max,
+            adapter_path="adapters/phase3a",
+            target_pieces=2,
+            bag_name="bag_1_foundation",
+        )
+        self.assertEqual(bag1.num_parts, 2)
+
+        merged = generate_guided_assembly(
+            seed=43,
+            module_min=box_min,
+            module_max=box_max,
+            adapter_path="adapters/phase3a",
+            target_pieces=2,
+            bag_name="bag_2_core",
+            base_assembly=bag1,
+            merge_base=True,
+        )
+        self.assertEqual(merged.num_parts, 4)
+
+        res = validate_ldraw(merged.to_ldraw())
+        self.assertTrue(res["passed"], f"Validation failed: {res.get('errors')}")
+        self.assertTrue(res["checks"]["mesh_collision_free"])
+        self.assertTrue(res["checks"]["included_base"])
+        self.assertTrue(res["checks"]["actual_connectivity"])
+        self.assertTrue(res["checks"]["approximate_gravity_equilibrium"])
 
 
 if __name__ == "__main__":
