@@ -48,7 +48,7 @@ BrickSmith rejects both monolithic coordinate prediction (which drifts) and hand
 │ STAGE 4: Physical Verification & Manufacturing Export       │
 │ • HiGHS Linear Programming for static gravity equilibrium   │
 │ • Continuous MeshLib collision checking (0.25 LDU inset)    │
-│ • Monotonic assembly clearance (insertion trajectory check) │
+│ • Monotonic assembly clearance (planned for Phase 4)        │
 │ • Multi-format export:                                      │
 │   1. Standard LDraw CAD (.ldr / .mpd)                       │
 │   2. Pick-a-Brick / BrickLink CSV Bill of Materials         │
@@ -116,7 +116,7 @@ Defines the foundational domain models:
 The non-negotiable physical verification gate:
 * **Static Equilibrium Solver:** Formulates compressive gravity load transfer as a **Linear Program (LP)** using SciPy / HiGHS. Tests whether contact patches under each brick can support gravity moments without tensile failure.
 * **Collision Engine:** Utilizes exact 0.25 LDU inset surface meshes (`scratch/bricknet-data/inset/`) and MeshLib/trimesh kernels to guarantee zero solid-solid volume interpenetration.
-* **Assembly Clearance:** Verifies that a continuous vertical insertion trajectory exists for each piece in sequence, preventing impossible enclosed assemblies.
+* **Assembly Clearance (Planned Phase 4):** Planned trajectory check to verify continuous vertical insertion for each piece in sequence, preventing impossible enclosed assemblies (present verification enforced by collision and static equilibrium).
 
 ### 3.3 `bricksmith.decomposition`
 Handles long-horizon piece count scaling:

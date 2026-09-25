@@ -420,7 +420,11 @@ def select_attachment(
     return legal[rng.randrange(len(legal))]
 
 
-def realize_assembly(tokens: Sequence[AttachmentToken], name: str = "guided_assembly"):
+def realize_assembly(
+    tokens: Sequence[AttachmentToken],
+    name: str = "guided_assembly",
+    interface_assembly: Optional[AssemblyGraph] = None,
+):
     """Realize attachment tokens. Child poses come only from parent-port mating."""
     placed: list[PlacedPart] = []
     nodes: list[TreeNode] = []
@@ -438,6 +442,7 @@ def realize_assembly(tokens: Sequence[AttachmentToken], name: str = "guided_asse
                     conn = ConnectorType.STUD
                 else:
                     conn = parent_port.connector_type
+        rot_q = int(round(token.rotation_offset / 90.0)) % 4
         nodes.append(
             TreeNode(
                 step_index=step,
@@ -449,6 +454,7 @@ def realize_assembly(tokens: Sequence[AttachmentToken], name: str = "guided_asse
                 self_port=token.self_port,
                 conn_type=conn,
                 transform=part.transform.copy(),
+                rotation_quarters=rot_q,
             )
         )
-    return BFSTreeCodec.decode(nodes, name=name)
+    return BFSTreeCodec.decode(nodes, name=name, interface_assembly=interface_assembly)

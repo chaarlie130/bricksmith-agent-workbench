@@ -36,26 +36,146 @@ class TreeNode:
     rotation_quarters: int = 0
 
 
+def _parse_port_index(port_name: str) -> int:
+    """Extract flat connector index from a port identifier string."""
+    if port_name in ("stud_0", "tube_0"):
+        return 0
+    if "_" in port_name:
+        parts = port_name.split("_")
+        if parts[1].isdigit():
+            return int(parts[1])
+    raise ValueError(f"Cannot parse numeric port index from '{port_name}'")
+
+
+def _stem_numeric(stem: str) -> int:
+    """Lookup the numeric catalog index for a part stem, consulting aliases and pattern variants if needed."""
+    import re
+    from bricknet.data import load_catalog, load_aliases
+
+    catalog = load_catalog()
+    if stem in catalog.stem_to_id:
+        return catalog.stem_to_id[stem]
+    aliases = load_aliases()
+    if stem in aliases:
+        canonical = aliases[stem][0]
+        if canonical in catalog.stem_to_id:
+            return catalog.stem_to_id[canonical]
+
+    # Try resolving prefix/pattern suffixes (e.g. bl_54200pb103 -> 54200)
+    s = stem[3:] if stem.startswith("bl_") else stem
+    m = re.match(r"^([0-9]+[a-zA-Z]*?)(?:pb|p[0-9]|s[0-9]|d[0-9]).*$", s)
+    candidates = [s]
+    if m:
+        candidates.append(m.group(1))
+
+    for cand in candidates:
+        if cand in catalog.stem_to_id:
+            return catalog.stem_to_id[cand]
+        if cand in aliases:
+            canonical = aliases[cand][0]
+            if canonical in catalog.stem_to_id:
+                return catalog.stem_to_id[canonical]
+
+    raise KeyError(f"Part '{stem}' not found in catalog or aliases")
+
+
+def _rotation_quarters_tree(parent_transform: np.ndarray, child_transform: np.ndarray) -> int:
+    relative = parent_transform[:3, :3].T @ child_transform[:3, :3]
+    yaw = float(np.arctan2(relative[0, 2], relative[0, 0]))
+    return int(round(np.degrees(yaw) / 90.0)) % 4
+
+
 class BFSTreeCodec:
     """Encodes an AssemblyGraph into a BFS spanning tree path sequence,
     and decodes path sequences back into an AssemblyGraph.
     """
 
     @staticmethod
-    def encode(graph: AssemblyGraph, root_id: Optional[int] = None) -> List[TreeNode]:
+    def encode(
+        graph: AssemblyGraph,
+        root_id: Optional[int] = None,
+        interface_assembly: Optional[AssemblyGraph] = None,
+        interface_ports: Optional[Sequence[InterfacePortSpec]] = None,
+    ) -> List[TreeNode]:
         """Traverse the graph in Breadth-First Search order starting from root_id.
-        If root_id is None, the brick with the lowest Y coordinate (lowest in gravity)
-        or lowest instance ID is selected as root.
+        If interface_assembly or interface_ports are provided, roots attached to prior
+        assemblies via interface connections will encode parent_port as 'iface_{index}'
+        and derive their rotation_quarters from the interface port.
         """
         if not graph.parts:
             return []
 
-        if root_id is None:
-            # Pick lowest brick in physical space (maximum positive Y in LDraw is lowest)
-            root_id = max(
-                graph.parts.keys(),
-                key=lambda bid: (graph.parts[bid].position[1], -bid)
-            )
+        if interface_assembly is not None and interface_ports is None:
+            interface_ports = get_available_interface_ports(interface_assembly)
+
+        # Map (brick_id, port_id) -> InterfacePortSpec and brick_id -> list[spec]
+        iface_map: dict[tuple[int, str], InterfacePortSpec] = {}
+        ifaces_by_brick: dict[int, list[InterfacePortSpec]] = {}
+        if interface_ports is not None:
+            for spec in interface_ports:
+                iface_map[(spec.brick_id, spec.port_id)] = spec
+                ifaces_by_brick.setdefault(spec.brick_id, []).append(spec)
+
+        # Discover which bricks in this graph connect to the interface
+        iface_attachments: dict[int, tuple[str, str, ConnectorType, int]] = {}
+        if iface_map:
+            from bricknet.data import load_catalog, load_connector_list
+            from bricksmith.physics.validator import frame
+
+            catalog = load_catalog()
+            conn_list = load_connector_list()
+            for conn in getattr(graph, "interface_connections", []):
+                c_type = conn.connection_type or ConnectorType.STUD
+                if conn.source_brick_id in graph.parts:
+                    child_id = conn.source_brick_id
+                    child_port = conn.source_port_id
+                    parent_id = conn.target_brick_id
+                    parent_port = conn.target_port_id
+                elif conn.target_brick_id in graph.parts:
+                    child_id = conn.target_brick_id
+                    child_port = conn.target_port_id
+                    parent_id = conn.source_brick_id
+                    parent_port = conn.source_port_id
+                else:
+                    continue
+
+                if child_id in iface_attachments:
+                    continue
+
+                parent_key = (parent_id, parent_port)
+                spec = None
+                if parent_key in iface_map:
+                    spec = iface_map[parent_key]
+                elif parent_id in ifaces_by_brick:
+                    c_part = graph.parts[child_id]
+                    spec = min(ifaces_by_brick[parent_id], key=lambda s: np.linalg.norm(s.world_transform[:3, 3] - c_part.position))
+
+                if spec is not None:
+                    c_part = graph.parts[child_id]
+                    c_num = catalog.stem_to_id.get(c_part.part_id)
+                    best_child_port = child_port if (child_port and child_port.startswith("port_")) else "port_0"
+                    if (not child_port or not child_port.startswith("port_")) and c_num is not None and c_num < len(conn_list):
+                        best_c_idx = 0
+                        best_dist = 1e9
+                        for ci, cm in enumerate(conn_list[c_num]):
+                            if cm[0] in ("hole", "tube"):
+                                cf = frame(c_num, ci)
+                                cw = (c_part.transform @ cf)[:3, 3]
+                                d = np.linalg.norm(spec.world_transform[:3, 3] - cw)
+                                if d < best_dist:
+                                    best_dist = d
+                                    best_c_idx = ci
+                        best_child_port = f"port_{best_c_idx}"
+
+                    rot_q = 0
+                    if c_num is not None:
+                        s_idx = _parse_port_index(best_child_port)
+                        cf = frame(c_num, s_idx)
+                        relative = np.linalg.inv(spec.world_transform) @ c_part.transform @ cf
+                        yaw = float(np.arctan2(relative[0, 2], relative[0, 0]))
+                        rot_q = int(round(np.degrees(yaw) / 90.0)) % 4
+
+                    iface_attachments[child_id] = (f"iface_{spec.index}", best_child_port, c_type, rot_q)
 
         visited = set()
         tree_nodes: List[TreeNode] = []
@@ -65,19 +185,25 @@ class BFSTreeCodec:
         while len(visited) < len(graph.parts):
             if not visited and root_id is not None and root_id in graph.parts:
                 curr_root = root_id
+                if curr_root in iface_attachments:
+                    p_port, s_port, c_type, rot_q = iface_attachments[curr_root]
+                else:
+                    p_port, s_port, c_type, rot_q = None, None, None, 0
             else:
-                # Pick lowest unvisited brick in physical space (max positive Y is ground level in LDraw)
-                unvisited = [bid for bid in graph.parts if bid not in visited]
-                curr_root = max(
-                    unvisited,
-                    key=lambda bid: (graph.parts[bid].position[1], -bid)
-                )
+                unvisited_iface = [bid for bid in iface_attachments if bid not in visited]
+                if unvisited_iface:
+                    curr_root = min(unvisited_iface, key=lambda bid: (iface_attachments[bid][0], bid))
+                    p_port, s_port, c_type, rot_q = iface_attachments[curr_root]
+                else:
+                    unvisited = [bid for bid in graph.parts if bid not in visited]
+                    curr_root = max(unvisited, key=lambda bid: (graph.parts[bid].position[1], -bid))
+                    p_port, s_port, c_type, rot_q = None, None, None, 0
 
             visited.add(curr_root)
-            queue = [(curr_root, None, None, None, None)]  # (curr, parent_step, parent_port, self_port, conn_type)
+            queue = [(curr_root, None, p_port, s_port, c_type, rot_q)]
 
             while queue:
-                curr_id, parent_step, p_port, s_port, c_type = queue.pop(0)
+                curr_id, parent_step, pp, sp, ct, rq = queue.pop(0)
                 part = graph.parts[curr_id]
                 brick_to_step[curr_id] = step
 
@@ -87,10 +213,11 @@ class BFSTreeCodec:
                     part_id=part.part_id,
                     color_id=part.color_id,
                     parent_step_index=parent_step,
-                    parent_port=p_port,
-                    self_port=s_port,
-                    conn_type=c_type,
+                    parent_port=pp,
+                    self_port=sp,
+                    conn_type=ct,
                     transform=part.transform.copy(),
+                    rotation_quarters=rq,
                 )
                 tree_nodes.append(node)
 
@@ -112,7 +239,9 @@ class BFSTreeCodec:
 
                     if neighbor_id is not None and neighbor_id not in visited:
                         visited.add(neighbor_id)
-                        queue.append((neighbor_id, curr_step, my_port, neighbor_port, conn.connection_type))
+                        child_part = graph.parts[neighbor_id]
+                        child_rot_q = _rotation_quarters_tree(part.transform, child_part.transform)
+                        queue.append((neighbor_id, curr_step, my_port, neighbor_port, conn.connection_type, child_rot_q))
 
                 step += 1
 
@@ -229,49 +358,50 @@ class BFSTreeCodec:
 
         for node in tree_nodes:
             node_transform = node.transform.copy()
-            if node.parent_step_index is not None and node.parent_step_index in step_to_inst:
+            if node.parent_step_index is not None:
+                if node.parent_step_index not in step_to_inst:
+                    raise ValueError(
+                        f"Parent step {node.parent_step_index} was not decoded before child step {node.step_index}"
+                    )
                 parent_inst = step_to_inst[node.parent_step_index]
                 parent_part = graph.parts[parent_inst]
                 p_port = node.parent_port or "port_0"
                 s_port = node.self_port or "port_0"
 
                 if np.allclose(node_transform, np.eye(4)):
-                    try:
-                        from bricknet.data import load_catalog
-                        from bricksmith.physics.validator import frame
-                        from bricksmith.generation.sampler import yaw_matrix
+                    from bricksmith.physics.validator import frame
+                    from bricksmith.generation.sampler import yaw_matrix
 
-                        catalog = load_catalog()
-                        if parent_part.part_id in catalog.stem_to_id and node.part_id in catalog.stem_to_id:
-                            p_num = catalog.stem_to_id[parent_part.part_id]
-                            c_num = catalog.stem_to_id[node.part_id]
-                            p_idx = int(p_port.split("_")[1]) if "_" in p_port else 0
-                            s_idx = int(s_port.split("_")[1]) if "_" in s_port else 0
-                            pf = frame(p_num, p_idx)
-                            cf = frame(c_num, s_idx)
-                            rot_deg = int(getattr(node, "rotation_quarters", 0)) * 90
-                            node_transform = parent_part.transform @ pf @ yaw_matrix(rot_deg) @ np.linalg.inv(cf)
-                    except Exception:
-                        pass
+                    p_num = _stem_numeric(parent_part.part_id)
+                    c_num = _stem_numeric(node.part_id)
+                    p_idx = _parse_port_index(p_port)
+                    s_idx = _parse_port_index(s_port)
+                    pf = frame(p_num, p_idx)
+                    cf = frame(c_num, s_idx)
+                    rot_deg = int(getattr(node, "rotation_quarters", 0)) * 90
+                    node_transform = parent_part.transform @ pf @ yaw_matrix(rot_deg) @ np.linalg.inv(cf)
             elif node.parent_step_index is None and node.parent_port and node.parent_port.startswith("iface_"):
-                iface_idx = int(node.parent_port.split("_")[1])
-                if interface_ports is not None and 0 <= iface_idx < len(interface_ports):
-                    iface = interface_ports[iface_idx]
-                    try:
-                        from bricknet.data import load_catalog
-                        from bricksmith.physics.validator import frame
-                        from bricksmith.generation.sampler import yaw_matrix
+                if interface_ports is None:
+                    raise ValueError(
+                        f"Node at step {node.step_index} references interface port '{node.parent_port}', "
+                        "but no interface ports or interface assembly were provided to decode()"
+                    )
+                iface_idx = _parse_port_index(node.parent_port)
+                if not (0 <= iface_idx < len(interface_ports)):
+                    raise IndexError(
+                        f"Interface port index {iface_idx} out of range (available interface ports: {len(interface_ports)})"
+                    )
+                iface = interface_ports[iface_idx]
+                if np.allclose(node_transform, np.eye(4)):
+                    from bricksmith.physics.validator import frame
+                    from bricksmith.generation.sampler import yaw_matrix
 
-                        catalog = load_catalog()
-                        if node.part_id in catalog.stem_to_id:
-                            c_num = catalog.stem_to_id[node.part_id]
-                            s_port = node.self_port or "port_0"
-                            s_idx = int(s_port.split("_")[1]) if "_" in s_port else 0
-                            cf = frame(c_num, s_idx)
-                            rot_deg = int(getattr(node, "rotation_quarters", 0)) * 90
-                            node_transform = iface.world_transform @ yaw_matrix(rot_deg) @ np.linalg.inv(cf)
-                    except Exception:
-                        pass
+                    c_num = _stem_numeric(node.part_id)
+                    s_port = node.self_port or "port_0"
+                    s_idx = _parse_port_index(s_port)
+                    cf = frame(c_num, s_idx)
+                    rot_deg = int(getattr(node, "rotation_quarters", 0)) * 90
+                    node_transform = iface.world_transform @ yaw_matrix(rot_deg) @ np.linalg.inv(cf)
             elif node.parent_step_index is None and anchor_transform is not None:
                 if np.allclose(node_transform, np.eye(4)):
                     node_transform = anchor_transform.copy()
@@ -284,7 +414,7 @@ class BFSTreeCodec:
             )
             step_to_inst[node.step_index] = inst_id
 
-            if node.parent_step_index is not None and node.parent_step_index in step_to_inst:
+            if node.parent_step_index is not None:
                 parent_inst = step_to_inst[node.parent_step_index]
                 p_port = node.parent_port or "port_0"
                 s_port = node.self_port or "port_0"
@@ -297,7 +427,7 @@ class BFSTreeCodec:
                     conn_type=c_type,
                 )
             elif node.parent_step_index is None and node.parent_port and node.parent_port.startswith("iface_"):
-                iface_idx = int(node.parent_port.split("_")[1])
+                iface_idx = _parse_port_index(node.parent_port)
                 if interface_ports is not None and 0 <= iface_idx < len(interface_ports):
                     iface = interface_ports[iface_idx]
                     s_port = node.self_port or "port_0"
@@ -331,9 +461,10 @@ def get_available_interface_ports(graph: AssemblyGraph) -> List[InterfacePortSpe
 
     available = []
     for bid, part in sorted(graph.parts.items()):
-        if part.part_id not in catalog.stem_to_id:
+        try:
+            numeric = _stem_numeric(part.part_id)
+        except KeyError:
             continue
-        numeric = catalog.stem_to_id[part.part_id]
         if numeric >= len(conn_list):
             continue
         for idx, meta in enumerate(conn_list[numeric]):

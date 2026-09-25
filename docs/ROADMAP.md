@@ -30,7 +30,7 @@ Phase 4: Production Pipeline: Prompt-to-Box (LDraw + BOM + Instructions)
 
 * [x] **0.1 Repository Setup:** Clean layout, symlinked LDraw catalog (24,500+ parts) and BrickNet collision meshes (21,000+ parts).
 * [x] **0.2 Reference Dataset:** Curate 200 gold-standard LEGO Architecture sets in `data/reference_sets/`.
-* [x] **0.3 Physics & Verification Engine (`bricksmith.physics`):** Port and verify HiGHS LP compressive static equilibrium, MeshLib collision detection, and vertical insertion clearance.
+* [x] **0.3 Physics & Verification Engine (`bricksmith.physics`):** Port and verify HiGHS LP compressive static equilibrium and MeshLib collision detection (vertical insertion clearance planned for Phase 4 instruction sequencing).
 * [x] **0.4 CAD & Manufacturing IO (`bricksmith.io`):** Robust LDraw parser/writer and Pick-a-Brick / BrickLink CSV BOM exporter.
 * [x] **0.5 Multi-View Software Rasterizer (`bricksmith.rendering`):** Fast multi-view and presentation axonometric renderer.
 * **Gate 0:** 100% of curated reference sets pass LDraw roundtrip, validation, and BOM extraction without errors. [PASSED]

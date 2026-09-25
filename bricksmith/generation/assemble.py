@@ -180,9 +180,10 @@ def _is_supported(
     """
     if parent_index is not None and 0 <= parent_index < len(placed):
         parent = placed[parent_index]
-        # Fast path: child footprint completely inside parent footprint
+        # Fast path: child footprint completely inside parent footprint resting on its top
         if (
-            child.bounds_min[0] >= parent.bounds_min[0] - 0.5
+            abs(child.bounds_max[1] - parent.bounds_min[1]) <= contact_tol_y
+            and child.bounds_min[0] >= parent.bounds_min[0] - 0.5
             and child.bounds_max[0] <= parent.bounds_max[0] + 0.5
             and child.bounds_min[2] >= parent.bounds_min[2] - 0.5
             and child.bounds_max[2] <= parent.bounds_max[2] + 0.5
@@ -211,17 +212,18 @@ def _is_supported(
                 ])
 
     if not contact_corners:
-        if parent_index is not None and 0 <= parent_index < len(placed):
-            parent = placed[parent_index]
-            if np.all(child.bounds_min < parent.bounds_max + 1.0) and np.all(child.bounds_max > parent.bounds_min - 1.0):
-                return True
         return False
 
     contact_pts = np.asarray(contact_corners, dtype=np.float64)
-    child_com = 0.5 * np.array(
-        [child.bounds_min[0] + child.bounds_max[0], child.bounds_min[2] + child.bounds_max[2]],
-        dtype=np.float64,
-    )
+    try:
+        from bricksmith.physics.validator import world_properties
+        _, com_world, _, _ = world_properties(child.part_id, child.transform)
+        child_com = np.array([com_world[0], com_world[2]], dtype=np.float64)
+    except Exception:
+        child_com = 0.5 * np.array(
+            [child.bounds_min[0] + child.bounds_max[0], child.bounds_min[2] + child.bounds_max[2]],
+            dtype=np.float64,
+        )
     return _point_in_hull_2d(child_com, contact_pts, margin=0.5)
 
 
@@ -361,6 +363,73 @@ def _child_actions(
     return candidates, blocked
 
 
+def _interface_actions(
+    base_assembly: AssemblyGraph,
+    module_min: np.ndarray,
+    module_max: np.ndarray,
+) -> list[tuple[AttachmentToken, int]]:
+    """Root attachment actions that mate onto available interface stud ports of base_assembly."""
+    from bricksmith.core.tree import get_available_interface_ports
+    from bricksmith.generation.sampler import scope_stems
+
+    ifaces = get_available_interface_ports(base_assembly)
+    if not ifaces:
+        return []
+
+    base_placed = []
+    for bid, p in sorted(base_assembly.parts.items()):
+        try:
+            _, _, p_lo, p_hi = world_properties(p.part_id, p.transform)
+        except Exception:
+            p_lo = p.position - np.array([20.0, 12.0, 20.0])
+            p_hi = p.position + np.array([20.0, 12.0, 20.0])
+        base_placed.append(
+            PlacedPart(
+                part_id=p.part_id,
+                color_id=p.color_id,
+                transform=p.transform.copy(),
+                bounds_min=p_lo,
+                bounds_max=p_hi,
+                ports=[],
+            )
+        )
+
+    actions = []
+    for iface in ifaces:
+        for stem in scope_stems():
+            try:
+                template, numeric = _part_token(stem, color_id=15)
+            except KeyError:
+                continue
+            holes = [port.port_id for port in template.ports if port.connector_type == ConnectorType.TUBE]
+            if not holes:
+                continue
+            for hole in holes[:2]:
+                for yaw in (0, 180):
+                    s_idx = int(hole.split("_")[1]) if "_" in hole else 0
+                    cf = frame(numeric, s_idx)
+                    anchor_t = iface.world_transform @ yaw_matrix(yaw) @ np.linalg.inv(cf)
+                    token = AttachmentToken(
+                        part_id=template.part_id,
+                        color_id=15,
+                        parent_index=None,
+                        parent_port=f"iface_{iface.index}",
+                        self_port=hole,
+                        rotation_offset=yaw,
+                        ports=template.ports,
+                        local_bounds_min=template.local_bounds_min,
+                        local_bounds_max=template.local_bounds_max,
+                        anchor_transform=anchor_t,
+                    )
+                    child_placed = place_token(token, [])
+                    if _fits(child_placed, module_min, module_max) and not any(
+                        _overlaps(child_placed.bounds_min, child_placed.bounds_max, bp.bounds_min, bp.bounds_max)
+                        for bp in base_placed
+                    ):
+                        actions.append((token, numeric))
+    return actions
+
+
 def generate_guided_assembly(
     module_min: np.ndarray,
     module_max: np.ndarray,
@@ -370,8 +439,9 @@ def generate_guided_assembly(
     bag_name: str = "bag_1_foundation",
     aspect_ratio_str: Optional[str] = None,
     voxel_tokens: Optional[str] = None,
+    base_assembly: Optional[AssemblyGraph] = None,
 ):
-    """Sample a grounded plate and further attachments from masked codec token ids."""
+    """Sample a grounded plate or interface-anchored attachments from masked codec token ids."""
     from mlx_lm.utils import load
 
     from bricksmith.training.codec import cached_model_dir
@@ -386,9 +456,14 @@ def generate_guided_assembly(
     if hasattr(model, "eval"):
         model.eval()
 
-    plates = _plate_actions(module_min, module_max)
-    if not plates:
-        raise RuntimeError("no plate fits inside the module box")
+    if base_assembly is not None:
+        initial_actions = _interface_actions(base_assembly, module_min, module_max)
+        if not initial_actions:
+            raise RuntimeError("no interface attachment candidate fits inside the module box")
+    else:
+        initial_actions = _plate_actions(module_min, module_max)
+        if not initial_actions:
+            raise RuntimeError("no plate fits inside the module box")
 
     prompt = _prompt(
         module_min,
@@ -398,19 +473,19 @@ def generate_guided_assembly(
         voxel_tokens=voxel_tokens,
     )
 
-    plate_tokens = [token for token, _numeric in plates]
-    plate = _sample_action(
+    root_tokens = [token for token, _numeric in initial_actions]
+    root_token = _sample_action(
         model,
         tokenizer,
         prompt,
         [],
-        plate_tokens,
-        [False] * len(plate_tokens),
+        root_tokens,
+        [False] * len(root_tokens),
         seed,
     )
-    plate_numeric = next(numeric for token, numeric in plates if token is plate)
-    chosen: list[AttachmentToken] = [plate]
-    chosen_ids: list[int] = [plate_numeric]
+    root_numeric = next(numeric for token, numeric in initial_actions if token is root_token)
+    chosen: list[AttachmentToken] = [root_token]
+    chosen_ids: list[int] = [root_numeric]
     for step in range(1, target_pieces):
         children, child_blocked = _child_actions(chosen, chosen_ids, module_min, module_max)
         if not children or not any(not flag for flag in child_blocked):
@@ -428,6 +503,6 @@ def generate_guided_assembly(
         chosen.append(child)
         chosen_ids.append(int(catalog.stem_to_id[child.part_id]))
 
-    graph = realize_assembly(chosen, name="guided_assembly")
+    graph = realize_assembly(chosen, name=f"guided_{bag_name}", interface_assembly=base_assembly)
     print("BFSTreeCodec.decode")
     return graph

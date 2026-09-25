@@ -45,3 +45,4 @@ adapters/
 !configs/
 !docs/
 scratch/
+grok_interrupted_goal.md

@@ -115,7 +115,8 @@ def count_tokens(text: str) -> int:
     return len(ids)
 
 
-def port_code(name: Optional[str]) -> int:
+def port_code_v1(name: Optional[str]) -> int:
+    """Legacy v1 3-digit port code (physical ports 0..996)."""
     if name is None or name == "ROOT":
         return 0
     if name == "stud_0":
@@ -124,29 +125,64 @@ def port_code(name: Optional[str]) -> int:
         return 2
     if name.startswith("port_") and name[5:].isdigit():
         code = 3 + int(name[5:])
-        if code > 499:
-            raise TokenizationError(f"port index does not fit in allocated range: {name}")
+        if code >= 1000:
+            raise TokenizationError(f"port index does not fit in 3-digit v1 code range: {name}")
         return code
-    if name.startswith("iface_") and name[6:].isdigit():
-        idx = int(name[6:])
-        if idx > 499:
-            raise TokenizationError(f"interface port index does not fit in 3-digit code range: {name}")
-        return 500 + idx
-    raise TokenizationError(f"unsupported port name: {name}")
+    raise TokenizationError(f"unsupported v1 port name: {name}")
 
 
-def port_name(code: int) -> Optional[str]:
+def port_name_v1(code: int) -> Optional[str]:
+    """Legacy v1 3-digit port name."""
     if code == 0:
         return None
     if code == 1:
         return "stud_0"
     if code == 2:
         return "tube_0"
-    if 3 <= code < 500:
+    if 3 <= code < 1000:
         return f"port_{code - 3}"
-    if 500 <= code <= 999:
-        return f"iface_{code - 500}"
-    raise TokenizationError(f"bad port code {code}")
+    raise TokenizationError(f"bad v1 port code {code}")
+
+
+# Aliases for backward compatibility
+port_code = port_code_v1
+port_name = port_name_v1
+
+
+def port_to_v2_entry(name: Optional[str]) -> tuple[int, int]:
+    """Return (kind, index) for v2 5-digit port encoding: kind (1 digit) + index (4 digits)."""
+    if name is None or name == "ROOT":
+        return (0, 0)
+    if name == "stud_0":
+        return (1, 0)
+    if name == "tube_0":
+        return (2, 0)
+    if name.startswith("port_") and name[5:].isdigit():
+        idx = int(name[5:])
+        if idx > 9999:
+            raise TokenizationError(f"port index exceeds 4 digits: {name}")
+        return (3, idx)
+    if name.startswith("iface_") and name[6:].isdigit():
+        idx = int(name[6:])
+        if idx > 9999:
+            raise TokenizationError(f"interface port index exceeds 4 digits: {name}")
+        return (4, idx)
+    raise TokenizationError(f"unsupported port name: {name}")
+
+
+def port_from_v2_entry(kind: int, index: int) -> Optional[str]:
+    """Inverse of port_to_v2_entry."""
+    if kind == 0:
+        return None
+    if kind == 1:
+        return "stud_0"
+    if kind == 2:
+        return "tube_0"
+    if kind == 3:
+        return f"port_{index}"
+    if kind == 4:
+        return f"iface_{index}"
+    raise TokenizationError(f"bad v2 port kind {kind}")
 
 
 def _pack_tail(conn: Optional[ConnectorType], rotation_quarters: int) -> int:
@@ -187,23 +223,35 @@ class _Digits:
         return len(self.text) - self.i
 
 
-def serialize_tree(tree: Sequence, codebook: Codebook) -> str:
-    """Encode one bag's BFS tree as a pure digit string."""
+def serialize_tree(tree: Sequence, codebook: Codebook, version: int = 2) -> str:
+    """Encode one bag's BFS tree as a pure digit string.
+
+    Version 1: Legacy 3-digit port codes (physical ports 0..996).
+    Version 2: Starts with '00002', 5-digit port table entries: kind (1) + index (4).
+               Separate physical (kind=3, port_0..port_9999) and interface (kind=4, iface_0..iface_9999).
+               Preserves rotation_quarters on all root/interface nodes.
+    """
     if not tree:
         raise TokenizationError("empty tree")
+    if version not in (1, 2):
+        raise ValueError(f"unsupported codec version: {version}")
+
     part_locals: list[int] = []
     part_of: dict[str, int] = {}
-    port_locals: list[int] = []
+    port_locals: list = []
     port_of: dict[str, int] = {}
 
     def local_port(name: Optional[str]) -> int:
         key = name or "ROOT"
         if key not in port_of:
             port_of[key] = len(port_locals)
-            port_locals.append(port_code(None if key == "ROOT" else key))
+            if version == 2:
+                port_locals.append(port_to_v2_entry(None if key == "ROOT" else key))
+            else:
+                port_locals.append(port_code_v1(None if key == "ROOT" else key))
         return port_of[key]
 
-    records: list[str] = []
+    records: list = []
     for node in tree:
         if node.part_id not in part_of:
             try:
@@ -224,15 +272,21 @@ def serialize_tree(tree: Sequence, codebook: Codebook) -> str:
             parent = int(node.step_index) - int(node.parent_step_index)
             if not 1 <= parent <= 99:
                 raise TokenizationError(f"parent delta {parent} does not fit in 2 digits")
+
         if node.parent_step_index is None or node.conn_type in (None, ConnectorType.STUD):
             if node.parent_step_index is None:
-                quarters = 0
+                quarters = int(getattr(node, "rotation_quarters", 0)) % 4
             else:
-                parent_node = tree[node.parent_step_index]
-                quarters = _rotation_quarters(parent_node.transform, node.transform)
+                rot = getattr(node, "rotation_quarters", None)
+                if rot is not None and rot != 0:
+                    quarters = int(rot) % 4
+                else:
+                    parent_node = tree[node.parent_step_index]
+                    quarters = _rotation_quarters(parent_node.transform, node.transform)
             tail = _pack_tail(ConnectorType.STUD, quarters)
         else:
             tail = _pack_tail(node.conn_type, 0)
+
         pp = local_port(node.parent_port)
         sp = local_port(node.self_port)
         if pp > 99 or sp > 99:
@@ -245,10 +299,17 @@ def serialize_tree(tree: Sequence, codebook: Codebook) -> str:
         raise TokenizationError("more than 999 distinct parts in one bag")
     if port_width == 1 and any(pp > 9 or sp > 9 for _, _, _, pp, sp, _ in records):
         port_width = 2
-    out = [f"{len(part_locals):03d}"]
+
+    out = []
+    if version == 2:
+        out.append("00002")
+    out.append(f"{len(part_locals):03d}")
     out.extend(f"{idx:04d}" for idx in part_locals)
     out.append(f"{len(port_locals):03d}")
-    out.extend(f"{code:03d}" for code in port_locals)
+    if version == 2:
+        out.extend(f"{kind:01d}{idx:04d}" for kind, idx in port_locals)
+    else:
+        out.extend(f"{code:03d}" for code in port_locals)
     out.append(str(width))
     out.append(str(port_width))
     out.append(f"{len(records):03d}")
@@ -260,12 +321,26 @@ def serialize_tree(tree: Sequence, codebook: Codebook) -> str:
 
 
 def parse_attachment_digits(digits: str, codebook: Codebook) -> List[TreeNode]:
-    """Inverse of ``serialize_tree``."""
+    """Inverse of ``serialize_tree`` supporting both v1 legacy and v2 versioned formats."""
     reader = _Digits(digits)
+    version = 1
+    if digits.startswith("00002"):
+        reader.take(5)
+        version = 2
+
     n_parts = reader.take(3)
     part_locals = [reader.take(4) for _ in range(n_parts)]
     n_ports = reader.take(3)
-    port_locals = [reader.take(3) for _ in range(n_ports)]
+    if version == 2:
+        port_locals = []
+        for _ in range(n_ports):
+            kind = reader.take(1)
+            idx = reader.take(4)
+            port_locals.append(port_from_v2_entry(kind, idx))
+    else:
+        raw_codes = [reader.take(3) for _ in range(n_ports)]
+        port_locals = [port_name_v1(code) for code in raw_codes]
+
     width = reader.take(1)
     port_width = reader.take(1)
     if width not in (2, 3):
@@ -289,8 +364,8 @@ def parse_attachment_digits(digits: str, codebook: Codebook) -> List[TreeNode]:
         if global_part >= len(codebook.part_ids):
             raise TokenizationError("part index out of range")
         conn, quarters = _unpack_tail(tail)
-        p_name = port_name(port_locals[pp_i])
-        s_name = port_name(port_locals[sp_i])
+        p_name = port_locals[pp_i]
+        s_name = port_locals[sp_i]
         if parent_code == 0:
             parent_step = None
             parent_port = p_name

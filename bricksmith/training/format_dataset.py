@@ -9,7 +9,8 @@ from typing import Iterator, Optional
 import numpy as np
 
 from bricksmith.core.connector import ConnectorType
-from bricksmith.core.tree import BFSTreeCodec, TreeNode
+from bricksmith.core.graph import AssemblyGraph
+from bricksmith.core.tree import BFSTreeCodec, InterfacePortSpec, TreeNode, merge_assemblies
 from bricksmith.decomposition.modularizer import BAG_NAMES, partition_into_bags
 from bricksmith.geometry.bounds import calculate_bounds
 from bricksmith.geometry.envelope import generate_occupancy_grid
@@ -101,13 +102,24 @@ def format_conditioning_prompt(
     )
 
 
-def example_text(bag, bag_name: str, codebook: Codebook) -> str:
+def example_text(
+    bag,
+    bag_name: str,
+    codebook: Codebook,
+    interface_assembly: Optional[AssemblyGraph] = None,
+    interface_ports: Optional[Sequence[InterfacePortSpec]] = None,
+    version: int = 2,
+) -> str:
     """One conditioning block plus the bag's parent-relative attachment target."""
-    tree = BFSTreeCodec.encode(bag)
+    tree = BFSTreeCodec.encode(
+        bag,
+        interface_assembly=interface_assembly,
+        interface_ports=interface_ports,
+    )
     bounds = calculate_bounds(bag)
     grid = generate_occupancy_grid(bag, resolution_studs=4.0)
     voxels = coarse_voxel_hex(grid)
-    payload = serialize_tree(tree, codebook)
+    payload = serialize_tree(tree, codebook, version=version)
     width = max(1, int(round(float(bounds.width_studs))))
     depth = max(1, int(round(float(bounds.depth_studs))))
     height = max(1, int(round(float(bounds.height_studs))))
@@ -125,6 +137,7 @@ def example_text(bag, bag_name: str, codebook: Codebook) -> str:
 def iter_bag_examples(
     corpus_path: Path = CORPUS_PATH,
     codebook: Optional[Codebook] = None,
+    version: int = 2,
 ) -> Iterator[dict]:
     book = codebook if codebook is not None else build_codebook_from_corpus(corpus_path)
     with corpus_path.open(encoding="utf-8") as handle:
@@ -132,12 +145,19 @@ def iter_bag_examples(
             record = json.loads(line)
             graph = graph_from_record(record)
             bags = partition_into_bags(graph)
+            accumulated: Optional[AssemblyGraph] = None
             for bag_name in BAG_NAMES:
                 bag = bags[bag_name]
                 if bag.num_parts == 0:
                     continue
                 try:
-                    text = example_text(bag, bag_name, book)
+                    text = example_text(
+                        bag,
+                        bag_name,
+                        book,
+                        interface_assembly=accumulated,
+                        version=version,
+                    )
                     n_tokens = count_tokens(text)
                 except TokenizationError as exc:
                     raise TokenizationError(f"{record['model_id']} {bag_name}: {exc}") from exc
@@ -145,6 +165,7 @@ def iter_bag_examples(
                     raise TokenizationError(
                         f"{record['model_id']} {bag_name}: {n_tokens} tokens exceeds {DATASET_TOKEN_CAP - 1}"
                     )
+                accumulated = bag if accumulated is None else merge_assemblies(accumulated, bag)
                 yield {
                     "model_id": record["model_id"],
                     "bag": bag_name,
