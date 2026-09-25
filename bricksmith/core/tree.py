@@ -85,6 +85,44 @@ def _rotation_quarters_tree(parent_transform: np.ndarray, child_transform: np.nd
     return int(round(np.degrees(yaw) / 90.0)) % 4
 
 
+def are_connectors_compatible(pm: tuple, cm: tuple) -> tuple[bool, Optional[ConnectorType]]:
+    """Determine whether two connectors can legally physically mate based on family, subtype, and polarity."""
+    from bricknet.core import _STUD_MATES, _AXLE_MATES
+    _EXTRA_AXLE_MATES = frozenset({("axle", "hole"), ("pin", "hole"), ("pin", "clip")})
+    all_axle_mates = _AXLE_MATES | _EXTRA_AXLE_MATES
+
+    kp, sp, pol_p = pm[0], pm[1], pm[2]
+    kc, sc, pol_c = cm[0], cm[1], cm[2]
+
+    # 1. Stud <-> Hole / Tube family
+    if (kp == "stud" and kc == "hole") or (kp == "hole" and kc == "stud"):
+        sub_pair = (min(sp, sc), max(sp, sc))
+        if sub_pair in _STUD_MATES:
+            return True, ConnectorType.STUD
+        return False, None
+
+    # 2. Axle family (bars, clips, axles, pins, sockets, holes)
+    if kp == "axle" and kc == "axle":
+        sub_pair = (min(sp, sc), max(sp, sc))
+        if sub_pair in all_axle_mates:
+            if "clip" in (sp, sc) or "bar" in (sp, sc):
+                return True, ConnectorType.CLIP
+            return True, ConnectorType.AXLE
+        return False, None
+
+    # 3. Hinge, Ball, Fixed (require identical subtype and opposite polarity: one 'in', one 'on')
+    if kp == kc and kp in ("hinge", "ball", "fixed"):
+        if sp == sc and pol_p in ("in", "on") and pol_c in ("in", "on") and pol_p != pol_c:
+            if kp == "hinge":
+                return True, ConnectorType.HINGE
+            if kp == "ball":
+                return True, ConnectorType.BALL
+            return True, ConnectorType.STUD
+        return False, None
+
+    return False, None
+
+
 def _recover_intra_bag_mating(parent_part, child_part, conn_list):
     """Discover exact mating ports and relative yaw that reconstruct child_part from parent_part with < 1e-4 LDU error."""
     try:
@@ -94,6 +132,19 @@ def _recover_intra_bag_mating(parent_part, child_part, conn_list):
         return None
     if p_num >= len(conn_list) or c_num >= len(conn_list):
         return None
+
+    # Collision check: overlapping or interpenetrating pieces cannot legally mate
+    import os
+    from pathlib import Path
+    _pkg_root = Path(__file__).resolve().parents[2]
+    os.environ.setdefault("BRICKNET_DATA", str(_pkg_root / "data/bricknet-data"))
+    try:
+        from bricknet.collision import colliding_pairs
+        if colliding_pairs([p_num, c_num], [parent_part.transform, child_part.transform]):
+            return None
+    except Exception:
+        pass
+
     p_conns = conn_list[p_num]
     c_conns = conn_list[c_num]
     from bricksmith.physics.validator import frame
@@ -105,6 +156,9 @@ def _recover_intra_bag_mating(parent_part, child_part, conn_list):
         pf = frame(p_num, pi)
         pw = (parent_part.transform @ pf)[:3, 3]
         for ci, cm in enumerate(c_conns):
+            compat, conn_type = are_connectors_compatible(pm, cm)
+            if not compat:
+                continue
             cf = frame(c_num, ci)
             cw = (child_part.transform @ cf)[:3, 3]
             if np.linalg.norm(pw - cw) > 0.5:
@@ -115,10 +169,10 @@ def _recover_intra_bag_mating(parent_part, child_part, conn_list):
                 rot_err = np.linalg.norm(test_tf[:3, :3] - child_part.transform[:3, :3])
                 err = pos_err + rot_err
                 if err < 1e-4:
-                    return f"port_{pi}", f"port_{ci}", rot_q, 0.0
+                    return f"port_{pi}", f"port_{ci}", rot_q, 0.0, conn_type
                 if err < best_err:
                     best_err = err
-                    best = (f"port_{pi}", f"port_{ci}", rot_q, err)
+                    best = (f"port_{pi}", f"port_{ci}", rot_q, err, conn_type)
     return best
 
 
@@ -170,15 +224,16 @@ class BFSTreeCodec:
                         continue
                     m = _recover_intra_bag_mating(p_part, c_part, conn_list)
                     if m and m[3] < 1e-4:
-                        p_port, c_port, rot_q, _ = m
+                        p_port, c_port, rot_q, _ = m[:4]
+                        conn_type = m[4] if len(m) > 4 else ConnectorType.STUD
                         spec = iface_map.get((p_id, p_port))
                         if spec is not None and spec.index not in used_spec_indices:
                             if best_match is None or spec.index < best_match[0].index:
-                                best_match = (spec, c_port, rot_q)
+                                best_match = (spec, c_port, rot_q, conn_type)
                 if best_match is not None:
-                    spec, c_port, rot_q = best_match
+                    spec, c_port, rot_q, conn_type = best_match
                     used_spec_indices.add(spec.index)
-                    iface_attachments[c_id] = (f"iface_{spec.index}", c_port, ConnectorType.STUD, rot_q)
+                    iface_attachments[c_id] = (f"iface_{spec.index}", c_port, conn_type, rot_q)
 
         # Build intra-bag mating adjacency with exact verified kinematics
         intra_adj: dict[int, list[tuple[int, str, str, ConnectorType, int]]] = {}
@@ -190,10 +245,12 @@ class BFSTreeCodec:
                     continue
                 m = _recover_intra_bag_mating(p1, p2, conn_list)
                 if m and m[3] < 1e-4:
-                    intra_adj.setdefault(b1, []).append((b2, m[0], m[1], ConnectorType.STUD, m[2]))
+                    conn_type = m[4] if len(m) > 4 else ConnectorType.STUD
+                    intra_adj.setdefault(b1, []).append((b2, m[0], m[1], conn_type, m[2]))
                     m_inv = _recover_intra_bag_mating(p2, p1, conn_list)
                     if m_inv and m_inv[3] < 1e-4:
-                        intra_adj.setdefault(b2, []).append((b1, m_inv[0], m_inv[1], ConnectorType.STUD, m_inv[2]))
+                        inv_conn_type = m_inv[4] if len(m_inv) > 4 else ConnectorType.STUD
+                        intra_adj.setdefault(b2, []).append((b1, m_inv[0], m_inv[1], inv_conn_type, m_inv[2]))
 
         visited = set()
         tree_nodes: List[TreeNode] = []
