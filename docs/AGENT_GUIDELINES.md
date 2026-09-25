@@ -43,7 +43,7 @@ bricksmith/
 
 ## 3. Daily Execution Workflow
 
-1. **Check the Current Phase in [`docs/ROADMAP.md`](ROADMAP.md)**: Identify the active unchecked work item under the current phase.
+1. **Check the Current Phase in [`docs/ROADMAP.md`](ROADMAP.md)**: The active block is Gate 3a in [`PHASE_3A_GOAL.md`](PHASE_3A_GOAL.md). Training strings and sampler actions must stay the same codec. Do not satisfy generation by searching a fixed part list until `validate_ldraw` passes.
 2. **Read Interface Contracts**: Ensure inputs and outputs conform to standard LDraw Units (LDU) and established schemas.
 3. **Execute & Test**:
    ```bash

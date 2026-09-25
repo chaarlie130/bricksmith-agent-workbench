@@ -135,6 +135,150 @@ class TestGuidedSampler(unittest.TestCase):
         if other[0] != ids[0]:
             self.assertTrue(np.isneginf(masked[other[0]]))
 
+    def test_scope_slope_codec_roundtrip_and_mesh_logit_mask(self):
+        from bricksmith.core.connector import ConnectorType, Polarity
+        from bricksmith.core.tree import BFSTreeCodec, TreeNode
+        from bricksmith.generation.assemble import (
+            _child_actions,
+            _child_token,
+            _ground_anchor,
+            _part_token,
+            module_box_from_studs,
+        )
+        from bricksmith.generation.sampler import (
+            illegal_mask,
+            mask_attachment_candidates,
+            masked_logits_for_continuations,
+            meshes_penetrate,
+            place_token,
+        )
+        from bricksmith.training.codec import (
+            build_codebook,
+            parse_attachment_digits,
+            serialize_tree,
+            training_tokenizer,
+        )
+
+        slope = "54200"
+        codebook = build_codebook(["3020", slope, "3001"], [0, 15])
+        plate, plate_id = _part_token("3020", 0)
+        brick, _brick_id = _part_token(slope, 15)
+        stud = next(port.port_id for port in plate.ports if port.connector_type == ConnectorType.STUD)
+        hole = next(port.port_id for port in brick.ports if port.connector_type == ConnectorType.TUBE)
+        nodes = [
+            TreeNode(0, 1, "3020", 0, None, None, None, None, np.eye(4)),
+            TreeNode(1, 2, slope, 15, 0, stud, hole, ConnectorType.STUD, np.eye(4)),
+        ]
+        text = serialize_tree(nodes, codebook)
+        self.assertNotRegex(text, r"POSE")
+        decoded = BFSTreeCodec.decode(parse_attachment_digits(text, codebook))
+        self.assertEqual([decoded.parts[1].part_id, decoded.parts[2].part_id], ["3020", slope])
+        link = decoded.connections[0]
+        self.assertEqual((link.source_port_id, link.target_port_id), (stud, hole))
+
+        module_min, module_max = module_box_from_studs(32, 32, 24)
+        plate.anchor_transform = _ground_anchor(plate_id, module_min, module_max)
+        children, blocked = _child_actions([plate], [plate_id], module_min, module_max)
+        drawable = [token.part_id for token, flag in zip(children, blocked) if not flag]
+        self.assertIn("54200", drawable)
+        self.assertIn("3794b", drawable)
+        self.assertTrue(any(token.part_id == "99781" for token in children))
+
+        brick, brick_id = _part_token("3005", 15)
+        jumper, jumper_id = _part_token("15573", 15)
+        parent_stud = "port_11"
+        brick_hole = next(port.port_id for port in brick.ports if port.connector_type == ConnectorType.TUBE)
+        legal = _child_token(brick, parent_stud, brick_hole, 0, 15)
+        penetrating = _child_token(jumper, parent_stud, "port_2", 0, 15)
+        child_stud = next(port.port_id for port in brick.ports if port.connector_type == ConnectorType.STUD)
+        stud_stud = _child_token(brick, parent_stud, child_stud, 0, 15)
+        placed = place_token(plate, [])
+        self.assertFalse(illegal_mask([penetrating], [placed], module_min, module_max)[0])
+        self.assertTrue(
+            meshes_penetrate(
+                [plate_id, jumper_id],
+                [placed.transform, place_token(penetrating, [placed]).transform],
+            )
+        )
+        self.assertFalse(
+            meshes_penetrate(
+                [plate_id, brick_id],
+                [placed.transform, place_token(legal, [placed]).transform],
+            )
+        )
+        candidates = [legal, penetrating, stud_stud]
+        flags = mask_attachment_candidates(
+            candidates,
+            [plate],
+            [plate_id],
+            [brick_id, jumper_id, brick_id],
+            module_min,
+            module_max,
+        )
+        self.assertEqual(flags, [False, True, True])
+        tokenizer = training_tokenizer()
+        sequences = [
+            codec_attachment_ids(tokenizer, [plate, token]) for token in candidates
+        ]
+        legal_ids, pen_ids, mate_ids = sequences
+        offset = next(i for i, (a, b) in enumerate(zip(legal_ids, pen_ids)) if a != b)
+        vocab = max(token_id for seq in sequences for token_id in seq) + 1
+        masked = masked_logits_for_continuations(
+            np.ones(vocab, dtype=np.float32),
+            sequences,
+            flags,
+            offset,
+        )
+        self.assertTrue(np.isfinite(masked[legal_ids[offset]]))
+        self.assertTrue(np.isneginf(masked[pen_ids[offset]]))
+        mate_offset = next(i for i, (a, b) in enumerate(zip(legal_ids, mate_ids)) if a != b)
+        mate_masked = masked_logits_for_continuations(
+            np.ones(vocab, dtype=np.float32),
+            sequences,
+            flags,
+            mate_offset,
+        )
+        self.assertTrue(np.isneginf(mate_masked[mate_ids[mate_offset]]))
+
+    def test_stack_parent_stays_in_the_building_box(self):
+        from bricksmith.core.connector import ConnectorType
+        from bricksmith.generation.assemble import _child_actions, _child_token, _ground_anchor, _part_token, module_box_from_studs
+        from bricksmith.generation.sampler import mask_attachment_candidates, meshes_penetrate, place_token
+
+        module_min, module_max = module_box_from_studs(32, 32, 24)
+        plate, plate_id = _part_token("3022", 0)
+        plate.anchor_transform = _ground_anchor(plate_id, module_min, module_max)
+        brick, brick_id = _part_token("3001", 15)
+        stud = next(port.port_id for port in plate.ports if port.connector_type == ConnectorType.STUD)
+        hole = next(port.port_id for port in brick.ports if port.connector_type == ConnectorType.TUBE)
+        first = _child_token(brick, stud, hole, 0, 15)
+        flags = mask_attachment_candidates(
+            [first], [plate], [plate_id], [brick_id], module_min, module_max
+        )
+        self.assertFalse(flags[0])
+        children, blocked = _child_actions(
+            [plate, first], [plate_id, brick_id], module_min, module_max
+        )
+        stacked = [
+            token for token, flag in zip(children, blocked) if token.parent_index == 1 and not flag
+        ]
+        self.assertTrue(stacked)
+        placed = place_token(plate, [])
+        overhang = place_token(first, [placed])
+        past_plate = (
+            overhang.bounds_min[0] < placed.bounds_min[0] - 0.5
+            or overhang.bounds_max[0] > placed.bounds_max[0] + 0.5
+            or overhang.bounds_min[2] < placed.bounds_min[2] - 0.5
+            or overhang.bounds_max[2] > placed.bounds_max[2] + 0.5
+        )
+        self.assertTrue(past_plate)
+        self.assertFalse(
+            meshes_penetrate(
+                [plate_id, brick_id],
+                [placed.transform, overhang.transform],
+            )
+        )
+
 
 if __name__ == "__main__":
     unittest.main()

@@ -225,6 +225,41 @@ def apply_illegal_logit_mask(logits: np.ndarray, illegal_ids: Sequence[int]) -> 
     return masked
 
 
+def mask_attachment_candidates(
+    candidates: Sequence[AttachmentToken],
+    placed_tokens: Sequence[AttachmentToken],
+    placed_ids: Sequence[int],
+    candidate_ids: Sequence[int],
+    module_min: np.ndarray,
+    module_max: np.ndarray,
+) -> list[bool]:
+    """Block only bounds violations, bad mating, AABB overlap, and mesh penetration."""
+    placed_parts: list[PlacedPart] = []
+    for token in placed_tokens:
+        placed_parts.append(place_token(token, placed_parts))
+    blocked = illegal_mask(candidates, placed_parts, module_min, module_max)
+    for index, token in enumerate(candidates):
+        if blocked[index]:
+            continue
+        child = place_token(token, placed_parts)
+        if meshes_penetrate(
+            list(placed_ids) + [int(candidate_ids[index])],
+            [part.transform for part in placed_parts] + [child.transform],
+        ):
+            blocked[index] = True
+    return blocked
+
+
+def meshes_penetrate(part_ids: Sequence[int], transforms: Sequence[np.ndarray]) -> bool:
+    """True when inset collision meshes interpenetrate, using the validator's kernel."""
+    from bricknet.collision import colliding_pairs
+
+    if len(part_ids) < 2:
+        return False
+    pairs = colliding_pairs(np.asarray(list(part_ids)), np.stack([np.asarray(t) for t in transforms]))
+    return len(pairs) > 0
+
+
 def attachment_nodes(actions: Sequence[AttachmentToken]) -> list[TreeNode]:
     """Parent-relative tree nodes whose poses come from port mating."""
     placed: list[PlacedPart] = []
@@ -259,6 +294,18 @@ def codec_attachment_ids(tokenizer, actions: Sequence[AttachmentToken]) -> list[
     return list(encoded)
 
 
+def masked_logits_for_continuations(
+    logits: np.ndarray,
+    sequences: Sequence[Sequence[int]],
+    blocked: Sequence[bool],
+    offset: int,
+) -> np.ndarray:
+    """Set next-token ids to -inf unless they continue a candidate the mask left open."""
+    legal = [seq for seq, flag in zip(sequences, blocked) if not flag]
+    illegal = illegal_ids_for_continuations(int(np.asarray(logits).shape[0]), legal, offset)
+    return apply_illegal_logit_mask(logits, illegal)
+
+
 def illegal_ids_for_continuations(
     vocab_size: int,
     sequences: Sequence[Sequence[int]],
@@ -277,7 +324,10 @@ def _model_next_logits(model, token_ids: Sequence[int]) -> np.ndarray:
     logits = model(mx.array(list(token_ids))[None])
     if isinstance(logits, (tuple, list)):
         logits = logits[0]
-    return np.array(logits[0, -1].astype(mx.float32))
+    vector = np.array(logits[0, -1].astype(mx.float32))
+    del logits
+    mx.clear_cache()
+    return vector
 
 
 def sample_codec_continuation(
@@ -298,15 +348,21 @@ def sample_codec_continuation(
         pending = [seq for seq in alive if offset < len(seq)]
         if not pending:
             break
-        logits = _model_next_logits(model, prompt_ids + chosen)
-        illegal = illegal_ids_for_continuations(int(logits.shape[0]), pending, offset)
-        masked = apply_illegal_logit_mask(logits, illegal)
-        pick = sample_masked_token_id(masked, seed + offset)
-        print(
-            f"next-token forward: vocab={logits.shape[0]} "
-            f"illegal_logit_ids={len(illegal)} sampled_token_id={pick}"
-        )
-        legal_next = {seq[offset] for seq in pending}
+        legal_next = {int(seq[offset]) for seq in pending}
+        if len(legal_next) == 1:
+            pick = next(iter(legal_next))
+            vocab = int(getattr(tokenizer, "vocab_size", 0))
+            illegal_count = vocab - 1 if vocab else 0
+            print(f"mask-forced token: illegal_logit_ids={illegal_count} sampled_token_id={pick}")
+        else:
+            logits = _model_next_logits(model, prompt_ids + chosen)
+            illegal = illegal_ids_for_continuations(int(logits.shape[0]), pending, offset)
+            masked = apply_illegal_logit_mask(logits, illegal)
+            pick = sample_masked_token_id(masked, seed + offset)
+            print(
+                f"next-token forward: vocab={logits.shape[0]} "
+                f"illegal_logit_ids={len(illegal)} sampled_token_id={pick}"
+            )
         if pick not in legal_next:
             raise RuntimeError(f"sampled token {pick} is outside the codec mask")
         chosen.append(pick)

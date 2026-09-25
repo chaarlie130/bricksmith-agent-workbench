@@ -7,7 +7,9 @@ Poses come from parent-port mating and the graph is realized with
 """
 from __future__ import annotations
 
-from typing import Sequence
+from functools import lru_cache
+from pathlib import Path
+from typing import Optional, Sequence
 
 import numpy as np
 
@@ -17,17 +19,16 @@ from bricksmith.generation.sampler import (
     PlacedPart,
     PortSpec,
     codec_attachment_ids,
-    illegal_mask,
+    mask_attachment_candidates,
     place_token,
     realize_assembly,
     sample_codec_continuation,
 )
 from bricksmith.physics.validator import frame, world_properties
-from bricknet.collision import colliding_pairs
 from bricknet.data import load_catalog, load_connector_list
 
 # Plates and bricks wider than 1 stud. 1x1 stems are intentionally absent.
-PLATES = ("3031", "3020", "3022")
+PLATES = ("3031",)
 BRICKS = ("3001", "3003", "3004", "3010")
 YAWS = (0, 90, 180, 270)
 GROUND_Y = 8.0
@@ -92,11 +93,34 @@ def module_box_from_studs(width: float, depth: float, height: float) -> tuple[np
     return module_min, module_max
 
 
-def _child_token(template: AttachmentToken, parent_port: str, self_port: str, yaw: int, color: int) -> AttachmentToken:
+@lru_cache(maxsize=1)
+def _scope_payload() -> dict:
+    import json
+
+    path = Path(__file__).resolve().parents[2] / "configs" / "architecture_scope.json"
+    return json.loads(path.read_text(encoding="utf-8"))
+
+
+def scope_stems() -> tuple[str, ...]:
+    """In-scope architecture catalog, including SNOT, jumpers, slopes, and tiles."""
+    stems: list[str] = []
+    for group in _scope_payload().get("part_categories", {}).values():
+        stems.extend(str(stem) for stem in group)
+    return tuple(dict.fromkeys(stems))
+
+
+def _child_token(
+    template: AttachmentToken,
+    parent_port: str,
+    self_port: str,
+    yaw: int,
+    color: int,
+    parent_index: int = 0,
+) -> AttachmentToken:
     return AttachmentToken(
         part_id=template.part_id,
         color_id=color,
-        parent_index=0,
+        parent_index=parent_index,
         parent_port=parent_port,
         self_port=self_port,
         rotation_offset=yaw,
@@ -121,10 +145,6 @@ def _supported(parent: PlacedPart, child: PlacedPart) -> bool:
         and child.bounds_min[2] >= parent.bounds_min[2] - 0.5
         and child.bounds_max[2] <= parent.bounds_max[2] + 0.5
     )
-
-
-def _mesh_free(numeric_ids: Sequence[int], transforms: Sequence[np.ndarray]) -> bool:
-    return len(colliding_pairs(np.asarray(numeric_ids), np.stack(transforms))) == 0
 
 
 def _prompt(module_min: np.ndarray, module_max: np.ndarray, chosen: str = "") -> str:
@@ -194,32 +214,54 @@ def _plate_actions(module_min: np.ndarray, module_max: np.ndarray) -> list[tuple
 
 
 def _child_actions(
-    plate: AttachmentToken,
-    plate_id: int,
+    placed_tokens: Sequence[AttachmentToken],
+    placed_ids: Sequence[int],
     module_min: np.ndarray,
     module_max: np.ndarray,
 ) -> tuple[list[AttachmentToken], list[bool]]:
-    placed_plate = place_token(plate, [])
+    """In-scope attachments. Illegal mating, bounds, overlap, and mesh penetration are blocked."""
+    placed_parts = []
+    running: list[AttachmentToken] = []
+    for token in placed_tokens:
+        running.append(token)
+        placed_parts.append(place_token(token, placed_parts))
     candidates: list[AttachmentToken] = []
     numeric_ids: list[int] = []
-    for stem in BRICKS:
-        template, numeric = _part_token(stem, color_id=15)
-        studs = [port.port_id for port in plate.ports if port.connector_type == ConnectorType.STUD]
-        holes = [port.port_id for port in template.ports if port.connector_type == ConnectorType.TUBE]
-        for stud in studs:
-            for hole in holes:
-                for yaw in YAWS:
-                    candidates.append(_child_token(template, stud, hole, yaw, 15))
-                    numeric_ids.append(numeric)
-    blocked = illegal_mask(candidates, [placed_plate], module_min, module_max)
+    for parent_index, parent in enumerate(placed_tokens):
+        studs = [port.port_id for port in parent.ports if port.connector_type == ConnectorType.STUD]
+        if not studs:
+            continue
+        for stem in scope_stems():
+            try:
+                template, numeric = _part_token(stem, color_id=15)
+            except KeyError:
+                continue
+            holes = [port.port_id for port in template.ports if port.connector_type == ConnectorType.TUBE]
+            if not holes:
+                continue
+            for stud in studs:
+                for hole in holes[:2]:
+                    for yaw in (0, 180):
+                        candidates.append(
+                            _child_token(template, stud, hole, yaw, 15, parent_index=parent_index)
+                        )
+                        numeric_ids.append(numeric)
+    if not candidates:
+        return [], []
+    blocked = mask_attachment_candidates(
+        candidates,
+        placed_tokens,
+        placed_ids,
+        numeric_ids,
+        module_min,
+        module_max,
+    )
     for index, token in enumerate(candidates):
         if blocked[index]:
             continue
-        child = place_token(token, [placed_plate])
-        if not _supported(placed_plate, child) or not _mesh_free(
-            (plate_id, numeric_ids[index]),
-            (placed_plate.transform, child.transform),
-        ):
+        child = place_token(token, placed_parts)
+        parent = placed_parts[token.parent_index]
+        if not _supported(parent, child):
             blocked[index] = True
     return candidates, blocked
 
@@ -228,8 +270,10 @@ def generate_guided_assembly(
     module_min: np.ndarray,
     module_max: np.ndarray,
     seed: int = 0,
+    adapter_path: Optional[str] = None,
+    target_pieces: int = 8,
 ):
-    """Sample a grounded plate, then one port attachment, from masked model logits."""
+    """Sample a grounded plate and further attachments from masked codec token ids."""
     from mlx_lm.utils import load
 
     from bricksmith.training.codec import cached_model_dir
@@ -238,7 +282,9 @@ def generate_guided_assembly(
     module_max = np.asarray(module_max, dtype=np.float64)
     model_path = str(cached_model_dir())
     print(f"model path: {model_path}")
-    model, tokenizer = load(model_path)
+    if adapter_path:
+        print(f"adapter path: {adapter_path}")
+    model, tokenizer = load(model_path, adapter_path=adapter_path)
     if hasattr(model, "eval"):
         model.eval()
 
@@ -257,17 +303,27 @@ def generate_guided_assembly(
         seed,
     )
     plate_numeric = next(numeric for token, numeric in plates if token is plate)
+    chosen: list[AttachmentToken] = [plate]
+    chosen_ids: list[int] = [plate_numeric]
+    history = _action_text(plate)
+    for step in range(1, target_pieces):
+        children, child_blocked = _child_actions(chosen, chosen_ids, module_min, module_max)
+        if not children or not any(not flag for flag in child_blocked):
+            raise RuntimeError(f"logit mask rejected every attachment at piece {step + 1}")
+        child = _sample_action(
+            model,
+            tokenizer,
+            _prompt(module_min, module_max, history),
+            chosen,
+            children,
+            child_blocked,
+            seed + step,
+        )
+        catalog = load_catalog()
+        chosen.append(child)
+        chosen_ids.append(int(catalog.stem_to_id[child.part_id]))
+        history = history + "\n" + _action_text(child)
 
-    children, child_blocked = _child_actions(plate, plate_numeric, module_min, module_max)
-    child = _sample_action(
-        model,
-        tokenizer,
-        _prompt(module_min, module_max, _action_text(plate)),
-        [plate],
-        children,
-        child_blocked,
-        seed + 1,
-    )
-    graph = realize_assembly([plate, child], name="guided_assembly")
+    graph = realize_assembly(chosen, name="guided_assembly")
     print("BFSTreeCodec.decode")
     return graph

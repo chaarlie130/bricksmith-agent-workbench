@@ -23,6 +23,7 @@ ROOT = Path(__file__).resolve().parents[2]
 CODEBOOK_PATH = Path(__file__).resolve().parent / "codebook.json"
 MODEL_REPO = "mlx-community/Llama-3.2-3B-Instruct-4bit"
 TOKEN_LIMIT = 1500
+DATASET_TOKEN_CAP = 1400
 
 # Tail digit: 0-3 is a stud mating with that many quarter-turns of yaw.
 # 4, 5, 6 record axle, hinge, and ball matings (yaw stored as 0).
@@ -210,9 +211,12 @@ def serialize_tree(tree: Sequence, codebook: Codebook) -> str:
             raise TokenizationError(f"color {node.color_id} missing from codebook") from exc
         if color_i > 99:
             raise TokenizationError(f"color index {color_i} exceeds 2 digits")
-        parent = 999 if node.parent_step_index is None else int(node.parent_step_index)
-        if parent != 999 and not 0 <= parent <= 298:
-            raise TokenizationError(f"parent step {parent} does not fit the digit scheme")
+        if node.parent_step_index is None:
+            parent = 0
+        else:
+            parent = int(node.step_index) - int(node.parent_step_index)
+            if not 1 <= parent <= 99:
+                raise TokenizationError(f"parent delta {parent} does not fit in 2 digits")
         if node.parent_step_index is None or node.conn_type in (None, ConnectorType.STUD):
             if node.parent_step_index is None:
                 quarters = 0
@@ -229,16 +233,22 @@ def serialize_tree(tree: Sequence, codebook: Codebook) -> str:
         records.append((part_of[node.part_id], color_i, parent, pp, sp, tail))
 
     width = 3 if len(part_locals) > 99 else 2
+    port_width = 1 if len(port_locals) <= 10 else 2
     if len(part_locals) > 999:
         raise TokenizationError("more than 999 distinct parts in one bag")
+    if port_width == 1 and any(pp > 9 or sp > 9 for _, _, _, pp, sp, _ in records):
+        port_width = 2
     out = [f"{len(part_locals):03d}"]
     out.extend(f"{idx:04d}" for idx in part_locals)
     out.append(f"{len(port_locals):03d}")
     out.extend(f"{code:03d}" for code in port_locals)
     out.append(str(width))
+    out.append(str(port_width))
     out.append(f"{len(records):03d}")
     for part_i, color_i, parent, pp, sp, tail in records:
-        out.append(f"{part_i:0{width}d}{color_i:02d}{parent:03d}{pp:02d}{sp:02d}{tail:01d}")
+        out.append(
+            f"{part_i:0{width}d}{color_i:02d}{parent:02d}{pp:0{port_width}d}{sp:0{port_width}d}{tail:01d}"
+        )
     return "".join(out)
 
 
@@ -250,16 +260,19 @@ def parse_attachment_digits(digits: str, codebook: Codebook) -> List[TreeNode]:
     n_ports = reader.take(3)
     port_locals = [reader.take(3) for _ in range(n_ports)]
     width = reader.take(1)
+    port_width = reader.take(1)
     if width not in (2, 3):
         raise TokenizationError(f"bad part-index width {width}")
+    if port_width not in (1, 2):
+        raise TokenizationError(f"bad port-index width {port_width}")
     n_steps = reader.take(3)
     nodes: List[TreeNode] = []
     for step in range(n_steps):
         part_i = reader.take(width)
         color_i = reader.take(2)
-        parent_code = reader.take(3)
-        pp_i = reader.take(2)
-        sp_i = reader.take(2)
+        parent_code = reader.take(2)
+        pp_i = reader.take(port_width)
+        sp_i = reader.take(port_width)
         tail = reader.take(1)
         if part_i >= len(part_locals) or pp_i >= len(port_locals) or sp_i >= len(port_locals):
             raise TokenizationError("local index out of range")
@@ -269,13 +282,15 @@ def parse_attachment_digits(digits: str, codebook: Codebook) -> List[TreeNode]:
         if global_part >= len(codebook.part_ids):
             raise TokenizationError("part index out of range")
         conn, quarters = _unpack_tail(tail)
-        if parent_code == 999:
+        if parent_code == 0:
             parent_step = None
             parent_port = None
             self_port = None
             conn_out = None
         else:
-            parent_step = parent_code
+            parent_step = step - parent_code
+            if parent_step < 0:
+                raise TokenizationError(f"parent delta {parent_code} runs before step {step}")
             parent_port = port_name(port_locals[pp_i])
             self_port = port_name(port_locals[sp_i])
             conn_out = conn
@@ -314,8 +329,8 @@ def tree_nodes_from_target_text(text: str, codebook: Optional[Codebook] = None) 
     return parse_attachment_digits(extract_payload_digits(text), book)
 
 
-def coarse_voxel_hex(grid: np.ndarray, nx: int = 4, ny: int = 1, nz: int = 2) -> str:
-    """OR-pool an occupancy grid into a short hex token string."""
+def coarse_voxel_hex(grid: np.ndarray, nx: int = 8, ny: int = 4, nz: int = 8) -> str:
+    """OR-pool an occupancy grid into a fixed-width hex massing signature."""
     arr = np.asarray(grid, dtype=bool)
     if arr.ndim != 3 or arr.size == 0 or not arr.any():
         return "0"

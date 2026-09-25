@@ -5,7 +5,7 @@ import unittest
 from bricksmith.core.tree import BFSTreeCodec
 from bricksmith.decomposition.modularizer import BAG_NAMES, partition_into_bags
 from bricksmith.training.codec import (
-    TOKEN_LIMIT,
+    DATASET_TOKEN_CAP,
     count_tokens,
     set_active_codebook,
     tree_nodes_from_target_text,
@@ -45,7 +45,7 @@ class TestTrainingFormat(unittest.TestCase):
             self.assertNotIn("POSE:", target)
             payload = target.split("\n", 1)[1].strip()
             self.assertRegex(payload, r"^[0-9]+$")
-            self.assertLess(count_tokens(text), TOKEN_LIMIT)
+            self.assertLess(count_tokens(text), DATASET_TOKEN_CAP)
 
             source = BFSTreeCodec.encode(bag)
             decoded_nodes = tree_nodes_from_target_text(text, self.codebook)

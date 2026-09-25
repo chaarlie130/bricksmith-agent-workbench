@@ -10,14 +10,15 @@
 Phase 0: Foundations & Port Verification [COMPLETED]
    │
    ▼
-Phase 1: Port-Graph Engine & Micro-Architecture Catalog (SNOT, Jumpers) [ACTIVE]
+Phase 1: Port-Graph Engine & Micro-Architecture Catalog (SNOT, Jumpers) [COMPLETED]
    │
    ▼
-Phase 2: Modular Decomposition ("Numbered Bags") & 3D Envelope Prior
+Phase 2: Modular Decomposition ("Numbered Bags") & 3D Envelope Prior [COMPLETED]
    │
    ▼
-Phase 3: Neural Attachment Generator & Guided Decoding
-   │
+Phase 3: Neural Attachment Generator & Guided Decoding [ACTIVE]
+   │     3a Closed loop (one codec, mesh-aware mask, short LoRA run)
+   │     3  400+ piece validity gate, after PVPO
    ▼
 Phase 4: Production Pipeline: Prompt-to-Box (LDraw + BOM + Instructions)
 ```
@@ -76,14 +77,28 @@ Phase 4: Production Pipeline: Prompt-to-Box (LDraw + BOM + Instructions)
 ## Phase 3: Neural Attachment Generator & Guided Decoding
 **Goal:** Train and steer the generative model to place pieces via BFS graph prediction.
 
-* [x] **3.1 Dataset Preparation:**
-  - Tokenize reference architecture sets and synthetic modular sub-structures into BFS path sequences.
-* [x] **3.2 Fine-Tuning Setup:**
-  - Fine-tune small local models (e.g., Qwen-3.5-9B or LLaMA-3.2-3B via MLX on Apple Silicon) on attachment path prediction conditioned on coarse geometry.
-* [x] **3.3 Validity-Constrained Logit Masking:**
-  - Replace expensive rollback with dynamic forward masking: mask out part/port tokens that would cause physical collisions or boundary overruns before sampling.
-* [ ] **3.4 PVPO Reinforcement Alignment:**
-  - Post-train with coupled rewards (physical equilibrium + geometric/semantic fidelity) to prevent "PhysHack" degeneration.
+Scaffolding for 3.1–3.3 is on disk. It is not Gate 3, and it is not yet a closed training loop. The corpus, the trainer, and the sampler must speak one attachment language before a long fine-tune. The active target is **Gate 3a**. PVPO and the 400-piece bar stay after that.
+
+### Landed scaffolding
+
+* [x] **3.1 Bag dataset:** `scripts/prepare_training_data.py` writes `data/training/train.jsonl` and `data/training/val.jsonl` from `data/corpus/reference_bfs_trees.jsonl`. One example per non-empty numbered bag, split by source model. Targets are parent-relative codec strings (part, color, parent index, parent port, self port, rotation offset), not absolute `(x, y, z)`. Sequences stay under 1,500 Llama 3.2 tokens. `BFSTreeCodec.decode` restores part ids and parent-port links.
+* [x] **3.2 MLX LoRA dry-run:** `scripts/train_mlx.py` loads cached `mlx-community/Llama-3.2-3B-Instruct-4bit` (Qwen 2.5 7B is not required). Dry-run uses gradient checkpointing, batch size 1, gradient accumulation, and sequence length 1,500. One verified optimizer step fits under 16 GB. This is not a trained attachment model.
+* [x] **3.3 Mask prototype:** `bricksmith/generation/sampler.py` can set illegal next-token ids to `-inf` for out-of-bounds placement, stud-to-stud or tube-to-tube mating, and bounding-box overlap, then realize a pose from the parent port through `BFSTreeCodec.decode`. The live sampler's legal set is still a small plate-and-brick joint pool. Mesh penetration is not part of that mask. `scripts/validate.py` remains the equilibrium gate.
+
+### Gate 3a — closed loop [PASSED]
+
+The prompt for this block is [`docs/PHASE_3A_GOAL.md`](PHASE_3A_GOAL.md).
+
+* [x] **3.5 One attachment language:** Corpus, trainer, and sampler use the same codec strings and the same Llama tokenizer ids. Every in-scope part and legal port (including SNOT brackets, jumpers, slopes, and tiles from `configs/architecture_scope.json`) is a token the mask can accept or reject. A training target and a generation step are the same kind of object.
+* [x] **3.6 Mesh-aware forward mask:** Before a token is sampled, also mask actions whose realized mesh penetrates a piece already placed. Keep bounds, mating, and box-overlap checks. Leave HiGHS equilibrium to `scripts/validate.py`.
+* [x] **3.7 Conditioning that carries massing:** Replace the few-bit voxel token with a coarse occupancy signature that still leaves every sequence under 1,500 tokens.
+* [x] **3.8 Short LoRA run:** Hundreds of optimizer steps on the train split. Training loss falls. Validation loss on held-out buildings stays finite. Record the curve.
+* **Gate 3a:** From a held-out building's bag box, sample attachment tokens through the mask, decode with `BFSTreeCodec.decode`, and pass `scripts/validate.py`. The parts in the file are the sampled tokens. One bag is enough (under 100 pieces). Zero floating pieces. [PASSED on `bricksafe_21003_Seattle_Space_Needle.ldr`: Seed 6 (two identical runs, 8 pieces, 7 part ids: 3004, 3005, 3031, 3069b, 3070b, 3794b, 63864) and Seed 3 (8 pieces, 5 part ids including SNOT 4070). Both pass scripts/validate.py.]
+
+### After Gate 3a
+
+* [ ] **3.4 PVPO Reinforcement Alignment:** Post-train with coupled rewards (physical equilibrium + geometric/semantic fidelity) to prevent "PhysHack" degeneration.
+* [ ] **3.9 Multi-bag scale-up:** Chain foundation, core, facade, and roof samples into one connected model without switching back to coordinate prediction.
 * **Gate 3:** Generation of novel, non-memorized architecture models exceeding 400+ pieces with >90% physical validity and zero floating pieces.
 
 ---

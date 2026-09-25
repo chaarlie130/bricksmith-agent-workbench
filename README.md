@@ -4,7 +4,7 @@
 
 [![Python 3.10+](https://img.shields.io/badge/python-3.10+-blue.svg)](https://www.python.org/)
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](LICENSE)
-[![Status: Phase 0 Foundations](https://img.shields.io/badge/status-Phase%200%20Verified-success.svg)](docs/ROADMAP.md)
+[![Status: Phase 3a Closed Loop](https://img.shields.io/badge/status-Phase%203a%20Closed%20Loop-blue.svg)](docs/ROADMAP.md)
 
 ---
 
@@ -108,6 +108,16 @@ Generate a clean, bordered black baseplate of any dimensions:
 python scripts/generate_baseplate.py --width 16 --depth 24 -o baseplate.ldr
 ```
 
+### 6. Phase 3 scaffolding
+Bag-level training text, a one-step MLX LoRA dry-run, and a masked attachment sample. These scripts are the landed scaffolding in [`docs/ROADMAP.md`](docs/ROADMAP.md). Gate 3a (one codec shared by the corpus, the trainer, and the sampler) is the active mission, specified in [`docs/PHASE_3A_GOAL.md`](docs/PHASE_3A_GOAL.md).
+
+```bash
+python scripts/prepare_training_data.py
+python scripts/train_mlx.py --dry-run --adapter-path adapters/phase3-dry-run
+python scripts/generate_assembly.py --width 16 --depth 16 --height 12 --seed 3 -o assembly.ldr
+python scripts/validate.py assembly.ldr
+```
+
 ---
 
 ## Core Documentation
@@ -117,6 +127,7 @@ All contributors and autonomous agents **must** read these foundational document
 * **[`docs/RESEARCH_FOUNDATIONS.md`](docs/RESEARCH_FOUNDATIONS.md)**: Literature review of LegoGPT, BrickNet, BrickAnything, PVPO, and empirical post-mortem of failed procedural approaches.
 * **[`docs/ARCHITECTURE.md`](docs/ARCHITECTURE.md)**: System design specification, port-socket formulation, and component interfaces.
 * **[`docs/ROADMAP.md`](docs/ROADMAP.md)**: Phased milestone plan and quantitative acceptance gates.
+* **[`docs/PHASE_3A_GOAL.md`](docs/PHASE_3A_GOAL.md)**: Active mission. Close the training and sampling loop before the 400-piece gate.
 * **[`docs/AGENT_GUIDELINES.md`](docs/AGENT_GUIDELINES.md)**: Ground rules for autonomous agents (no silent fallbacks, strict validation, ledger tracking).
 
 ---

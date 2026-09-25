@@ -14,7 +14,7 @@ from bricksmith.decomposition.modularizer import BAG_NAMES, partition_into_bags
 from bricksmith.geometry.bounds import calculate_bounds
 from bricksmith.geometry.envelope import generate_occupancy_grid
 from bricksmith.training.codec import (
-    TOKEN_LIMIT,
+    DATASET_TOKEN_CAP,
     Codebook,
     TokenizationError,
     build_codebook,
@@ -70,6 +70,13 @@ def build_codebook_from_corpus(path: Path = CORPUS_PATH) -> Codebook:
             for node in record["nodes"]:
                 parts.append(node["part_id"])
                 colors.append(int(node["color_id"]))
+    scope_path = ROOT / "configs" / "architecture_scope.json"
+    if scope_path.exists():
+        scope = json.loads(scope_path.read_text(encoding="utf-8"))
+        for stems in scope.get("part_categories", {}).values():
+            parts.extend(str(stem) for stem in stems)
+        for color_id in scope.get("colors", {}):
+            colors.append(int(color_id))
     return build_codebook(parts, colors)
 
 
@@ -115,9 +122,9 @@ def iter_bag_examples(
                     n_tokens = count_tokens(text)
                 except TokenizationError as exc:
                     raise TokenizationError(f"{record['model_id']} {bag_name}: {exc}") from exc
-                if n_tokens >= TOKEN_LIMIT:
+                if n_tokens >= DATASET_TOKEN_CAP:
                     raise TokenizationError(
-                        f"{record['model_id']} {bag_name}: {n_tokens} tokens exceeds {TOKEN_LIMIT - 1}"
+                        f"{record['model_id']} {bag_name}: {n_tokens} tokens exceeds {DATASET_TOKEN_CAP - 1}"
                     )
                 yield {
                     "model_id": record["model_id"],
