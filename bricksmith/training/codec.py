@@ -289,16 +289,25 @@ def serialize_tree(tree: Sequence, codebook: Codebook, version: int = 2) -> str:
 
         pp = local_port(node.parent_port)
         sp = local_port(node.self_port)
-        if pp > 99 or sp > 99:
-            raise TokenizationError("more than 100 distinct ports in one bag")
+        if pp > 999 or sp > 999:
+            raise TokenizationError("more than 999 distinct ports in one bag")
         records.append((part_of[node.part_id], color_i, parent, pp, sp, tail))
 
     width = 3 if len(part_locals) > 99 else 2
-    port_width = 1 if len(port_locals) <= 10 else 2
+    if len(port_locals) <= 10:
+        port_width = 1
+    elif len(port_locals) <= 100:
+        port_width = 2
+    else:
+        port_width = 3
     if len(part_locals) > 999:
         raise TokenizationError("more than 999 distinct parts in one bag")
+    if len(port_locals) > 999:
+        raise TokenizationError("more than 999 distinct ports in one bag")
     if port_width == 1 and any(pp > 9 or sp > 9 for _, _, _, pp, sp, _ in records):
         port_width = 2
+    if port_width == 2 and any(pp > 99 or sp > 99 for _, _, _, pp, sp, _ in records):
+        port_width = 3
 
     out = []
     if version == 2:
@@ -345,7 +354,7 @@ def parse_attachment_digits(digits: str, codebook: Codebook) -> List[TreeNode]:
     port_width = reader.take(1)
     if width not in (2, 3):
         raise TokenizationError(f"bad part-index width {width}")
-    if port_width not in (1, 2):
+    if port_width not in (1, 2, 3):
         raise TokenizationError(f"bad port-index width {port_width}")
     n_steps = reader.take(3)
     nodes: List[TreeNode] = []
@@ -388,7 +397,7 @@ def parse_attachment_digits(digits: str, codebook: Codebook) -> List[TreeNode]:
                 parent_port=parent_port,
                 self_port=self_port,
                 conn_type=conn_out,
-                transform=np.eye(4, dtype=np.float64),
+                transform=None,
                 rotation_quarters=quarters,
             )
         )

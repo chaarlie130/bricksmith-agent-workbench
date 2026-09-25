@@ -32,7 +32,7 @@ class TreeNode:
     parent_port: Optional[str]
     self_port: Optional[str]
     conn_type: Optional[ConnectorType]
-    transform: np.ndarray
+    transform: Optional[np.ndarray] = None
     rotation_quarters: int = 0
 
 
@@ -144,38 +144,103 @@ class BFSTreeCodec:
 
                 parent_key = (parent_id, parent_port)
                 spec = None
-                if parent_key in iface_map:
+                best_child_port = None
+                if parent_key in iface_map and child_port and child_port.startswith("port_"):
                     spec = iface_map[parent_key]
-                elif parent_id in ifaces_by_brick:
-                    c_part = graph.parts[child_id]
-                    spec = min(ifaces_by_brick[parent_id], key=lambda s: np.linalg.norm(s.world_transform[:3, 3] - c_part.position))
+                    best_child_port = child_port
+                else:
+                    # Verified geometric connector recovery for placeholder ports (e.g. stud_0, tube_0)
+                    if interface_assembly is not None and parent_id in interface_assembly.parts and child_id in graph.parts:
+                        p_part = interface_assembly.parts[parent_id]
+                        c_part = graph.parts[child_id]
+                        try:
+                            p_num = _stem_numeric(p_part.part_id)
+                            c_num = _stem_numeric(c_part.part_id)
+                        except KeyError:
+                            p_num, c_num = None, None
 
-                if spec is not None:
-                    c_part = graph.parts[child_id]
-                    c_num = catalog.stem_to_id.get(c_part.part_id)
-                    best_child_port = child_port if (child_port and child_port.startswith("port_")) else "port_0"
-                    if (not child_port or not child_port.startswith("port_")) and c_num is not None and c_num < len(conn_list):
-                        best_c_idx = 0
-                        best_dist = 1e9
-                        for ci, cm in enumerate(conn_list[c_num]):
-                            if cm[0] in ("hole", "tube"):
-                                cf = frame(c_num, ci)
-                                cw = (c_part.transform @ cf)[:3, 3]
-                                d = np.linalg.norm(spec.world_transform[:3, 3] - cw)
-                                if d < best_dist:
-                                    best_dist = d
-                                    best_c_idx = ci
-                        best_child_port = f"port_{best_c_idx}"
+                        if p_num is not None and c_num is not None and p_num < len(conn_list) and c_num < len(conn_list):
+                            best_dist = 1e9
+                            best_p, best_c = None, None
+                            for pi, pm in enumerate(conn_list[p_num]):
+                                if pm[0] == "stud":
+                                    pw = (p_part.transform @ frame(p_num, pi))[:3, 3]
+                                    for ci, cm in enumerate(conn_list[c_num]):
+                                        if cm[0] in ("tube", "hole"):
+                                            cw = (c_part.transform @ frame(c_num, ci))[:3, 3]
+                                            d = float(np.linalg.norm(pw - cw))
+                                            if d < best_dist:
+                                                best_dist = d
+                                                best_p, best_c = pi, ci
+                            if best_dist <= 0.5 and best_p is not None and best_c is not None:
+                                matched_spec = iface_map.get((parent_id, f"port_{best_p}"))
+                                if matched_spec is not None:
+                                    spec = matched_spec
+                                    best_child_port = f"port_{best_c}"
 
-                    rot_q = 0
-                    if c_num is not None:
-                        s_idx = _parse_port_index(best_child_port)
-                        cf = frame(c_num, s_idx)
-                        relative = np.linalg.inv(spec.world_transform) @ c_part.transform @ cf
-                        yaw = float(np.arctan2(relative[0, 2], relative[0, 0]))
-                        rot_q = int(round(np.degrees(yaw) / 90.0)) % 4
+                if spec is not None and best_child_port is not None:
+                    c_part = graph.parts[child_id]
+                    c_num = _stem_numeric(c_part.part_id)
+                    s_idx = _parse_port_index(best_child_port)
+                    cf = frame(c_num, s_idx)
+                    relative = np.linalg.inv(spec.world_transform) @ c_part.transform @ cf
+                    yaw = float(np.arctan2(relative[0, 2], relative[0, 0]))
+                    rot_q = int(round(np.degrees(yaw) / 90.0)) % 4
 
                     iface_attachments[child_id] = (f"iface_{spec.index}", best_child_port, c_type, rot_q)
+
+            # Discover real physical contacts with interface_assembly if any remain unattached
+            if interface_assembly is not None:
+                used_spec_indices = {
+                    int(att[0].split("_")[1]) for att in iface_attachments.values() if att[0].startswith("iface_")
+                }
+                for child_id, child_part in sorted(graph.parts.items()):
+                    if child_id in iface_attachments:
+                        continue
+                    try:
+                        c_num = _stem_numeric(child_part.part_id)
+                    except KeyError:
+                        continue
+                    if c_num >= len(conn_list):
+                        continue
+                    best_match = None
+                    best_dist = 1e9
+                    for parent_id, parent_part in sorted(interface_assembly.parts.items()):
+                        if np.linalg.norm(parent_part.position - child_part.position) > 150:
+                            continue
+                        try:
+                            p_num = _stem_numeric(parent_part.part_id)
+                        except KeyError:
+                            continue
+                        if p_num >= len(conn_list):
+                            continue
+                        for pi, pm in enumerate(conn_list[p_num]):
+                            if pm[0] != "stud":
+                                continue
+                            spec = iface_map.get((parent_id, f"port_{pi}"))
+                            if spec is None or spec.index in used_spec_indices:
+                                continue
+                            pw = (parent_part.transform @ frame(p_num, pi))[:3, 3]
+                            for ci, cm in enumerate(conn_list[c_num]):
+                                if cm[0] not in ("tube", "hole"):
+                                    continue
+                                cw = (child_part.transform @ frame(c_num, ci))[:3, 3]
+                                d = float(np.linalg.norm(pw - cw))
+                                if d <= 0.5:
+                                    if d < best_dist - 1e-4:
+                                        best_dist = d
+                                        best_match = (spec, f"port_{ci}")
+                                    elif abs(d - best_dist) <= 1e-4 and (best_match is None or spec.index < best_match[0].index):
+                                        best_match = (spec, f"port_{ci}")
+                    if best_match is not None:
+                        spec, best_child_port = best_match
+                        used_spec_indices.add(spec.index)
+                        s_idx = _parse_port_index(best_child_port)
+                        cf = frame(c_num, s_idx)
+                        relative = np.linalg.inv(spec.world_transform) @ child_part.transform @ cf
+                        yaw = float(np.arctan2(relative[0, 2], relative[0, 0]))
+                        rot_q = int(round(np.degrees(yaw) / 90.0)) % 4
+                        iface_attachments[child_id] = (f"iface_{spec.index}", best_child_port, ConnectorType.STUD, rot_q)
 
         visited = set()
         tree_nodes: List[TreeNode] = []
@@ -357,18 +422,18 @@ class BFSTreeCodec:
         step_to_inst: dict[int, int] = {}
 
         for node in tree_nodes:
-            node_transform = node.transform.copy()
-            if node.parent_step_index is not None:
-                if node.parent_step_index not in step_to_inst:
-                    raise ValueError(
-                        f"Parent step {node.parent_step_index} was not decoded before child step {node.step_index}"
-                    )
-                parent_inst = step_to_inst[node.parent_step_index]
-                parent_part = graph.parts[parent_inst]
-                p_port = node.parent_port or "port_0"
-                s_port = node.self_port or "port_0"
+            node_transform = None if node.transform is None else node.transform.copy()
+            if node_transform is None or np.allclose(node_transform, np.eye(4)):
+                if node.parent_step_index is not None:
+                    if node.parent_step_index not in step_to_inst:
+                        raise ValueError(
+                            f"Parent step {node.parent_step_index} was not decoded before child step {node.step_index}"
+                        )
+                    parent_inst = step_to_inst[node.parent_step_index]
+                    parent_part = graph.parts[parent_inst]
+                    p_port = node.parent_port or "port_0"
+                    s_port = node.self_port or "port_0"
 
-                if np.allclose(node_transform, np.eye(4)):
                     from bricksmith.physics.validator import frame
                     from bricksmith.generation.sampler import yaw_matrix
 
@@ -380,19 +445,18 @@ class BFSTreeCodec:
                     cf = frame(c_num, s_idx)
                     rot_deg = int(getattr(node, "rotation_quarters", 0)) * 90
                     node_transform = parent_part.transform @ pf @ yaw_matrix(rot_deg) @ np.linalg.inv(cf)
-            elif node.parent_step_index is None and node.parent_port and node.parent_port.startswith("iface_"):
-                if interface_ports is None:
-                    raise ValueError(
-                        f"Node at step {node.step_index} references interface port '{node.parent_port}', "
-                        "but no interface ports or interface assembly were provided to decode()"
-                    )
-                iface_idx = _parse_port_index(node.parent_port)
-                if not (0 <= iface_idx < len(interface_ports)):
-                    raise IndexError(
-                        f"Interface port index {iface_idx} out of range (available interface ports: {len(interface_ports)})"
-                    )
-                iface = interface_ports[iface_idx]
-                if np.allclose(node_transform, np.eye(4)):
+                elif node.parent_step_index is None and node.parent_port and node.parent_port.startswith("iface_"):
+                    if interface_ports is None:
+                        raise ValueError(
+                            f"Node at step {node.step_index} references interface port '{node.parent_port}', "
+                            "but no interface ports or interface assembly were provided to decode()"
+                        )
+                    iface_idx = _parse_port_index(node.parent_port)
+                    if not (0 <= iface_idx < len(interface_ports)):
+                        raise IndexError(
+                            f"Interface port index {iface_idx} out of range (available interface ports: {len(interface_ports)})"
+                        )
+                    iface = interface_ports[iface_idx]
                     from bricksmith.physics.validator import frame
                     from bricksmith.generation.sampler import yaw_matrix
 
@@ -402,9 +466,10 @@ class BFSTreeCodec:
                     cf = frame(c_num, s_idx)
                     rot_deg = int(getattr(node, "rotation_quarters", 0)) * 90
                     node_transform = iface.world_transform @ yaw_matrix(rot_deg) @ np.linalg.inv(cf)
-            elif node.parent_step_index is None and anchor_transform is not None:
-                if np.allclose(node_transform, np.eye(4)):
+                elif node.parent_step_index is None and anchor_transform is not None:
                     node_transform = anchor_transform.copy()
+                else:
+                    node_transform = np.eye(4, dtype=np.float64)
 
             inst_id = graph.add_part(
                 part_id=node.part_id,

@@ -62,14 +62,56 @@ def load_scope(scope_path: Optional[str] = None):
     return config, canonical
 
 
-def frame(part_id: str, flat_index: int):
-    _, subtype, polarity, subgroup_index, _ = load_connector_list()[part_id][flat_index]
-    return load_connectors()[part_id][subtype, polarity][subgroup_index]
+@lru_cache(maxsize=512)
+def _resolve_part_num(part_id: Union[str, int]) -> int:
+    """Resolve a part stem (str) or catalog index (int) to a valid bricknet catalog integer ID."""
+    if isinstance(part_id, (int, np.integer)):
+        return int(part_id)
+    import re
+    from bricknet.data import load_catalog, load_aliases
+    catalog = load_catalog()
+    stem = str(part_id)
+    if stem.endswith(".dat"):
+        stem = stem[:-4]
+    if stem in catalog.stem_to_id:
+        return catalog.stem_to_id[stem]
+    aliases = load_aliases()
+    if stem in aliases:
+        canonical = aliases[stem][0]
+        if canonical in catalog.stem_to_id:
+            return catalog.stem_to_id[canonical]
+
+    # Pattern variant stripping (e.g. bl_54200pb103 -> 54200, 3068bp0i -> 3068b)
+    s = stem[3:] if stem.startswith("bl_") else stem
+    m = re.match(r"^([0-9]+[a-zA-Z]*?)(?:pb|p[0-9]|s[0-9]|d[0-9]).*$", s, re.IGNORECASE)
+    candidates = [s]
+    if m:
+        candidates.append(m.group(1))
+
+    for cand in candidates:
+        if cand in catalog.stem_to_id:
+            return catalog.stem_to_id[cand]
+        if cand in aliases:
+            canonical = aliases[cand][0]
+            if canonical in catalog.stem_to_id:
+                return catalog.stem_to_id[canonical]
+
+    raise KeyError(f"Part '{part_id}' not found in catalog or aliases")
+
+
+def frame(part_id: Union[str, int], flat_index: int):
+    p_num = _resolve_part_num(part_id)
+    conn_list = load_connector_list()
+    if p_num >= len(conn_list) or flat_index >= len(conn_list[p_num]):
+        raise IndexError(f"Connector index {flat_index} out of bounds for part {part_id}")
+    _, subtype, polarity, subgroup_index, _ = conn_list[p_num][flat_index]
+    return load_connectors()[p_num][subtype, polarity][subgroup_index]
 
 
 @lru_cache(maxsize=128)
-def properties(part_id: str):
-    mesh, lo, hi = _mesh(part_id)
+def properties(part_id: Union[str, int]):
+    p_num = _resolve_part_num(part_id)
+    mesh, lo, hi = _mesh(p_num)
     vertices = mesh_numpy.getNumpyVerts(mesh)
     faces = mesh_numpy.getNumpyFaces(mesh.topology)
     a, b, c = (vertices[faces[:, i]] for i in range(3))
@@ -81,14 +123,14 @@ def properties(part_id: str):
     if not np.isfinite(center).all():
         raise ValueError(f"Mesh center of mass for {part_id} is nonfinite")
     bottom = round((hi[1] + 0.25) / 8) * 8
-    studs = [frame(part_id, i) for i, meta in enumerate(load_connector_list()[part_id]) if meta[0] == "stud"]
+    studs = [frame(p_num, i) for i, meta in enumerate(load_connector_list()[p_num]) if meta[0] == "stud"]
     top = min(f[1, 3] for f in studs) if studs else lo[1] - 0.25
     low = np.array([lo[0] - 0.25, top, lo[2] - 0.25])
     high = np.array([hi[0] + 0.25, bottom, hi[2] + 0.25])
     return abs(volume) / 10000, center, low, high
 
 
-def world_properties(part_id: str, transform: np.ndarray):
+def world_properties(part_id: Union[str, int], transform: np.ndarray):
     mass, center, lo, hi = properties(part_id)
     corners = np.array([[x, y, z] for x in (lo[0], hi[0]) for y in (lo[1], hi[1]) for z in (lo[2], hi[2])])
     corners = corners @ transform[:3, :3].T + transform[:3, 3]

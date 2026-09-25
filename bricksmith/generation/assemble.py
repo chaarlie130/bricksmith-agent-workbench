@@ -18,11 +18,13 @@ from bricksmith.generation.sampler import (
     AttachmentToken,
     PlacedPart,
     PortSpec,
+    _overlaps,
     codec_attachment_ids,
     mask_attachment_candidates,
     place_token,
     realize_assembly,
     sample_codec_continuation,
+    yaw_matrix,
 )
 from bricksmith.physics.validator import frame, world_properties
 from bricksmith.training.codec import coarse_voxel_hex
@@ -215,15 +217,9 @@ def _is_supported(
         return False
 
     contact_pts = np.asarray(contact_corners, dtype=np.float64)
-    try:
-        from bricksmith.physics.validator import world_properties
-        _, com_world, _, _ = world_properties(child.part_id, child.transform)
-        child_com = np.array([com_world[0], com_world[2]], dtype=np.float64)
-    except Exception:
-        child_com = 0.5 * np.array(
-            [child.bounds_min[0] + child.bounds_max[0], child.bounds_min[2] + child.bounds_max[2]],
-            dtype=np.float64,
-        )
+    from bricksmith.physics.validator import world_properties
+    _, com_world, _, _ = world_properties(child.part_id, child.transform)
+    child_com = np.array([com_world[0], com_world[2]], dtype=np.float64)
     return _point_in_hull_2d(child_com, contact_pts, margin=0.5)
 
 
@@ -316,6 +312,7 @@ def _child_actions(
     placed_ids: Sequence[int],
     module_min: np.ndarray,
     module_max: np.ndarray,
+    base_placed: Optional[list[PlacedPart]] = None,
 ) -> tuple[list[AttachmentToken], list[bool]]:
     """In-scope attachments. Illegal mating, bounds, overlap, and mesh penetration are blocked."""
     placed_parts = []
@@ -354,11 +351,19 @@ def _child_actions(
         module_min,
         module_max,
     )
+    all_placed = (base_placed or []) + placed_parts
     for index, token in enumerate(candidates):
         if blocked[index]:
             continue
         child = place_token(token, placed_parts)
-        if not _is_supported(child, placed_parts, token.parent_index):
+        if base_placed and any(
+            _overlaps(child.bounds_min, child.bounds_max, bp.bounds_min, bp.bounds_max)
+            for bp in base_placed
+        ):
+            blocked[index] = True
+            continue
+        p_idx = (len(base_placed) + token.parent_index) if base_placed else token.parent_index
+        if not _is_supported(child, all_placed, p_idx):
             blocked[index] = True
     return candidates, blocked
 
@@ -370,7 +375,8 @@ def _interface_actions(
 ) -> list[tuple[AttachmentToken, int]]:
     """Root attachment actions that mate onto available interface stud ports of base_assembly."""
     from bricksmith.core.tree import get_available_interface_ports
-    from bricksmith.generation.sampler import scope_stems
+    from bricksmith.generation.sampler import yaw_matrix, _overlaps
+    from bricksmith.physics.validator import world_properties, frame
 
     ifaces = get_available_interface_ports(base_assembly)
     if not ifaces:
@@ -378,11 +384,7 @@ def _interface_actions(
 
     base_placed = []
     for bid, p in sorted(base_assembly.parts.items()):
-        try:
-            _, _, p_lo, p_hi = world_properties(p.part_id, p.transform)
-        except Exception:
-            p_lo = p.position - np.array([20.0, 12.0, 20.0])
-            p_hi = p.position + np.array([20.0, 12.0, 20.0])
+        _, _, p_lo, p_hi = world_properties(p.part_id, p.transform)
         base_placed.append(
             PlacedPart(
                 part_id=p.part_id,
@@ -440,6 +442,7 @@ def generate_guided_assembly(
     aspect_ratio_str: Optional[str] = None,
     voxel_tokens: Optional[str] = None,
     base_assembly: Optional[AssemblyGraph] = None,
+    merge_base: bool = True,
 ):
     """Sample a grounded plate or interface-anchored attachments from masked codec token ids."""
     from mlx_lm.utils import load
@@ -456,10 +459,25 @@ def generate_guided_assembly(
     if hasattr(model, "eval"):
         model.eval()
 
+    base_placed: Optional[list[PlacedPart]] = None
     if base_assembly is not None:
         initial_actions = _interface_actions(base_assembly, module_min, module_max)
         if not initial_actions:
             raise RuntimeError("no interface attachment candidate fits inside the module box")
+        from bricksmith.physics.validator import world_properties
+        base_placed = []
+        for bid, p in sorted(base_assembly.parts.items()):
+            _, _, p_lo, p_hi = world_properties(p.part_id, p.transform)
+            base_placed.append(
+                PlacedPart(
+                    part_id=p.part_id,
+                    color_id=p.color_id,
+                    transform=p.transform.copy(),
+                    bounds_min=p_lo,
+                    bounds_max=p_hi,
+                    ports=[],
+                )
+            )
     else:
         initial_actions = _plate_actions(module_min, module_max)
         if not initial_actions:
@@ -487,7 +505,9 @@ def generate_guided_assembly(
     chosen: list[AttachmentToken] = [root_token]
     chosen_ids: list[int] = [root_numeric]
     for step in range(1, target_pieces):
-        children, child_blocked = _child_actions(chosen, chosen_ids, module_min, module_max)
+        children, child_blocked = _child_actions(
+            chosen, chosen_ids, module_min, module_max, base_placed=base_placed
+        )
         if not children or not any(not flag for flag in child_blocked):
             raise RuntimeError(f"logit mask rejected every attachment at piece {step + 1}")
         child = _sample_action(
@@ -505,4 +525,7 @@ def generate_guided_assembly(
 
     graph = realize_assembly(chosen, name=f"guided_{bag_name}", interface_assembly=base_assembly)
     print("BFSTreeCodec.decode")
+    if base_assembly is not None and merge_base:
+        from bricksmith.core.tree import merge_assemblies
+        return merge_assemblies(base_assembly, graph, name=f"merged_{base_assembly.name}_{graph.name}")
     return graph

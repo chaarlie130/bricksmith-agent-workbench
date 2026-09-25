@@ -19,8 +19,8 @@ from bricksmith.core.tree import (
     get_available_interface_ports,
     merge_assemblies,
 )
-from bricksmith.decomposition.modularizer import partition_into_bags
-from bricksmith.generation.assemble import _is_supported
+from bricksmith.decomposition.modularizer import BAG_NAMES, partition_into_bags
+from bricksmith.generation.assemble import _child_actions, _interface_actions, _is_supported
 from bricksmith.generation.sampler import PlacedPart, PortSpec, yaw_matrix
 from bricksmith.physics.validator import frame, validate_ldraw, world_properties
 from bricksmith.training.codec import (
@@ -277,6 +277,102 @@ class TestCodecV2AndKinematics(unittest.TestCase):
         self.assertTrue(res["checks"]["approximate_gravity_equilibrium"], "Static equilibrium failed")
         self.assertTrue(res["checks"]["mesh_collision_free"], "Collisions detected")
 
+    def test_woodland_elf_house_cross_bag_zero_error_reconstruction(self):
+        """Review Finding 3: Verified connector recovery on Elf House eliminates 8-60 LDU errors."""
+        with CORPUS_PATH.open(encoding="utf-8") as handle:
+            record = json.loads(handle.readline())
+
+        graph = graph_from_record(record)
+        bags = partition_into_bags(graph)
+        accumulated = None
+
+        for bag_name in BAG_NAMES:
+            bag = bags[bag_name]
+            tree = BFSTreeCodec.encode(bag, interface_assembly=accumulated)
+            decoded_bag = BFSTreeCodec.decode(tree, interface_assembly=accumulated)
+
+            # Check that all roots match ground truth translation with zero error (< 1e-4 LDU)
+            for node in tree:
+                if node.parent_step_index is None:
+                    orig_t = bag.parts[node.brick_id].transform
+                    dec_t = decoded_bag.parts[node.brick_id].transform
+                    err = float(np.linalg.norm(orig_t[:3, 3] - dec_t[:3, 3]))
+                    self.assertLess(err, 1e-4, f"{bag_name} root {node.brick_id} translation error {err} >= 1e-4")
+
+            accumulated = bag if accumulated is None else merge_assemblies(accumulated, bag)
+
+    def test_chained_guided_generation_multi_bag_context(self):
+        """Review Findings 1 & 2: Multi-bag generation branch runs without ImportError and checks base collisions."""
+        # Create base assembly (foundation plate + 2x4 brick)
+        base = AssemblyGraph("base_foundation")
+        base.add_part("3031", 0, np.eye(4), instance_id=1)
+        id_3001 = self.catalog.stem_to_id["3001"]
+        f_plate = frame(self.catalog.stem_to_id["3031"], 18)
+        f_brick = frame(id_3001, 0)
+        t_brick = np.eye(4) @ f_plate @ np.linalg.inv(f_brick)
+        base.add_part("3001", 15, t_brick, instance_id=2)
+        base.connect(1, "port_18", 2, "port_0", ConnectorType.STUD)
+
+        # 1. Test _interface_actions runs cleanly and generates legal interface root candidates
+        module_min = np.array([-100.0, -100.0, -100.0])
+        module_max = np.array([100.0, 100.0, 100.0])
+        iface_actions = _interface_actions(base, module_min, module_max)
+        self.assertGreater(len(iface_actions), 0, "Expected legal interface actions on base assembly")
+
+        # Check that interface tokens have valid iface parent_ports
+        for token, pid in iface_actions[:5]:
+            self.assertIsNotNone(token.parent_port)
+            self.assertTrue(token.parent_port.startswith("iface_"))
+            self.assertIsNotNone(token.anchor_transform)
+
+        # 2. Test _child_actions receives base_placed and verifies collisions/support against base
+        chosen_token, chosen_pid = iface_actions[0]
+        base_placed = []
+        for bid, p in sorted(base.parts.items()):
+            _, _, p_lo, p_hi = world_properties(p.part_id, p.transform)
+            base_placed.append(
+                PlacedPart(
+                    part_id=p.part_id,
+                    color_id=p.color_id,
+                    transform=p.transform.copy(),
+                    bounds_min=p_lo,
+                    bounds_max=p_hi,
+                    ports=[],
+                )
+            )
+
+        candidates, blocked = _child_actions(
+            placed_tokens=[chosen_token],
+            placed_ids=[chosen_pid],
+            module_min=module_min,
+            module_max=module_max,
+            base_placed=base_placed,
+        )
+        self.assertEqual(len(candidates), len(blocked))
+        unblocked = [cand for cand, blk in zip(candidates, blocked) if not blk]
+        self.assertGreater(len(unblocked), 0, "Expected legal child placements on interface root")
+
+    def test_validator_robust_part_resolution(self):
+        """Review Finding 5: Validator resolves pattern variants, integer IDs, and normalizes stems."""
+        from bricksmith.physics.validator import _resolve_part_num
+        # Integer ID
+        id_3001 = self.catalog.stem_to_id["3001"]
+        self.assertEqual(_resolve_part_num(id_3001), id_3001)
+        # Direct stem
+        self.assertEqual(_resolve_part_num("3001"), id_3001)
+        # .dat suffix
+        self.assertEqual(_resolve_part_num("3001.dat"), id_3001)
+        # Pattern variant stripping (e.g. 54200pb103 -> 54200)
+        id_54200 = self.catalog.stem_to_id["54200"]
+        self.assertEqual(_resolve_part_num("54200pb103"), id_54200)
+        self.assertEqual(_resolve_part_num("bl_54200pb103"), id_54200)
+        # World properties should compute real COM and bounding box
+        vol, com, lo, hi = world_properties("3001", np.eye(4))
+        self.assertGreater(vol, 0.0)
+        self.assertTrue(np.all(np.isfinite(com)))
+        self.assertTrue(np.all(lo <= hi))
+
 
 if __name__ == "__main__":
     unittest.main()
+

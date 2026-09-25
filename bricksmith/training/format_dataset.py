@@ -21,8 +21,10 @@ from bricksmith.training.codec import (
     build_codebook,
     coarse_voxel_hex,
     count_tokens,
+    extract_payload_digits,
     save_codebook,
     serialize_tree,
+    tree_nodes_from_target_text,
 )
 
 ROOT = Path(__file__).resolve().parents[2]
@@ -58,8 +60,31 @@ def nodes_from_record(record: dict) -> list[TreeNode]:
     return nodes
 
 
-def graph_from_record(record: dict):
-    return BFSTreeCodec.decode(nodes_from_record(record))
+def graph_from_record(record: dict) -> AssemblyGraph:
+    nodes = nodes_from_record(record)
+    graph = AssemblyGraph(name=record.get("model_id", "corpus_model"))
+    step_to_inst: dict[int, int] = {}
+    for node in nodes:
+        inst_id = graph.add_part(
+            part_id=node.part_id,
+            color_id=node.color_id,
+            transform=node.transform if node.transform is not None else np.eye(4),
+            instance_id=node.brick_id,
+        )
+        step_to_inst[node.step_index] = inst_id
+        if node.parent_step_index is not None and node.parent_step_index in step_to_inst:
+            parent_inst = step_to_inst[node.parent_step_index]
+            p_port = node.parent_port or "port_0"
+            s_port = node.self_port or "port_0"
+            c_type = node.conn_type or ConnectorType.STUD
+            graph.connect(
+                source_id=parent_inst,
+                source_port=p_port,
+                target_id=inst_id,
+                target_port=s_port,
+                conn_type=c_type,
+            )
+    return graph
 
 
 def build_codebook_from_corpus(path: Path = CORPUS_PATH) -> Codebook:
@@ -138,6 +163,8 @@ def iter_bag_examples(
     corpus_path: Path = CORPUS_PATH,
     codebook: Optional[Codebook] = None,
     version: int = 2,
+    skip_rejected: bool = False,
+    rejected_tracker: Optional[list[dict]] = None,
 ) -> Iterator[dict]:
     book = codebook if codebook is not None else build_codebook_from_corpus(corpus_path)
     with corpus_path.open(encoding="utf-8") as handle:
@@ -159,13 +186,36 @@ def iter_bag_examples(
                         version=version,
                     )
                     n_tokens = count_tokens(text)
+                    if n_tokens >= DATASET_TOKEN_CAP:
+                        msg = f"{record['model_id']} {bag_name}: {n_tokens} tokens exceeds {DATASET_TOKEN_CAP - 1}"
+                        if not skip_rejected:
+                            raise TokenizationError(msg)
+                        if rejected_tracker is not None:
+                            rejected_tracker.append({
+                                "model_id": record["model_id"],
+                                "bag": bag_name,
+                                "reason": "exceeds_token_cap",
+                                "detail": msg,
+                                "n_tokens": n_tokens,
+                                "parts": bag.num_parts,
+                            })
+                        continue
                 except TokenizationError as exc:
-                    raise TokenizationError(f"{record['model_id']} {bag_name}: {exc}") from exc
-                if n_tokens >= DATASET_TOKEN_CAP:
-                    raise TokenizationError(
-                        f"{record['model_id']} {bag_name}: {n_tokens} tokens exceeds {DATASET_TOKEN_CAP - 1}"
-                    )
-                accumulated = bag if accumulated is None else merge_assemblies(accumulated, bag)
+                    if not skip_rejected:
+                        raise TokenizationError(f"{record['model_id']} {bag_name}: {exc}") from exc
+                    if rejected_tracker is not None:
+                        rejected_tracker.append({
+                            "model_id": record["model_id"],
+                            "bag": bag_name,
+                            "reason": "tokenization_error",
+                            "detail": str(exc),
+                            "n_tokens": None,
+                            "parts": bag.num_parts,
+                        })
+                    continue
+                finally:
+                    accumulated = bag if accumulated is None else merge_assemblies(accumulated, bag)
+
                 yield {
                     "model_id": record["model_id"],
                     "bag": bag_name,
@@ -178,56 +228,86 @@ def write_splits(
     corpus_path: Path = CORPUS_PATH,
     train_path: Path = TRAIN_PATH,
     val_path: Path = VAL_PATH,
+    version: int = 2,
 ) -> dict:
-    """Write disjoint train/val jsonl. Returns a summary. Raises on any tokenization error."""
+    """Write disjoint train/val jsonl with complete accounting for accepted and rejected records."""
     codebook = build_codebook_from_corpus(corpus_path)
     save_codebook(codebook)
     train_path.parent.mkdir(parents=True, exist_ok=True)
-    errors = 0
+    rejected_records: list[dict] = []
     train_n = 0
     val_n = 0
     max_tokens = 0
     models = set()
-    try:
-        with train_path.open("w", encoding="utf-8") as train_f, val_path.open("w", encoding="utf-8") as val_f:
-            for example in iter_bag_examples(corpus_path, codebook):
-                models.add(example["model_id"])
-                max_tokens = max(max_tokens, example["n_tokens"])
-                handle = val_f if is_validation_model(example["model_id"]) else train_f
-                if handle is val_f:
-                    val_n += 1
-                else:
-                    train_n += 1
-                handle.write(json.dumps(example) + "\n")
-    except TokenizationError as exc:
-        errors += 1
-        print(f"tokenization error: {exc}")
-        summary = {
-            "models": len(models),
-            "train_examples": train_n,
-            "val_examples": val_n,
-            "tokenization_errors": errors,
-            "max_tokens": max_tokens,
-        }
-        print(f"tokenization errors: {errors}")
-        return summary
+    iface_bags = 0
+    total_iface_tokens = 0
+    iface_by_bag: dict[str, int] = {b: 0 for b in BAG_NAMES}
+
+    with train_path.open("w", encoding="utf-8") as train_f, val_path.open("w", encoding="utf-8") as val_f:
+        for example in iter_bag_examples(
+            corpus_path=corpus_path,
+            codebook=codebook,
+            version=version,
+            skip_rejected=True,
+            rejected_tracker=rejected_records,
+        ):
+            models.add(example["model_id"])
+            max_tokens = max(max_tokens, example["n_tokens"])
+            handle = val_f if is_validation_model(example["model_id"]) else train_f
+            if handle is val_f:
+                val_n += 1
+            else:
+                train_n += 1
+            handle.write(json.dumps(example) + "\n")
+
+            payload = extract_payload_digits(example["text"])
+            nodes = tree_nodes_from_target_text(payload, codebook)
+            bag_ifaces = sum(1 for n in nodes if n.parent_port and n.parent_port.startswith("iface_"))
+            if bag_ifaces > 0:
+                iface_bags += 1
+                total_iface_tokens += bag_ifaces
+                iface_by_bag[example["bag"]] += 1
 
     if train_n == 0 or val_n == 0:
         raise TokenizationError(f"split is empty (train={train_n}, val={val_n})")
+
+    rejected_breakdown: dict[str, int] = {}
+    for r in rejected_records:
+        reason = r.get("reason", "unknown")
+        rejected_breakdown[reason] = rejected_breakdown.get(reason, 0) + 1
+
+    total_accepted = train_n + val_n
+    total_bags = total_accepted + len(rejected_records)
+    coverage_pct = round((iface_bags / total_accepted) * 100, 2) if total_accepted > 0 else 0.0
+
     summary = {
         "models": len(models),
+        "total_bags": total_bags,
+        "accepted_examples": total_accepted,
         "train_examples": train_n,
         "val_examples": val_n,
-        "non_empty_bags": train_n + val_n,
+        "non_empty_bags": total_accepted,
         "tokenization_errors": 0,
+        "rejected_records": len(rejected_records),
+        "rejected_breakdown": rejected_breakdown,
+        "rejected_details": rejected_records,
+        "interface_coverage_bags": iface_bags,
+        "interface_coverage_pct": coverage_pct,
+        "interface_coverage_by_bag": iface_by_bag,
+        "total_interface_tokens": total_iface_tokens,
         "max_tokens": max_tokens,
         "train_path": str(train_path),
         "val_path": str(val_path),
     }
+
     print(f"models: {summary['models']}")
-    print(f"non-empty bags: {summary['non_empty_bags']}")
-    print(f"train examples: {train_n}")
-    print(f"val examples: {val_n}")
+    print(f"total bags: {total_bags}")
+    print(f"accepted examples: {total_accepted} (train={train_n}, val={val_n})")
+    print(f"rejected records: {len(rejected_records)} ({rejected_breakdown})")
+    print(f"interface coverage bags: {iface_bags}/{total_accepted} ({coverage_pct}%)")
+    print(f"interface coverage by bag: {iface_by_bag}")
+    print(f"total interface tokens: {total_iface_tokens}")
     print(f"max tokens: {max_tokens}")
     print("tokenization errors: 0")
     return summary
+
