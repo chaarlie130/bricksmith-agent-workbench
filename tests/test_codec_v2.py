@@ -464,7 +464,7 @@ class TestCodecV2AndKinematics(unittest.TestCase):
 
         for bag_name in BAG_NAMES:
             bag = bags[bag_name]
-            tree = BFSTreeCodec.encode(bag, interface_assembly=accumulated)
+            tree = BFSTreeCodec.encode(bag, interface_assembly=accumulated, require_anchored=True)
 
             # Strict representation boundary: serialize and parse tokens
             tokens = serialize_tree(tree, codebook, version=2)
@@ -506,36 +506,33 @@ class TestCodecV2AndKinematics(unittest.TestCase):
                     base_connected_bids.add(bid)
 
             # Compare pieces:
-            # Kinematically attached pieces must reconstruct with < 1e-4 LDU error.
-            # Unattached pieces must NOT silently receive source CAD transforms.
+            # All pieces in the retained subassembly must reconstruct with < 1e-4 LDU error.
+            self.assertEqual(len(decoded_bag.parts), len(tree), "Decoded graph must contain exactly the anchored pieces")
             for t in tree:
                 bid = t.brick_id
                 orig_part = bag.parts[bid]
                 dec_part = decoded_bag.parts[bid]
-                is_attached = bid in base_connected_bids
+                self.assertIn(bid, base_connected_bids, f"Piece {bid} must have verified path to base anchor")
 
-                if is_attached:
-                    pos_err = float(np.linalg.norm(orig_part.position - dec_part.position))
-                    rot_err = float(np.linalg.norm(orig_part.rotation - dec_part.rotation))
-                    self.assertLess(
-                        pos_err,
-                        1e-4,
-                        f"{bag_name} part {bid} ({orig_part.part_id}) position error {pos_err} >= 1e-4 LDU",
-                    )
-                    self.assertLess(
-                        rot_err,
-                        1e-4,
-                        f"{bag_name} part {bid} ({orig_part.part_id}) rotation error {rot_err} >= 1e-4",
-                    )
-                    total_verified_pieces += 1
-                else:
-                    # Unattached pieces MUST NOT receive source coordinates.
-                    # Verify they do not match source CAD transforms.
-                    self.assertFalse(
-                        np.allclose(dec_part.transform, orig_part.transform),
-                        f"Unattached piece {bid} must not silently receive source coordinates",
-                    )
-                    total_unsupported_pieces += 1
+                pos_err = float(np.linalg.norm(orig_part.position - dec_part.position))
+                rot_err = float(np.linalg.norm(orig_part.rotation - dec_part.rotation))
+                self.assertLess(
+                    pos_err,
+                    1e-4,
+                    f"{bag_name} part {bid} ({orig_part.part_id}) position error {pos_err} >= 1e-4 LDU",
+                )
+                self.assertLess(
+                    rot_err,
+                    1e-4,
+                    f"{bag_name} part {bid} ({orig_part.part_id}) rotation error {rot_err} >= 1e-4",
+                )
+                total_verified_pieces += 1
+
+            # Unsupported pieces in bag must be completely excluded from decoded_bag.parts and accumulated state
+            unsupported_in_bag = set(bag.parts.keys()) - set(decoded_bag.parts.keys())
+            total_unsupported_pieces += len(unsupported_in_bag)
+            for bid in unsupported_in_bag:
+                self.assertNotIn(bid, decoded_bag.parts, f"Unsupported piece {bid} must not enter reconstructed assembly")
 
             # Accumulate the RECONSTRUCTED earlier bag, NOT original CAD
             accumulated = decoded_bag if accumulated is None else merge_assemblies(accumulated, decoded_bag)
@@ -543,11 +540,96 @@ class TestCodecV2AndKinematics(unittest.TestCase):
         # Explicitly verify the exact accounting:
         # Only 1 anchor supplied to decoder in total (the initial ground baseplate).
         # 187 kinematically connected pieces verified with zero error from saved tokens alone.
-        # 217 unattached pieces (floating/continuous-rotation foliage/furniture) accounted as unsupported.
+        # 217 unattached pieces (floating/continuous-rotation foliage/furniture) excluded from accepted targets.
         self.assertEqual(anchors_supplied_count, 1, "Only the single initial grounded baseplate anchor may be supplied")
         self.assertEqual(total_verified_pieces, 187, "Expected 187 kinematically connected pieces verified with zero error")
         self.assertEqual(total_unsupported_pieces, 217, "Expected 217 unattached pieces explicitly accounted as unsupported")
         self.assertEqual(total_verified_pieces + total_unsupported_pieces, 404, "All 404 Elf House pieces must be accounted for")
+
+    def test_decoder_quarantines_unanchored_roots_and_strict_mode(self):
+        """Production decoder must quarantine unanchored roots rather than placing at identity, and enforce strict mode."""
+        with CORPUS_PATH.open(encoding="utf-8") as handle:
+            record = json.loads(handle.readline())
+        graph = graph_from_record(record)
+        all_parts = sorted({p.part_id for p in graph.parts.values()})
+        all_colors = sorted({p.color_id for p in graph.parts.values()})
+        codebook = build_codebook(all_parts, all_colors)
+        bags = partition_into_bags(graph)
+        bag1 = bags["bag_1_foundation"]
+
+        # When encoded with require_anchored=False, bag1 contains all 166 parts (122 anchored + 44 unanchored)
+        tree_all = BFSTreeCodec.encode(bag1, require_anchored=False)
+        self.assertEqual(len(tree_all), 166)
+
+        # Serialize to tokens so transforms are stripped
+        tokens = serialize_tree(tree_all, codebook, version=2)
+        parsed = tree_nodes_from_target_text(tokens, codebook)
+        for p, t in zip(parsed, tree_all):
+            p.brick_id = t.brick_id
+
+        root_id = tree_all[0].brick_id
+        anchor = {root_id: bag1.parts[root_id].transform}
+
+        # 1. Non-strict decode: quarantines unanchored roots into unsupported_parts
+        dec = BFSTreeCodec.decode(parsed, anchor_transforms=anchor, strict=False)
+        self.assertEqual(len(dec.parts), 122, "Only base-anchored pieces must enter reconstructed assembly")
+        self.assertEqual(len(dec.unsupported_parts), 44, "All 44 unanchored pieces must be quarantined in unsupported_parts")
+        for bid in dec.unsupported_parts:
+            self.assertNotIn(bid, dec.parts, f"Quarantined piece {bid} must not appear in parts")
+
+        # 2. Strict mode decode: raises ValueError on unanchored root
+        with self.assertRaises(ValueError) as ctx:
+            BFSTreeCodec.decode(parsed, anchor_transforms=anchor, strict=True)
+        self.assertIn("has no anchor or interface connection", str(ctx.exception))
+
+    def test_collision_check_failure_never_produces_mating(self):
+        """Rule: A failed collision check must never produce a successful mating."""
+        from unittest.mock import patch
+        from bricknet.data import load_connector_list
+        from bricksmith.core.tree import _recover_intra_bag_mating
+        from bricksmith.core.graph import PartInstance
+
+        conn_list = load_connector_list()
+
+        # Two valid mating parts: 3004 brick on top of 3004 brick
+        parent_part = PartInstance(
+            instance_id=1,
+            part_id="3004",
+            color_id=0,
+            transform=np.eye(4, dtype=np.float64),
+        )
+        child_part = PartInstance(
+            instance_id=2,
+            part_id="3004",
+            color_id=0,
+            transform=np.array([
+                [1.0, 0.0, 0.0, 0.0],
+                [0.0, 1.0, 0.0, -24.0],
+                [0.0, 0.0, 1.0, 0.0],
+                [0.0, 0.0, 0.0, 1.0],
+            ], dtype=np.float64),
+        )
+
+        # Baseline: without error, valid mating is discovered
+        mating = _recover_intra_bag_mating(parent_part, child_part, conn_list)
+        self.assertIsNotNone(mating, "Baseline valid 3004 stack should mate successfully")
+
+        # Injected collision engine failure: must NEVER produce a successful mating
+        with patch("bricknet.collision.colliding_pairs", side_effect=RuntimeError("Collision engine crashed")):
+            with self.assertRaises(RuntimeError):
+                _recover_intra_bag_mating(parent_part, child_part, conn_list)
+
+        # Overlapping identical pieces: must return None (rejected by collision check)
+        overlapping_child = PartInstance(
+            instance_id=3,
+            part_id="3004",
+            color_id=0,
+            transform=np.eye(4, dtype=np.float64),
+        )
+        self.assertIsNone(
+            _recover_intra_bag_mating(parent_part, overlapping_child, conn_list),
+            "Identical overlapping pieces must be rejected by collision check",
+        )
 
     def test_chained_guided_generation_multi_bag_context(self):
         """Review Findings 1 & 2: Multi-bag generation branch runs without ImportError and checks base collisions."""

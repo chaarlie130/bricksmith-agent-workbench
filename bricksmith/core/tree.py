@@ -138,12 +138,9 @@ def _recover_intra_bag_mating(parent_part, child_part, conn_list):
     from pathlib import Path
     _pkg_root = Path(__file__).resolve().parents[2]
     os.environ.setdefault("BRICKNET_DATA", str(_pkg_root / "data/bricknet-data"))
-    try:
-        from bricknet.collision import colliding_pairs
-        if colliding_pairs([p_num, c_num], [parent_part.transform, child_part.transform]):
-            return None
-    except Exception:
-        pass
+    from bricknet.collision import colliding_pairs
+    if colliding_pairs([p_num, c_num], [parent_part.transform, child_part.transform]):
+        return None
 
     p_conns = conn_list[p_num]
     c_conns = conn_list[c_num]
@@ -187,11 +184,14 @@ class BFSTreeCodec:
         root_id: Optional[int] = None,
         interface_assembly: Optional[AssemblyGraph] = None,
         interface_ports: Optional[Sequence[InterfacePortSpec]] = None,
+        require_anchored: bool = False,
     ) -> List[TreeNode]:
         """Traverse the graph in Breadth-First Search order starting from root_id.
         If interface_assembly or interface_ports are provided, roots attached to prior
         assemblies via interface connections will encode parent_port as 'iface_{index}'
         and derive their rotation_quarters from the interface port.
+        If require_anchored is True, only pieces with a verified kinematic attachment
+        path to the base anchor (or prior interface assembly) are retained.
         """
         if not graph.parts:
             return []
@@ -235,6 +235,10 @@ class BFSTreeCodec:
                     used_spec_indices.add(spec.index)
                     iface_attachments[c_id] = (f"iface_{spec.index}", c_port, conn_type, rot_q)
 
+        # If require_anchored is requested on a dependent bag with no interface attachments, return empty
+        if require_anchored and interface_assembly is not None and not iface_attachments:
+            return []
+
         # Build intra-bag mating adjacency with exact verified kinematics
         intra_adj: dict[int, list[tuple[int, str, str, ConnectorType, int]]] = {}
         for b1, p1 in sorted(graph.parts.items()):
@@ -252,6 +256,25 @@ class BFSTreeCodec:
                         inv_conn_type = m_inv[4] if len(m_inv) > 4 else ConnectorType.STUD
                         intra_adj.setdefault(b2, []).append((b1, m_inv[0], m_inv[1], inv_conn_type, m_inv[2]))
 
+        def get_best_grounded_root(candidate_bids: set[int]) -> int:
+            comp_visited = set()
+            comps = []
+            for b in candidate_bids:
+                if b not in comp_visited:
+                    comp = []
+                    q = [b]
+                    comp_visited.add(b)
+                    while q:
+                        curr = q.pop()
+                        comp.append(curr)
+                        for nbr, _, _, _, _ in intra_adj.get(curr, []):
+                            if nbr in candidate_bids and nbr not in comp_visited:
+                                comp_visited.add(nbr)
+                                q.append(nbr)
+                    comps.append(comp)
+            best_comp = max(comps, key=len) if comps else list(candidate_bids)
+            return max(best_comp, key=lambda bid: (graph.parts[bid].position[1], -bid))
+
         visited = set()
         tree_nodes: List[TreeNode] = []
         brick_to_step: dict[int, int] = {}
@@ -264,15 +287,24 @@ class BFSTreeCodec:
                     p_port, s_port, c_type, rot_q = iface_attachments[curr_root]
                 else:
                     p_port, s_port, c_type, rot_q = None, None, None, 0
+            elif not visited and interface_assembly is None:
+                curr_root = get_best_grounded_root(set(graph.parts.keys()))
+                p_port, s_port, c_type, rot_q = None, None, None, 0
             else:
                 unvisited_iface = [bid for bid in iface_attachments if bid not in visited]
                 if unvisited_iface:
                     curr_root = min(unvisited_iface, key=lambda bid: (iface_attachments[bid][0], bid))
                     p_port, s_port, c_type, rot_q = iface_attachments[curr_root]
+                elif require_anchored:
+                    # All anchored/interface trees have been visited! Stop traversal.
+                    break
                 else:
                     unvisited = [bid for bid in graph.parts if bid not in visited]
                     curr_root = max(unvisited, key=lambda bid: (graph.parts[bid].position[1], -bid))
                     p_port, s_port, c_type, rot_q = None, None, None, 0
+
+            if require_anchored and interface_assembly is not None and curr_root not in iface_attachments:
+                break
 
             visited.add(curr_root)
             queue = [(curr_root, None, p_port, s_port, c_type, rot_q)]
@@ -304,7 +336,7 @@ class BFSTreeCodec:
                         queue.append((nbr_id, curr_step, my_p, nbr_p, ct_nbr, nbr_rq))
 
                 # Fallback to declared connections for abstract/non-geometric graphs without kinematic contacts
-                if not intra_adj and not iface_attachments:
+                if not intra_adj and not iface_attachments and not require_anchored:
                     for conn in graph.connections:
                         nbr = None
                         mp = None
@@ -416,8 +448,12 @@ class BFSTreeCodec:
         interface_ports: Optional[Sequence[InterfacePortSpec]] = None,
         anchor_transform: Optional[np.ndarray] = None,
         anchor_transforms: Optional[Union[np.ndarray, dict[int, np.ndarray]]] = None,
+        strict: bool = False,
     ) -> AssemblyGraph:
-        """Decode a BFS spanning tree path sequence or list of TreeNodes back into an AssemblyGraph."""
+        """Decode a BFS spanning tree path sequence or list of TreeNodes back into an AssemblyGraph.
+        Any unanchored roots without interface attachments or permitted anchors are quarantined in
+        graph.unsupported_parts and excluded from the reconstructed assembly state.
+        """
         if isinstance(tree_nodes_or_text, str):
             if "STEP:" in tree_nodes_or_text:
                 tree_nodes = BFSTreeCodec.deserialize_path_text(tree_nodes_or_text)
@@ -434,16 +470,27 @@ class BFSTreeCodec:
 
         graph = AssemblyGraph(name=name)
         graph.interface_connections = []
+        graph.unsupported_parts = {}
+        unsupported_steps: set[int] = set()
         step_to_inst: dict[int, int] = {}
 
         for node in tree_nodes:
+            if node.parent_step_index is not None and node.parent_step_index in unsupported_steps:
+                unsupported_steps.add(node.step_index)
+                graph.unsupported_parts[node.brick_id] = node
+                continue
+
             node_transform = None if node.transform is None else node.transform.copy()
             if node_transform is None or np.allclose(node_transform, np.eye(4)):
                 if node.parent_step_index is not None:
                     if node.parent_step_index not in step_to_inst:
-                        raise ValueError(
-                            f"Parent step {node.parent_step_index} was not decoded before child step {node.step_index}"
-                        )
+                        if strict:
+                            raise ValueError(
+                                f"Parent step {node.parent_step_index} was not decoded before child step {node.step_index}"
+                            )
+                        unsupported_steps.add(node.step_index)
+                        graph.unsupported_parts[node.brick_id] = node
+                        continue
                     parent_inst = step_to_inst[node.parent_step_index]
                     parent_part = graph.parts[parent_inst]
                     p_port = node.parent_port or "port_0"
@@ -458,6 +505,7 @@ class BFSTreeCodec:
                     s_idx = _parse_port_index(s_port)
                     pf = frame(p_num, p_idx)
                     cf = frame(c_num, s_idx)
+
                     rot_deg = int(getattr(node, "rotation_quarters", 0)) * 90
                     node_transform = parent_part.transform @ pf @ yaw_matrix(rot_deg) @ np.linalg.inv(cf)
                 elif node.parent_step_index is None and node.parent_port and node.parent_port.startswith("iface_"):
@@ -479,24 +527,37 @@ class BFSTreeCodec:
                     s_port = node.self_port or "port_0"
                     s_idx = _parse_port_index(s_port)
                     cf = frame(c_num, s_idx)
+
                     rot_deg = int(getattr(node, "rotation_quarters", 0)) * 90
                     node_transform = iface.world_transform @ yaw_matrix(rot_deg) @ np.linalg.inv(cf)
                 elif node.parent_step_index is None:
                     anchors = anchor_transforms if anchor_transforms is not None else anchor_transform
+                    matched_anchor = None
                     if anchors is not None:
                         if isinstance(anchors, dict):
                             if node.brick_id in anchors:
-                                node_transform = np.asarray(anchors[node.brick_id], dtype=np.float64).copy()
+                                matched_anchor = np.asarray(anchors[node.brick_id], dtype=np.float64).copy()
                             elif node.step_index in anchors:
-                                node_transform = np.asarray(anchors[node.step_index], dtype=np.float64).copy()
-                            else:
-                                node_transform = np.eye(4, dtype=np.float64)
-                        else:
-                            node_transform = np.asarray(anchors, dtype=np.float64).copy()
+                                matched_anchor = np.asarray(anchors[node.step_index], dtype=np.float64).copy()
+                        elif node.step_index == 0 or not graph.parts:
+                            matched_anchor = np.asarray(anchors, dtype=np.float64).copy()
+                    elif (node.step_index == 0 or not graph.parts) and interface_assembly is None and interface_ports is None:
+                        matched_anchor = np.eye(4, dtype=np.float64)
+
+                    if matched_anchor is not None:
+                        node_transform = matched_anchor
                     else:
-                        node_transform = np.eye(4, dtype=np.float64)
+                        if strict:
+                            raise ValueError(
+                                f"Unresolved root at step {node.step_index} (brick_id={node.brick_id}) has no anchor or interface connection"
+                            )
+                        unsupported_steps.add(node.step_index)
+                        graph.unsupported_parts[node.brick_id] = node
+                        continue
                 else:
-                    node_transform = np.eye(4, dtype=np.float64)
+                    unsupported_steps.add(node.step_index)
+                    graph.unsupported_parts[node.brick_id] = node
+                    continue
 
             inst_id = graph.add_part(
                 part_id=node.part_id,

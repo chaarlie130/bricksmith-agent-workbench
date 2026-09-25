@@ -47,11 +47,11 @@ class TestTrainingFormat(unittest.TestCase):
             self.assertRegex(payload, r"^[0-9]+$")
             self.assertLess(count_tokens(text), DATASET_TOKEN_CAP)
 
-            source = BFSTreeCodec.encode(bag)
+            source = BFSTreeCodec.encode(bag, require_anchored=True)
             decoded_nodes = tree_nodes_from_target_text(text, self.codebook)
             graph_out = BFSTreeCodec.decode(decoded_nodes)
             self.assertEqual(len(decoded_nodes), len(source))
-            self.assertEqual(graph_out.num_parts, bag.num_parts)
+            self.assertEqual(graph_out.num_parts, len(source))
             for src, dec in zip(source, decoded_nodes):
                 self.assertEqual(dec.part_id, src.part_id)
                 self.assertEqual(dec.color_id, src.color_id)

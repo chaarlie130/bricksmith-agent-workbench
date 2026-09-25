@@ -134,15 +134,28 @@ def example_text(
     interface_assembly: Optional[AssemblyGraph] = None,
     interface_ports: Optional[Sequence[InterfacePortSpec]] = None,
     version: int = 2,
+    require_anchored: bool = True,
 ) -> str:
-    """One conditioning block plus the bag's parent-relative attachment target."""
+    """One conditioning block plus the bag's parent-relative attachment target.
+    If require_anchored is True, unattached pieces are excluded and conditioning is
+    computed strictly on the retained reconstructable subassembly.
+    """
     tree = BFSTreeCodec.encode(
         bag,
         interface_assembly=interface_assembly,
         interface_ports=interface_ports,
+        require_anchored=require_anchored,
     )
-    bounds = calculate_bounds(bag)
-    grid = generate_occupancy_grid(bag, resolution_studs=4.0)
+    if not tree:
+        raise TokenizationError(f"{bag_name} has no pieces attached to base anchor or interface")
+
+    retained_bag = AssemblyGraph(name=bag_name)
+    for node in tree:
+        p = bag.parts[node.brick_id]
+        retained_bag.add_part(part_id=p.part_id, color_id=p.color_id, transform=p.transform.copy(), instance_id=p.instance_id)
+
+    bounds = calculate_bounds(retained_bag)
+    grid = generate_occupancy_grid(retained_bag, resolution_studs=4.0)
     voxels = coarse_voxel_hex(grid)
     payload = serialize_tree(tree, codebook, version=version)
     width = max(1, int(round(float(bounds.width_studs))))
@@ -177,14 +190,53 @@ def iter_bag_examples(
                 bag = bags[bag_name]
                 if bag.num_parts == 0:
                     continue
+                if bag_name != "bag_1_foundation" and accumulated is None:
+                    if rejected_tracker is not None:
+                        rejected_tracker.append({
+                            "model_id": record["model_id"],
+                            "bag": bag_name,
+                            "reason": "unattached_bag",
+                            "detail": "prior foundation or accumulated assembly was missing or rejected",
+                            "n_tokens": None,
+                            "parts": bag.num_parts,
+                        })
+                    continue
+                dec_bag = None
                 try:
-                    text = example_text(
+                    tree = BFSTreeCodec.encode(
                         bag,
-                        bag_name,
-                        book,
                         interface_assembly=accumulated,
-                        version=version,
+                        require_anchored=True,
                     )
+                    if not tree:
+                        raise TokenizationError(f"{bag_name} has no pieces attached to base anchor or interface")
+
+                    retained_bag = AssemblyGraph(name=bag_name)
+                    for node in tree:
+                        p = bag.parts[node.brick_id]
+                        retained_bag.add_part(
+                            part_id=p.part_id,
+                            color_id=p.color_id,
+                            transform=p.transform.copy(),
+                            instance_id=p.instance_id,
+                        )
+
+                    bounds = calculate_bounds(retained_bag)
+                    grid = generate_occupancy_grid(retained_bag, resolution_studs=4.0)
+                    voxels = coarse_voxel_hex(grid)
+                    payload = serialize_tree(tree, book, version=version)
+                    width = max(1, int(round(float(bounds.width_studs))))
+                    depth = max(1, int(round(float(bounds.depth_studs))))
+                    height = max(1, int(round(float(bounds.height_studs))))
+                    prompt = format_conditioning_prompt(
+                        width=width,
+                        depth=depth,
+                        height=height,
+                        aspect_ratio_str=bounds.aspect_ratio_str,
+                        bag_name=bag_name,
+                        coarse_voxel_tokens=voxels,
+                    )
+                    text = f"{prompt}{payload}\n"
                     n_tokens = count_tokens(text)
                     if n_tokens >= DATASET_TOKEN_CAP:
                         msg = f"{record['model_id']} {bag_name}: {n_tokens} tokens exceeds {DATASET_TOKEN_CAP - 1}"
@@ -200,21 +252,29 @@ def iter_bag_examples(
                                 "parts": bag.num_parts,
                             })
                         continue
-                except TokenizationError as exc:
+
+                    # Decode from tokens for accumulating exact reconstructed state
+                    parsed = tree_nodes_from_target_text(payload, book)
+                    anchor_t = bag.parts[tree[0].brick_id].transform if accumulated is None else None
+                    dec_bag = BFSTreeCodec.decode(parsed, interface_assembly=accumulated, anchor_transform=anchor_t)
+
+                except (TokenizationError, Exception) as exc:
+                    reason = "unattached_bag" if "no pieces attached" in str(exc) else "tokenization_error"
                     if not skip_rejected:
                         raise TokenizationError(f"{record['model_id']} {bag_name}: {exc}") from exc
                     if rejected_tracker is not None:
                         rejected_tracker.append({
                             "model_id": record["model_id"],
                             "bag": bag_name,
-                            "reason": "tokenization_error",
+                            "reason": reason,
                             "detail": str(exc),
                             "n_tokens": None,
                             "parts": bag.num_parts,
                         })
                     continue
                 finally:
-                    accumulated = bag if accumulated is None else merge_assemblies(accumulated, bag)
+                    if dec_bag is not None:
+                        accumulated = dec_bag if accumulated is None else merge_assemblies(accumulated, dec_bag)
 
                 yield {
                     "model_id": record["model_id"],
@@ -242,6 +302,9 @@ def write_splits(
     iface_bags = 0
     total_iface_tokens = 0
     iface_by_bag: dict[str, int] = {b: 0 for b in BAG_NAMES}
+    foundation_multiple_roots = 0
+    later_bags_with_unanchored_roots = 0
+    total_unanchored_later_roots = 0
 
     with train_path.open("w", encoding="utf-8") as train_f, val_path.open("w", encoding="utf-8") as val_f:
         for example in iter_bag_examples(
@@ -267,6 +330,17 @@ def write_splits(
                 iface_bags += 1
                 total_iface_tokens += bag_ifaces
                 iface_by_bag[example["bag"]] += 1
+
+            # Audit root types
+            roots = [n for n in nodes if n.parent_step_index is None]
+            unanchored_roots = [n for n in roots if not (n.parent_port and n.parent_port.startswith("iface_"))]
+            if example["bag"] == "bag_1_foundation":
+                if len(unanchored_roots) > 1:
+                    foundation_multiple_roots += 1
+            else:
+                if len(unanchored_roots) > 0:
+                    later_bags_with_unanchored_roots += 1
+                    total_unanchored_later_roots += len(unanchored_roots)
 
     if train_n == 0 or val_n == 0:
         raise TokenizationError(f"split is empty (train={train_n}, val={val_n})")
@@ -296,6 +370,9 @@ def write_splits(
         "interface_coverage_by_bag": iface_by_bag,
         "total_interface_tokens": total_iface_tokens,
         "max_tokens": max_tokens,
+        "foundation_multiple_roots": foundation_multiple_roots,
+        "later_bags_with_unanchored_roots": later_bags_with_unanchored_roots,
+        "total_unanchored_later_roots": total_unanchored_later_roots,
         "train_path": str(train_path),
         "val_path": str(val_path),
     }
@@ -308,6 +385,9 @@ def write_splits(
     print(f"interface coverage by bag: {iface_by_bag}")
     print(f"total interface tokens: {total_iface_tokens}")
     print(f"max tokens: {max_tokens}")
+    print(f"foundation bags with multiple unanchored roots: {foundation_multiple_roots}")
+    print(f"later bags containing unanchored, non-interface roots: {later_bags_with_unanchored_roots}")
+    print(f"such roots in later bags: {total_unanchored_later_roots}")
     print("tokenization errors: 0")
     return summary
 
