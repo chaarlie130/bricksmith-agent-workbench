@@ -1,13 +1,6 @@
-# BrickSmith Dependencies
+# BrickSmith workbench geometry, validation, and rendering dependencies
 numpy>=1.26.0
 scipy>=1.15.0
 meshlib>=3.1.0
 pillow>=10.0.0
 matplotlib>=3.8.0
-tqdm>=4.66.0
-
-# Optional for neural training & LLM inference (Apple Silicon MLX)
-# mlx>=0.20.0
-# mlx-lm>=0.20.0
-# torch>=2.2.0
-# transformers>=4.40.0

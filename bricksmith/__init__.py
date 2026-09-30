@@ -1,4 +1,4 @@
-"""BrickSmith: State-of-the-Art Generative AI & Physics System for LEGO Architecture."""
+"""BrickSmith construction tools for a frontier-model design workbench."""
 __version__ = "0.1.0"
 
 from bricksmith.core import (
@@ -10,8 +10,6 @@ from bricksmith.core import (
     Port,
     PortConnection,
     AssemblyGraph,
-    TreeNode,
-    BFSTreeCodec,
 )
 from bricksmith.io import parse_ldr, save_ldr, BillOfMaterials
 from bricksmith.physics import validate_ldraw
@@ -26,8 +24,6 @@ __all__ = [
     "Port",
     "PortConnection",
     "AssemblyGraph",
-    "TreeNode",
-    "BFSTreeCodec",
     "parse_ldr",
     "save_ldr",
     "BillOfMaterials",

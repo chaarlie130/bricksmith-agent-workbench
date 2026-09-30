@@ -31,9 +31,6 @@ ENV/
 .DS_Store
 Thumbs.db
 
-# LoRA adapters from scripts/train_mlx.py
-adapters/
-
 # Output artifacts & renders
 *.png
 *.jpg

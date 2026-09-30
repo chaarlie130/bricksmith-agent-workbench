@@ -16,7 +16,6 @@ from bricksmith.core.connector import (
     COMPATIBILITY_MATRIX,
 )
 from bricksmith.core.graph import AssemblyGraph
-from bricksmith.core.tree import TreeNode, BFSTreeCodec
 
 __all__ = [
     "PartDefinition",
@@ -32,6 +31,4 @@ __all__ = [
     "PortConnection",
     "COMPATIBILITY_MATRIX",
     "AssemblyGraph",
-    "TreeNode",
-    "BFSTreeCodec",
 ]
