@@ -42,4 +42,5 @@ Thumbs.db
 !configs/
 !docs/
 scratch/
+runs/
 grok_interrupted_goal.md

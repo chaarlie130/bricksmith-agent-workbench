@@ -3,6 +3,8 @@ from __future__ import annotations
 
 from pathlib import Path
 from typing import Optional, Union
+from functools import lru_cache
+import re
 import numpy as np
 import matplotlib
 matplotlib.use("Agg")
@@ -19,22 +21,78 @@ COLORS = {
     0: "#202326",    # Black
     15: "#e7e7e3",   # White
     19: "#cbb68a",   # Tan
-    28: "#958164",   # Dark Green
+    28: "#897d62",   # Dark Tan
+    288: "#00451a",  # Dark Green
     71: "#a0a4a5",   # Light Bluish Gray
     72: "#626567",   # Dark Bluish Gray
-    47: "#bed9dd",   # Trans-Light Blue
+    41: "#559ab7",   # Trans-Medium Blue
+    47: "#fcfcfc",   # Trans-Clear
     70: "#693b2a",   # Reddish Brown
     378: "#7c9082",  # Sand Green
     297: "#b89548",  # Pearl Gold
 }
 
 
-def rasterize(triangles: np.ndarray, colors: np.ndarray, width: int, height: int, background: str = "#f5f4ef") -> np.ndarray:
-    """Per-pixel depth rasterization with z-buffering in pure NumPy."""
+@lru_cache(maxsize=1)
+def ldraw_colors() -> dict[int, str]:
+    """Use actual LDraw palette values so design previews preserve colour choices."""
+    palette = dict(COLORS)
+    config = Path(__file__).resolve().parents[2] / "data/ldraw/LDConfig.ldr"
+    if config.is_file():
+        for line in config.read_text(encoding="utf-8", errors="replace").splitlines():
+            if not line.startswith("0 !COLOUR "):
+                continue
+            match = re.search(r"\bCODE\s+(\d+)\s+VALUE\s+(#[0-9A-Fa-f]{6})\b", line)
+            if match:
+                palette[int(match.group(1))] = match.group(2)
+    return palette
+
+
+@lru_cache(maxsize=1)
+def ldraw_opacity() -> dict[int, float]:
+    """Read LDraw ALPHA values; missing ALPHA means an opaque material."""
+    config = Path(__file__).resolve().parents[2] / "data/ldraw/LDConfig.ldr"
+    opacity = {}
+    if config.is_file():
+        for line in config.read_text(encoding="utf-8", errors="replace").splitlines():
+            match = re.search(r"\bCODE\s+(\d+)\b.*?\bALPHA\s+(\d+)\b", line)
+            if match:
+                opacity[int(match.group(1))] = min(1.0, max(0.0, int(match.group(2)) / 255.0))
+    return opacity
+
+
+def preview_face_opacity(material_opacity: float) -> float:
+    """Convert a transparent part's target opacity to each mesh skin.
+
+    LDraw's ALPHA describes the material, whereas the software rasterizer
+    blends both the front and rear triangles of a solid clear brick. Applying
+    ALPHA to each skin makes a two-sided pane substantially more opaque than
+    intended and hides the interior that agents need to inspect. Choose the
+    per-face opacity whose two-layer composition equals the material value.
+    """
+    if not 0.0 < material_opacity < 1.0:
+        return material_opacity
+    return 1.0 - (1.0 - material_opacity) ** 0.5
+
+
+def rasterize(triangles: np.ndarray, colors: np.ndarray, width: int, height: int,
+              background: str = "#f5f4ef", opacity: np.ndarray | None = None) -> np.ndarray:
+    """Depth rasterize opaque geometry, then composite translucent faces."""
     pixels = np.full((height, width, 3), to_rgb(background), dtype=np.float32)
     depth = np.full((height, width), -np.inf, dtype=np.float32)
+    if opacity is None:
+        opacity = np.ones(len(triangles), dtype=np.float32)
+    if len(opacity) != len(triangles):
+        raise ValueError("One opacity value is required per triangle")
 
-    for triangle, color in zip(triangles, colors):
+    opaque = np.flatnonzero(opacity >= 0.999)
+    translucent = np.flatnonzero((opacity > 0) & (opacity < 0.999))
+    # Projected depth increases toward the camera. Back-to-front blending is
+    # approximate for intersecting translucent meshes but preserves the
+    # important see-through view of studs and interiors behind glazing.
+    translucent = translucent[np.argsort(triangles[translucent, :, 2].mean(axis=1))]
+    for index in np.concatenate((opaque, translucent)):
+        triangle, color, alpha = triangles[index], colors[index], float(opacity[index])
         a, b, c = triangle
         denominator = (b[1] - c[1]) * (a[0] - c[0]) + (c[0] - b[0]) * (a[1] - c[1])
         if abs(denominator) < 1e-10:
@@ -52,16 +110,21 @@ def rasterize(triangles: np.ndarray, colors: np.ndarray, width: int, height: int
 
         current = depth[y0:y1 + 1, x0:x1 + 1]
         visible = (u >= -1e-8) & (v >= -1e-8) & (w >= -1e-8) & (d > current)
-        current[visible] = d[visible]
-        pixels[y0:y1 + 1, x0:x1 + 1][visible] = color
+        region = pixels[y0:y1 + 1, x0:x1 + 1]
+        if alpha >= 0.999:
+            current[visible] = d[visible]
+            region[visible] = color
+        else:
+            region[visible] = alpha * color + (1.0 - alpha) * region[visible]
     return pixels
 
 
 def project(triangles: np.ndarray, azimuth: float, elevation: float = 24.0, resolution: int = 900) -> np.ndarray:
-    """Project 3D world triangles to 2D screen coordinates."""
+    """Project LDraw triangles (negative Y up) to 2D screen coordinates."""
     az_rad, el_rad = np.deg2rad([azimuth, elevation])
-    eye = np.array([np.cos(el_rad) * np.cos(az_rad), np.cos(el_rad) * np.sin(az_rad), np.sin(el_rad)])
-    right = np.array([-np.sin(az_rad), np.cos(az_rad), 0.0])
+    eye = np.array([np.cos(el_rad) * np.cos(az_rad), -np.sin(el_rad),
+                    np.cos(el_rad) * np.sin(az_rad)])
+    right = np.array([-np.sin(az_rad), 0.0, np.cos(az_rad)])
     up = np.cross(eye, right)
 
     projected = triangles @ np.array([right, -up, eye]).T
@@ -87,8 +150,8 @@ def render_ldr_to_png(
     path = Path(ldr_path)
     graph = bricknet.parse_ldr(path.read_text(encoding="utf-8", errors="ignore"))
 
-    meshes, facecolors = [], []
-    light = np.array([0.35, -0.4, 1.0])
+    meshes, facecolors, faceopacity = [], [], []
+    light = np.array([0.35, -1.0, 0.4])
     light /= np.linalg.norm(light)
 
     for pid, m, c in zip(graph.part_ids, graph.transforms, graph.colors):
@@ -97,7 +160,7 @@ def render_ldr_to_png(
         lens = np.linalg.norm(normals, axis=1, keepdims=True)
         normals = np.divide(normals, lens, out=np.zeros_like(normals), where=lens > 1e-9)
 
-        base_hex = COLORS.get(c, "#a0a4a5")
+        base_hex = ldraw_colors().get(c, "#a0a4a5")
         base_rgb = np.array(to_rgb(base_hex), dtype=np.float32)
 
         # Ambient + Lambertian diffuse shading
@@ -106,12 +169,16 @@ def render_ldr_to_png(
 
         meshes.append(tris)
         facecolors.append(colors)
+        faceopacity.append(np.full(
+            len(tris), preview_face_opacity(ldraw_opacity().get(c, 1.0)),
+            dtype=np.float32))
 
     all_tris = np.concatenate(meshes, axis=0)
     all_colors = np.concatenate(facecolors, axis=0)
+    all_opacity = np.concatenate(faceopacity, axis=0)
 
     proj = project(all_tris, azimuth=azimuth, elevation=elevation, resolution=resolution)
-    img = rasterize(proj, all_colors, resolution, resolution)
+    img = rasterize(proj, all_colors, resolution, resolution, opacity=all_opacity)
 
     out = Path(output_png)
     out.parent.mkdir(parents=True, exist_ok=True)

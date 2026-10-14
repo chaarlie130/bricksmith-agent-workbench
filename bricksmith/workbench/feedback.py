@@ -19,6 +19,20 @@ def check_model(path: Path, *, ground_y: float = 8.0) -> dict:
                 for a, b in error.get("pairs", [])
                 if 0 <= a < len(part_lines) and 0 <= b < len(part_lines)
             ]
+        elif error.get("kind") == "disconnected_assembly":
+            error["component_line_samples"] = [
+                [part_lines[index] for index in members if 0 <= index < len(part_lines)]
+                for members in error.get("component_members", [])
+            ]
+        elif error.get("kind") == "parts_below_ground":
+            error["line_samples"] = [part_lines[index] for index in error.get("part_indices", [])
+                                     if 0 <= index < len(part_lines)]
+        elif error.get("kind") == "gravity_equilibrium_infeasible":
+            error["suspect_line_samples"] = [
+                {"line": part_lines[index], "text": lines[part_lines[index] - 1]}
+                for index in error.get("details", {}).get("suspect_part_indices", [])
+                if 0 <= index < len(part_lines)
+            ]
     report["file"] = str(path.resolve())
     report["ground_y_ldu"] = ground_y
     report["limitations"] = [

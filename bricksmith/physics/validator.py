@@ -20,7 +20,7 @@ try:
     from bricknet.collision import _mesh, colliding_pairs
     from bricknet.data import load_aliases, load_catalog, load_connector_list, load_connectors
     from scipy.optimize import linprog
-    from scipy.sparse import coo_matrix
+    from scipy.sparse import coo_matrix, eye, hstack
     BRICKNET_AVAILABLE = True
 except ImportError:
     BRICKNET_AVAILABLE = False
@@ -183,12 +183,29 @@ def vertical_equilibrium(props, contacts, ground_indices):
     result = linprog(np.zeros(len(variables)), A_eq=matrix, b_eq=rhs, bounds=(0, None), method="highs")
     residual = float(np.max(np.abs(matrix @ result.x - rhs))) if result.success else None
     passed = bool(result.success and residual is not None and residual < 1e-6)
-    return passed, {
+    details = {
         "solver_status": int(result.status),
         "max_equilibrium_residual": residual,
         "parts": n,
         "reaction_variables": len(variables),
     }
+    if not passed:
+        # Find the smallest force/moment balance violations, rather than
+        # returning only HiGHS status=2. These are hints, not a proof that
+        # each named part is the root cause of the unstable assembly.
+        identity = eye(3 * n, format="csr")
+        relaxed = hstack((matrix, identity, -identity), format="csr")
+        cost = np.r_[np.zeros(len(variables)), np.ones(6 * n)]
+        diagnosis = linprog(cost, A_eq=relaxed, b_eq=rhs,
+                            bounds=(0, None), method="highs")
+        if diagnosis.success:
+            slack = diagnosis.x[len(variables):]
+            by_part = (slack[:3 * n] + slack[3 * n:]).reshape(n, 3)
+            scores = by_part.sum(axis=1)
+            details["balance_slack_total"] = round(float(scores.sum()), 5)
+            details["suspect_part_indices"] = [int(i) for i in np.argsort(-scores)[:12]
+                                               if scores[i] > 1e-6]
+    return passed, details
 
 
 def validate_ldraw(
@@ -248,14 +265,34 @@ def validate_ldraw(
 
     # 2. Baseplate & Ground Check
     ground_indices = []
+    below_ground = []
+    plate_bottoms = []
+    catalog = load_catalog()
     for i, (_, _, lo, hi) in enumerate(props):
+        if hi[1] > ground_y + EPS:
+            below_ground.append(i)
+        part_name = catalog.id_to_name[graph.part_ids[i]].lower()
+        if "plate " in part_name:
+            plate_bottoms.append(float(hi[1]))
         if abs(hi[1] - ground_y) <= EPS:
-            part_name = load_catalog().id_to_name[graph.part_ids[i]].lower()
             if "plate " in part_name:
                 ground_indices.append(i)
     report["checks"]["included_base"] = len(ground_indices) > 0
     if not ground_indices:
-        errors.append({"kind": "no_ground_baseplate"})
+        ground_error = {"kind": "no_ground_baseplate"}
+        if len(plate_bottoms) >= 2:
+            candidate = max(plate_bottoms)
+            if abs(candidate - ground_y) > EPS:
+                ground_error["candidate_ground_y_ldu"] = round(candidate, 3)
+                ground_error["note"] = (
+                    "Plate undersides suggest another ground plane. Verify the model's "
+                    "base and rerun with that ground-y value; this is not an automatic pass.")
+        errors.append(ground_error)
+    report["checks"]["no_parts_below_ground"] = not below_ground
+    if below_ground:
+        errors.append({"kind": "parts_below_ground", "part_indices": below_ground[:30],
+                       "count": len(below_ground), "ground_y_ldu": ground_y,
+                       "note": "LDraw +Y points down. A 32x32 baseplate normally has origin Y=0 and underside Y=8; the first plate above it has origin Y=-8."})
 
     # 3. Contacts & Connectivity
     contacts = []
@@ -292,7 +329,8 @@ def validate_ldraw(
 
     report["checks"]["actual_connectivity"] = len(comps) == 1
     if len(comps) > 1:
-        errors.append({"kind": "disconnected_assembly", "component_sizes": [len(c) for c in comps]})
+        errors.append({"kind": "disconnected_assembly", "component_sizes": [len(c) for c in comps],
+                       "component_members": [c[:8] for c in comps]})
 
     # 4. Compressive Gravity Equilibrium (HiGHS LP)
     eq_ok, eq_details = vertical_equilibrium(props, contacts, ground_indices)
