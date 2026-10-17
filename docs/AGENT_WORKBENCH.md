@@ -48,6 +48,116 @@ subassemblies or use embeddings. Validation does not establish assembly order,
 insertion clearance, clutch strength, or real-world stability. The ground
 height is configurable because a model's origin may differ from the default.
 
+## M1 offline design documents
+
+The offline design document commands import a supported flat LDraw file into a
+`bricksmith-design-v1` record with stable part and assembly IDs, then inspect,
+export, or explicitly migrate session data. They make no model request and do
+not change the live agent tool set. Type-0 comments and type-1 `.dat` placements
+are supported; MPD/submodels and type-2–5 geometry fail with source locations.
+Import/export destinations must be new paths. Export includes deterministic
+`build.ldr`, one module view per assembly, and `line_map.json`; line addresses
+are valid only for the exact exported-file hash and revision.
+
+```bash
+./.venv/bin/python scripts/workbench.py design-import tests/fixtures/design/tiny.ldr /tmp/tiny-design.json
+./.venv/bin/python scripts/workbench.py design-inspect /tmp/tiny-design.json
+./.venv/bin/python scripts/workbench.py design-export /tmp/tiny-design.json /tmp/tiny-export
+./.venv/bin/python scripts/workbench.py design-inspect /tmp/tiny-design.json \
+  --line-map /tmp/tiny-export/line_map.json --export-file /tmp/tiny-export/build.ldr
+```
+
+To migrate a legacy session, use
+`./.venv/bin/python scripts/workbench.py design-migrate <v1-session> <new-v2-session>`.
+Migration reads `module_order` and its module files, compares their placements
+to the saved derived build, and refuses disagreements or path escapes. The v1
+source remains untouched. Migrated v2 sessions are inert and read-only for model
+execution; legacy validation/review evidence remains historical. M1 provides editable in-memory helper functions for stable-ID move
+and recolor semantics, but it does not enable live mutations.
+
+## M2-A offline operator transactions
+
+The transaction CLI creates a new, separate workspace from an M1 design or an
+explicitly selected inert v2 design revision. It never overwrites a source or
+implicitly migrates a historical v1 folder. This offline operator path does not
+enable v2 `step`/`run` or route existing model tools through transactions; those
+adapters remain deferred to M2-B.
+
+```bash
+./.venv/bin/python scripts/workbench.py design-import tests/fixtures/acceptance/pass.ldr /tmp/m2-design.json --ground-y 8
+./.venv/bin/python scripts/workbench.py transaction-init /tmp/m2-design.json /tmp/m2-session
+# Write a strict bricksmith-operation-v1 request to /tmp/m2-operation.json.
+./.venv/bin/python scripts/workbench.py transaction-propose /tmp/m2-session /tmp/m2-operation.json
+./.venv/bin/python scripts/workbench.py transaction-inspect /tmp/m2-session <operation-uuid>
+./.venv/bin/python scripts/workbench.py transaction-commit /tmp/m2-session <operation-uuid> <candidate-revision-uuid>
+./.venv/bin/python scripts/workbench.py transaction-discard /tmp/m2-session <operation-uuid>
+./.venv/bin/python scripts/workbench.py transaction-recover /tmp/m2-session
+```
+
+`propose` resolves selectors against the declared base and saves the frozen
+selection, candidate, raw validation reports, interpreted offender identities,
+and commit-policy reasons. A candidate does not change `state.json`. `commit`
+rechecks the base and candidate under the OS writer lock and atomically publishes
+the new immutable revision pointer with its completed receipt. A committed
+`build.ldr` is a compatibility export; reads/checks use the revision pointer.
+Only the five real checker booleans with complete identity-mappable hard-failure
+evidence can authorize a commit. `construction_passed`, `provisional`, and
+`repair_incomplete` are construction statuses, not workflow acceptance.
+Discard retains candidate evidence. Recovery completes committed receipts,
+events, and compatibility exports; it never publishes an orphan sealed revision.
+
+## M3-A persistent intent ledger
+
+An initialized transaction workspace remains `bricksmith-design-v1` until an
+operator explicitly upgrades it with a normal, validated transaction. The
+upgrade preserves old records and revisions and creates empty
+`bricksmith-intent-ledger-v1` arrays. Ledger edits use operation-v3 and the same
+proposal/commit/recovery path. They retain the construction commit policy, so a
+metadata-only edit is blocked when the real checks are unavailable.
+
+The `operator-intake` command accepts exact instruction text and already
+structured changes. The trusted source comes from its required `--source`
+option rather than the JSON body. It records a single operation and commits
+through the standard transaction service. This application boundary cannot
+protect workspace files from a process with arbitrary filesystem access.
+Operator intake is not part of the model tool catalog. A model cannot promote
+retrieved text or its own summary into user authority.
+
+```bash
+./.venv/bin/python scripts/workbench.py transaction-upgrade-v2 WORKSPACE OPERATION_UUID BASE_REVISION_UUID
+./.venv/bin/python scripts/workbench.py operator-intake WORKSPACE intake.json --source user
+./.venv/bin/python scripts/workbench.py ledger-read WORKSPACE --limit 50
+./.venv/bin/python scripts/workbench.py ledger-read WORKSPACE --revision-id REVISION_UUID --offset 50 --limit 50
+```
+
+The intake JSON contains exactly `operation_id`, `base_revision_id`,
+`instruction_id`, `created_at`, `instruction_text`, `changes`, and `fill_brief`.
+Supported structured changes are `requirement`, `decision`, `issue`,
+`repair_attempt`, and `next_action`; record IDs are explicit UUIDs. Each new
+text field is limited to 16 KiB UTF-8, instruction text and an initial brief to
+64 KiB, and the ledger data to 2 MiB / 2,000 records per revision. Reads return
+per-collection counts and continuation offsets. A recorded claim or construction
+pass does not establish final acceptance. See `system_prompt.md` for the exact
+authority boundary and M3-A offline semantics.
+
+Issue history is derived from each committed operation's own verified candidate.
+Each status observation carries its observed status and evidence IDs/hashes;
+current status and evidence are attributed to the latest status assertion, while
+creation provenance remains tied to issue creation. Later evidence is never
+projected onto an earlier observation. Only committed, issue-specific updates
+create status observations. Staged or terminal attempts, committed updates to a
+different issue, geometry-only edits, and repair-attempt records do not create
+observations just because they carry a copy of the issue. Checker-created policy
+issues require matching committed policy evidence; legacy entries without
+demonstrable operation provenance remain historical and unverified.
+
+Repair records use `bricksmith-repair-attempt-v2`. Their
+`recorded_revision_id` binds the ledger edit to its base. `observed_revision_id`
+is the attempted operation's committed result revision, or its base when the
+attempt remained uncommitted/failed. Reads retain `outcome_at_recording` and
+report any later state separately as `current_reconciled_outcome`. The revision
+chain is paged like the ledger collections.
+
 `search_omr_sets`/`fetch_omr_set` (in `bricksmith/workbench/omr.py`) are a
 separate, **live** lookup against the LDraw Official Model Repository
 (library.ldraw.org), distinct from the checked-in local corpus above. They
@@ -470,3 +580,28 @@ Implementation contract:
 [registration and sign-in](https://developers.openai.com/siwc/token-sharing-open-source/sign-in),
 [models and inference](https://developers.openai.com/siwc/token-sharing-open-source/models-and-inference),
 [preview limitations](https://developers.openai.com/siwc/token-sharing-open-source/preview-limitations).
+
+## M2-B offline tool adapters
+
+M2-B exposes the existing compatibility tool names through the same
+`agent_session._tool` dispatcher when the caller supplies an exact versioned
+offline invocation. This path operates only on an explicitly initialized
+transaction workspace and routes every mutation through M2-A. It is distinct
+from historical v1 session file writes. V2 snapshots and transaction workspaces
+remain unavailable to model `step`/`run` until M7.
+
+```sh
+./.venv/bin/python scripts/workbench.py transaction-tool-catalog
+./.venv/bin/python scripts/workbench.py transaction-tool /tmp/m2-session /tmp/invocation.json
+```
+
+The invocation binds the tool name, unchanged argument object, operation UUID,
+expected base revision UUID, and SHA-256 of that revision's assembled `build.ldr`.
+Mutation line numbers are valid only for that sealed export; after a revision
+change, read the new export/map and form a new invocation. `save_module` replaces
+the named assembly's direct parts using fresh stable part IDs while preserving
+its assembly identity and unrelated records. `clone_module` likewise allocates
+fresh instance IDs and records source relationships. Blocked evidence remains
+available; a committed `provisional` or `repair_incomplete` construction status
+is not final acceptance. Offline render results record creation and source
+identity, not visual review.

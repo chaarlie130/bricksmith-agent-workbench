@@ -1,5 +1,11 @@
 # BrickSmith Agent Workbench
 
+Development status: M0–M2 are accepted; M3-A's persistent intent ledger is still
+under review. The latest R3b changes are awaiting full validation and reviewer
+acceptance. See the [sharing checkpoint](docs/implementation/2026-10-16-sharing-checkpoint.md)
+and [implementation plan](docs/HARNESS_IMPLEMENTATION_PLAN.md). Live v2 model
+execution and the official benchmark remain disabled/unstarted.
+
 An experimental workbench for frontier AI models to design original LEGO builds
 from a brief. The intended loop is: plan, retrieve relevant LDraw examples,
 edit a persistent model, validate its geometry and support, inspect renders,
@@ -75,6 +81,34 @@ The [quality benchmark](docs/QUALITY_BENCHMARK.md) keeps visual and
 construction comparisons separate, using the user's local Claude/GPT house
 artifacts as a private evaluation target rather than retrieval examples.
 
+The [harness implementation plan](docs/HARNESS_IMPLEMENTATION_PLAN.md) defines
+the engineering milestones, with [explicit contracts](docs/HARNESS_CONTRACTS.md)
+and a [worker handoff](docs/WORKER_HANDOFF.md). M1 now adds an offline stable
+design document and explicit v1 migration; it does not change model generation
+or enable v2 model execution. M2-A adds a separate offline operator transaction
+workspace and CLI; existing live editing tools still do not use that service.
+The [official benchmark protocol draft](docs/BENCHMARK_PROTOCOL_DRAFT.md)
+defines the setup and fairness requirements; no official benchmark has been run
+under that protocol yet.
+
+To inspect a flat LDraw file without a model request, import it to a stable
+design record, inspect its IDs, then export a deterministic build and module
+views. Import/export destinations must be new paths:
+
+```bash
+./.venv/bin/python scripts/workbench.py design-import tests/fixtures/design/tiny.ldr /tmp/tiny-design.json
+./.venv/bin/python scripts/workbench.py design-inspect /tmp/tiny-design.json
+./.venv/bin/python scripts/workbench.py design-export /tmp/tiny-design.json /tmp/tiny-export
+./.venv/bin/python scripts/workbench.py design-inspect /tmp/tiny-design.json \
+  --line-map /tmp/tiny-export/line_map.json --export-file /tmp/tiny-export/build.ldr
+```
+
+`design-migrate <existing-v1-session> <new-v2-session>` explicitly copies a
+legacy session into a read-only v2 snapshot. V2 step/run/mutation remains
+disabled until atomic persistence is implemented. See
+[`docs/AGENT_WORKBENCH.md`](docs/AGENT_WORKBENCH.md#m1-offline-design-documents)
+for command details and migration limits.
+
 For a persistent agent build, use `python scripts/agent_session.py start ...`,
 then deliberate `step` invocations as documented in the workbench guide. Each
 step consumes one model request; check account usage between steps. The
@@ -118,8 +152,62 @@ that fails a check needs diagnosis; a pass is not a physical certification.
 ## Development
 
 ```bash
-python -m unittest discover tests
+./.venv/bin/python -m unittest discover -s tests/unit -p 'test_*.py'
+./.venv/bin/python -m unittest discover -s tests/integration -p 'test_*.py'
+./.venv/bin/python -m unittest discover -s tests -p 'test_*.py'
+BRICKNET_DATA="$PWD/data/bricknet-data" ./.venv/bin/python scripts/workbench.py preflight
+./.venv/bin/python scripts/workbench.py baseline-export runs/provenance/baseline.json --track historical-operator-assisted
 ```
+
+The `tests/unit` command runs the data-independent contract suite against
+temporary source/data fixtures. The full `tests` command runs that suite plus
+all library-dependent checker, renderer, and existing workbench tests; it fails
+when required libraries/data are absent. Real checks are identified as such in
+integration modules; mocked seams remain unit evidence only. `preflight` reports
+missing runtime or library targets, loads the catalog, connectors, and an actual
+part mesh, then runs a tiny real check/render. In this checkout, set
+`BRICKNET_DATA="$PWD/data/bricknet-data"` when invoking it; otherwise its mesh
+probe can resolve to BrickNet's user cache before the repository library path is
+configured. That fixture is a single 1×1 plate
+and tests plumbing rather than broad checker coverage. `baseline-export` records
+source and environment provenance only, makes no model request, and refuses to
+overwrite an existing file. It labels the capture complete only when source,
+runtime, LDraw, BrickNet data, and reference-corpus fingerprints are present.
+
+The tested runtime is CPython 3.14.7 on macOS 26.6.1 arm64. Other Python
+versions and platforms are not verified. For setup, create `.venv`, install the
+dependencies with `./.venv/bin/pip install -r requirements-lock.txt`, clone
+`https://github.com/kulits/BrickNet.git`, check out commit
+`b09a689c4929bd27f59c9bb9446237967aa332c9`, then install that checkout with
+`./.venv/bin/pip install -e ./BrickNet`. BrickNet's catalog, aliases, and
+connector tables are read from its installed `bricknet/_data/v1` package data.
+For collision geometry, set up a mesh snapshot with BrickNet's documented
+fetcher (about 1.6 GB extracted):
+
+```bash
+mkdir -p data/bricknet-data
+BRICKNET_DATA="$PWD/data/bricknet-data" ./.venv/bin/python -m bricknet fetch-meshes
+```
+
+Obtain the LDraw parts library from the official LDraw downloads, extract it
+locally, and point `data/ldraw` to its root. It must contain `parts/`, `p/`,
+and `LDConfig.ldr`; verify at least `parts/3005.dat` and `parts/3024.dat` exist.
+The BrickNet snapshot must contain `inset/3024.ply` and the other part meshes
+requested by designs. Run `preflight` to verify catalog and connector loading,
+the `3024.dat` mesh, all five checks on a supported fixture, and PNG rendering.
+Export a manifest before and after copying snapshots and compare the library
+content hashes. The repository does not redistribute these libraries. The lock
+pins observed Python packages, but clean-environment installation was not
+verified. In this checkout BrickNet is editable from the `bricknet-evaluation`
+source tree at the pinned commit (version 0.1.0); the manifest records its
+actual source path, commit, dirty state, and source-content hash.
 
 The original BrickSmith repository remains available separately for historical
 research and any reusable code we deliberately bring into this workbench.
+
+M2-B adds an explicit offline compatibility adapter for the existing mutation,
+read, check, and render tools. Use `transaction-tool-catalog` to inspect its strict
+argument schemas and `transaction-tool` with a versioned invocation containing
+the exact base revision and assembled-export hash. The adapter routes through the
+M2-A transaction service; v1 session execution remains the historical baseline,
+and v2/transaction model `step` and `run` remain disabled pending M7.

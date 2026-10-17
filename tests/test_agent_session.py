@@ -847,6 +847,29 @@ class AgentSessionTests(unittest.TestCase):
             self.assertEqual(set(load_session(directory)["inspected_view_digests"]),
                              {"front_left", "front_right"})
 
+    def test_v2_session_refuses_step_run_and_mutation_before_provider_or_write(self):
+        with tempfile.TemporaryDirectory() as root:
+            directory = Path(root) / "v2-session"
+            directory.mkdir()
+            state_path = directory / "state.json"
+            original = {"schema": "bricksmith-agent-session-v2", "session_id": "offline",
+                "current_revision_id": "revision", "read_only": True}
+            state_path.write_text(json.dumps(original) + "\n")
+            before = state_path.read_bytes()
+            files_before = sorted(path.name for path in directory.iterdir())
+            with patch("bricksmith.workbench.agent_session.respond") as respond:
+                with self.assertRaisesRegex(RuntimeError, "inert historical snapshot"):
+                    step_session(directory)
+                with self.assertRaisesRegex(RuntimeError, "inert historical snapshot"):
+                    run_session(directory, max_requests=1)
+                with self.assertRaisesRegex(RuntimeError, "inert historical snapshot"):
+                    _tool(directory, original, "save_module", {"name": "x", "ldr": PLACEMENT})
+                with self.assertRaisesRegex(RuntimeError, "inert historical snapshot"):
+                    _save(directory, original)
+                self.assertFalse(respond.called)
+            self.assertEqual(state_path.read_bytes(), before)
+            self.assertEqual(sorted(path.name for path in directory.iterdir()), files_before)
+
 
 if __name__ == "__main__":
     unittest.main()

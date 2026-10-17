@@ -1,0 +1,785 @@
+{
+  "invocation_schema": "bricksmith-tool-invocation-v1",
+  "required_invocation_context": [
+    "schema",
+    "tool_name",
+    "arguments",
+    "operation_id",
+    "expected_base_revision_id",
+    "expected_export_sha256"
+  ],
+  "schema": "bricksmith-offline-tool-catalog-v1",
+  "tools": [
+    {
+      "arguments": {
+        "additionalProperties": false,
+        "properties": {},
+        "required": [],
+        "type": "object"
+      },
+      "kind": "read",
+      "name": "check"
+    },
+    {
+      "arguments": {
+        "additionalProperties": false,
+        "properties": {
+          "dx": {
+            "type": "integer"
+          },
+          "dy": {
+            "type": "integer"
+          },
+          "dz": {
+            "type": "integer"
+          },
+          "name": {
+            "type": "string"
+          },
+          "source": {
+            "type": "string"
+          }
+        },
+        "required": [
+          "source",
+          "name",
+          "dx",
+          "dy",
+          "dz"
+        ],
+        "type": "object"
+      },
+      "kind": "mutation",
+      "name": "clone_module"
+    },
+    {
+      "arguments": {
+        "additionalProperties": false,
+        "properties": {
+          "name": {
+            "type": "string"
+          }
+        },
+        "required": [
+          "name"
+        ],
+        "type": "object"
+      },
+      "kind": "mutation",
+      "name": "discard_module"
+    },
+    {
+      "arguments": {
+        "additionalProperties": false,
+        "properties": {
+          "edits": {
+            "items": {
+              "additionalProperties": false,
+              "properties": {
+                "action": {
+                  "enum": [
+                    "replace",
+                    "delete"
+                  ],
+                  "type": "string"
+                },
+                "line": {
+                  "type": "integer"
+                },
+                "text": {
+                  "type": "string"
+                }
+              },
+              "required": [
+                "line",
+                "action",
+                "text"
+              ],
+              "type": "object"
+            },
+            "type": "array"
+          }
+        },
+        "required": [
+          "edits"
+        ],
+        "type": "object"
+      },
+      "kind": "mutation",
+      "name": "edit_lines"
+    },
+    {
+      "arguments": {
+        "additionalProperties": false,
+        "properties": {
+          "lines": {
+            "items": {
+              "type": "integer"
+            },
+            "type": "array"
+          }
+        },
+        "required": [
+          "lines"
+        ],
+        "type": "object"
+      },
+      "kind": "read",
+      "name": "inspect_alignment"
+    },
+    {
+      "arguments": {
+        "additionalProperties": false,
+        "properties": {
+          "count": {
+            "type": "integer"
+          },
+          "h_max": {
+            "type": "number"
+          },
+          "h_min": {
+            "type": "number"
+          },
+          "offset": {
+            "type": "integer"
+          },
+          "x_max": {
+            "type": "number"
+          },
+          "x_min": {
+            "type": "number"
+          },
+          "z_max": {
+            "type": "number"
+          },
+          "z_min": {
+            "type": "number"
+          }
+        },
+        "required": [
+          "x_min",
+          "x_max",
+          "z_min",
+          "z_max",
+          "h_min",
+          "h_max",
+          "offset",
+          "count"
+        ],
+        "type": "object"
+      },
+      "kind": "read",
+      "name": "inspect_build_region"
+    },
+    {
+      "arguments": {
+        "additionalProperties": false,
+        "properties": {
+          "groups": {
+            "items": {
+              "additionalProperties": false,
+              "properties": {
+                "dx": {
+                  "type": "integer"
+                },
+                "dy": {
+                  "type": "integer"
+                },
+                "dz": {
+                  "type": "integer"
+                },
+                "lines": {
+                  "items": {
+                    "type": "integer"
+                  },
+                  "type": "array"
+                }
+              },
+              "required": [
+                "lines",
+                "dx",
+                "dy",
+                "dz"
+              ],
+              "type": "object"
+            },
+            "type": "array"
+          }
+        },
+        "required": [
+          "groups"
+        ],
+        "type": "object"
+      },
+      "kind": "mutation",
+      "name": "move_groups"
+    },
+    {
+      "arguments": {
+        "additionalProperties": false,
+        "properties": {
+          "dx": {
+            "type": "integer"
+          },
+          "dy": {
+            "type": "integer"
+          },
+          "dz": {
+            "type": "integer"
+          },
+          "lines": {
+            "items": {
+              "type": "integer"
+            },
+            "type": "array"
+          }
+        },
+        "required": [
+          "lines",
+          "dx",
+          "dy",
+          "dz"
+        ],
+        "type": "object"
+      },
+      "kind": "mutation",
+      "name": "move_lines"
+    },
+    {
+      "arguments": {
+        "additionalProperties": false,
+        "properties": {
+          "count": {
+            "type": "integer"
+          },
+          "name": {
+            "type": "string"
+          },
+          "start": {
+            "type": "integer"
+          }
+        },
+        "required": [
+          "name",
+          "start",
+          "count"
+        ],
+        "type": "object"
+      },
+      "kind": "read",
+      "name": "read_module"
+    },
+    {
+      "arguments": {
+        "additionalProperties": false,
+        "properties": {
+          "color": {
+            "type": "integer"
+          },
+          "lines": {
+            "items": {
+              "type": "integer"
+            },
+            "type": "array"
+          },
+          "name": {
+            "type": "string"
+          }
+        },
+        "required": [
+          "name",
+          "lines",
+          "color"
+        ],
+        "type": "object"
+      },
+      "kind": "mutation",
+      "name": "recolor_module_lines"
+    },
+    {
+      "arguments": {
+        "additionalProperties": false,
+        "properties": {
+          "view": {
+            "enum": [
+              "front_left",
+              "front_right",
+              "back_left",
+              "back_right",
+              "top"
+            ],
+            "type": "string"
+          }
+        },
+        "required": [
+          "view"
+        ],
+        "type": "object"
+      },
+      "kind": "read",
+      "name": "render"
+    },
+    {
+      "arguments": {
+        "additionalProperties": false,
+        "properties": {
+          "counts": {
+            "items": {
+              "type": "integer"
+            },
+            "type": "array"
+          },
+          "name": {
+            "type": "string"
+          },
+          "step_x": {
+            "items": {
+              "type": "number"
+            },
+            "type": "array"
+          },
+          "step_y": {
+            "items": {
+              "type": "number"
+            },
+            "type": "array"
+          },
+          "step_z": {
+            "items": {
+              "type": "number"
+            },
+            "type": "array"
+          },
+          "template": {
+            "type": "string"
+          }
+        },
+        "required": [
+          "name",
+          "template",
+          "counts",
+          "step_x",
+          "step_y",
+          "step_z"
+        ],
+        "type": "object"
+      },
+      "kind": "mutation",
+      "name": "save_array"
+    },
+    {
+      "arguments": {
+        "additionalProperties": false,
+        "properties": {
+          "color": {
+            "type": "integer"
+          },
+          "name": {
+            "type": "string"
+          },
+          "rectangles": {
+            "items": {
+              "additionalProperties": false,
+              "properties": {
+                "x_max": {
+                  "type": "integer"
+                },
+                "x_min": {
+                  "type": "integer"
+                },
+                "z_max": {
+                  "type": "integer"
+                },
+                "z_min": {
+                  "type": "integer"
+                }
+              },
+              "required": [
+                "x_min",
+                "x_max",
+                "z_min",
+                "z_max"
+              ],
+              "type": "object"
+            },
+            "type": "array"
+          },
+          "y": {
+            "type": "integer"
+          }
+        },
+        "required": [
+          "name",
+          "color",
+          "y",
+          "rectangles"
+        ],
+        "type": "object"
+      },
+      "kind": "mutation",
+      "name": "save_floor"
+    },
+    {
+      "arguments": {
+        "additionalProperties": false,
+        "properties": {
+          "axis": {
+            "enum": [
+              "x",
+              "z"
+            ],
+            "type": "string"
+          },
+          "bottom_y": {
+            "type": "integer"
+          },
+          "color": {
+            "type": "integer"
+          },
+          "courses": {
+            "type": "integer"
+          },
+          "end": {
+            "type": "integer"
+          },
+          "fixed": {
+            "type": "integer"
+          },
+          "inset_studs": {
+            "type": "integer"
+          },
+          "name": {
+            "type": "string"
+          },
+          "start": {
+            "type": "integer"
+          }
+        },
+        "required": [
+          "name",
+          "color",
+          "axis",
+          "start",
+          "end",
+          "fixed",
+          "bottom_y",
+          "courses",
+          "inset_studs"
+        ],
+        "type": "object"
+      },
+      "kind": "mutation",
+      "name": "save_gable"
+    },
+    {
+      "arguments": {
+        "additionalProperties": false,
+        "properties": {
+          "ldr": {
+            "type": "string"
+          },
+          "name": {
+            "type": "string"
+          }
+        },
+        "required": [
+          "name",
+          "ldr"
+        ],
+        "type": "object"
+      },
+      "kind": "mutation",
+      "name": "save_module"
+    },
+    {
+      "arguments": {
+        "additionalProperties": false,
+        "properties": {
+          "bottom_y": {
+            "type": "integer"
+          },
+          "bricks": {
+            "type": "integer"
+          },
+          "cap_color": {
+            "type": "integer"
+          },
+          "color": {
+            "type": "integer"
+          },
+          "name": {
+            "type": "string"
+          },
+          "x": {
+            "type": "integer"
+          },
+          "z": {
+            "type": "integer"
+          }
+        },
+        "required": [
+          "name",
+          "x",
+          "z",
+          "bottom_y",
+          "bricks",
+          "color",
+          "cap_color"
+        ],
+        "type": "object"
+      },
+      "kind": "mutation",
+      "name": "save_roof_seam_column"
+    },
+    {
+      "arguments": {
+        "additionalProperties": false,
+        "properties": {
+          "beam_studs": {
+            "enum": [
+              4,
+              6,
+              8,
+              10,
+              12
+            ],
+            "type": "integer"
+          },
+          "color": {
+            "type": "integer"
+          },
+          "courses": {
+            "type": "integer"
+          },
+          "front_z": {
+            "type": "integer"
+          },
+          "gable_bottom_y": {
+            "type": "integer"
+          },
+          "left_x": {
+            "type": "integer"
+          },
+          "name": {
+            "type": "string"
+          },
+          "rear_z": {
+            "type": "integer"
+          },
+          "right_x": {
+            "type": "integer"
+          }
+        },
+        "required": [
+          "name",
+          "color",
+          "left_x",
+          "right_x",
+          "front_z",
+          "rear_z",
+          "gable_bottom_y",
+          "courses",
+          "beam_studs"
+        ],
+        "type": "object"
+      },
+      "kind": "mutation",
+      "name": "save_roof_tile_caps"
+    },
+    {
+      "arguments": {
+        "additionalProperties": false,
+        "properties": {
+          "beam_studs": {
+            "enum": [
+              4,
+              6,
+              8,
+              10,
+              12
+            ],
+            "type": "integer"
+          },
+          "color": {
+            "type": "integer"
+          },
+          "courses": {
+            "type": "integer"
+          },
+          "front_z": {
+            "type": "integer"
+          },
+          "gable_bottom_y": {
+            "type": "integer"
+          },
+          "left_x": {
+            "type": "integer"
+          },
+          "name": {
+            "type": "string"
+          },
+          "rear_z": {
+            "type": "integer"
+          },
+          "right_x": {
+            "type": "integer"
+          }
+        },
+        "required": [
+          "name",
+          "color",
+          "left_x",
+          "right_x",
+          "front_z",
+          "rear_z",
+          "gable_bottom_y",
+          "courses",
+          "beam_studs"
+        ],
+        "type": "object"
+      },
+      "kind": "mutation",
+      "name": "save_stepped_roof_beams"
+    },
+    {
+      "arguments": {
+        "additionalProperties": false,
+        "properties": {
+          "bottom_y": {
+            "type": "integer"
+          },
+          "bricks": {
+            "type": "integer"
+          },
+          "cap_color": {
+            "type": "integer"
+          },
+          "cap_plate": {
+            "type": "boolean"
+          },
+          "color": {
+            "type": "integer"
+          },
+          "name": {
+            "type": "string"
+          },
+          "size_studs": {
+            "enum": [
+              1,
+              2
+            ],
+            "type": "integer"
+          },
+          "x": {
+            "type": "integer"
+          },
+          "z": {
+            "type": "integer"
+          }
+        },
+        "required": [
+          "name",
+          "x",
+          "z",
+          "bottom_y",
+          "bricks",
+          "color",
+          "cap_color",
+          "cap_plate",
+          "size_studs"
+        ],
+        "type": "object"
+      },
+      "kind": "mutation",
+      "name": "save_support_column"
+    },
+    {
+      "arguments": {
+        "additionalProperties": false,
+        "properties": {
+          "bottom_y": {
+            "type": "integer"
+          },
+          "color": {
+            "type": "integer"
+          },
+          "name": {
+            "type": "string"
+          },
+          "runs": {
+            "items": {
+              "additionalProperties": false,
+              "properties": {
+                "axis": {
+                  "enum": [
+                    "x",
+                    "z"
+                  ],
+                  "type": "string"
+                },
+                "courses": {
+                  "type": "integer"
+                },
+                "end": {
+                  "type": "integer"
+                },
+                "fixed": {
+                  "type": "integer"
+                },
+                "openings": {
+                  "items": {
+                    "additionalProperties": false,
+                    "properties": {
+                      "end": {
+                        "type": "integer"
+                      },
+                      "from_course": {
+                        "type": "integer"
+                      },
+                      "start": {
+                        "type": "integer"
+                      },
+                      "to_course": {
+                        "type": "integer"
+                      }
+                    },
+                    "required": [
+                      "start",
+                      "end",
+                      "from_course",
+                      "to_course"
+                    ],
+                    "type": "object"
+                  },
+                  "type": "array"
+                },
+                "start": {
+                  "type": "integer"
+                }
+              },
+              "required": [
+                "axis",
+                "start",
+                "end",
+                "fixed",
+                "courses",
+                "openings"
+              ],
+              "type": "object"
+            },
+            "type": "array"
+          }
+        },
+        "required": [
+          "name",
+          "color",
+          "bottom_y",
+          "runs"
+        ],
+        "type": "object"
+      },
+      "kind": "mutation",
+      "name": "save_wall_runs"
+    }
+  ]
+}

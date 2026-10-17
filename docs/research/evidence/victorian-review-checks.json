@@ -1,0 +1,135 @@
+{
+  "schema": "bricksmith-exploratory-run-review-v1",
+  "review_date": "2026-10-16",
+  "conversation_id": "f289bdfb-8b37-4cd9-a3c0-037b3b9dce42",
+  "classification": "retrospective exploratory review; not an official benchmark or acceptance record",
+  "transcript_sha256": "0baff4af3fbc12c0f4a56c6d05bc6ca6f0e4ae99d8cc29f48422617850412d51",
+  "historical_steps": {
+    "victorian_brief": 110,
+    "geometry_creation": 133,
+    "last_geometry_repair": 170,
+    "final_recorded_checks": 173,
+    "first_render_views": 180,
+    "model_switch_before_blender": 184
+  },
+  "reviewer_checks": [
+    {
+      "file": "runs/victorian_house/01-foundation-walls.ldr",
+      "sha256": "b2964692f8ca5c3e55c5e4c4bea3a1c3382ee0e443c576290df62f458949361d",
+      "report": {
+        "schema": "bricksmith-construction-v1",
+        "passed": true,
+        "checks": {
+          "mesh_collision_free": true,
+          "included_base": true,
+          "no_parts_below_ground": true,
+          "actual_connectivity": true,
+          "approximate_gravity_equilibrium": true
+        },
+        "errors": [],
+        "physical_piece_count": 281,
+        "diagnostics": {
+          "below_ground_indices_complete": [],
+          "below_ground_indices_complete_flag": true
+        },
+        "elapsed_seconds": 0.6898,
+        "file": "/Users/charliecittadini/GitHub/bricksmith-agent-workbench/runs/victorian_house/01-foundation-walls.ldr",
+        "ground_y_ldu": 0,
+        "limitations": [
+          "Approximate static equilibrium; a pass does not prove real-world strength.",
+          "Assembly order and insertion clearance are not checked."
+        ]
+      }
+    },
+    {
+      "file": "runs/victorian_house/02-openings.ldr",
+      "sha256": "8aedc08b8a9bcca25ecfbb57da8aba09435e0e50796f56b7f04ee961d49dad48",
+      "report": {
+        "schema": "bricksmith-construction-v1",
+        "passed": true,
+        "checks": {
+          "mesh_collision_free": true,
+          "included_base": true,
+          "no_parts_below_ground": true,
+          "actual_connectivity": true,
+          "approximate_gravity_equilibrium": true
+        },
+        "errors": [],
+        "physical_piece_count": 745,
+        "diagnostics": {
+          "below_ground_indices_complete": [],
+          "below_ground_indices_complete_flag": true
+        },
+        "elapsed_seconds": 0.4506,
+        "file": "/Users/charliecittadini/GitHub/bricksmith-agent-workbench/runs/victorian_house/02-openings.ldr",
+        "ground_y_ldu": 0,
+        "limitations": [
+          "Approximate static equilibrium; a pass does not prove real-world strength.",
+          "Assembly order and insertion clearance are not checked."
+        ]
+      }
+    },
+    {
+      "file": "runs/victorian_house/03-complete-roof.ldr",
+      "sha256": "80e227128ea84612ef48c4062ae7d8a28e0426abb9bf047eae3c680a258e3904",
+      "report": {
+        "schema": "bricksmith-construction-v1",
+        "passed": true,
+        "checks": {
+          "mesh_collision_free": true,
+          "included_base": true,
+          "no_parts_below_ground": true,
+          "actual_connectivity": true,
+          "approximate_gravity_equilibrium": true
+        },
+        "errors": [],
+        "physical_piece_count": 977,
+        "diagnostics": {
+          "below_ground_indices_complete": [],
+          "below_ground_indices_complete_flag": true
+        },
+        "elapsed_seconds": 0.7643,
+        "file": "/Users/charliecittadini/GitHub/bricksmith-agent-workbench/runs/victorian_house/03-complete-roof.ldr",
+        "ground_y_ldu": 0,
+        "limitations": [
+          "Approximate static equilibrium; a pass does not prove real-world strength.",
+          "Assembly order and insertion clearance are not checked."
+        ]
+      }
+    },
+    {
+      "file": "runs/victorian_house/victorian_house.ldr",
+      "sha256": "ef27179a245a5269c6dc3ccc28564cf25caa58a8e8e1259ba034fa0e392589da",
+      "report": {
+        "schema": "bricksmith-construction-v1",
+        "passed": true,
+        "checks": {
+          "mesh_collision_free": true,
+          "included_base": true,
+          "no_parts_below_ground": true,
+          "actual_connectivity": true,
+          "approximate_gravity_equilibrium": true
+        },
+        "errors": [],
+        "physical_piece_count": 985,
+        "diagnostics": {
+          "below_ground_indices_complete": [],
+          "below_ground_indices_complete_flag": true
+        },
+        "elapsed_seconds": 0.7444,
+        "file": "/Users/charliecittadini/GitHub/bricksmith-agent-workbench/runs/victorian_house/victorian_house.ldr",
+        "ground_y_ldu": 0,
+        "limitations": [
+          "Approximate static equilibrium; a pass does not prove real-world strength.",
+          "Assembly order and insertion clearance are not checked."
+        ]
+      }
+    }
+  ],
+  "limitations": [
+    "Fresh checks use the current local environment, not a reconstructed historical environment.",
+    "Model names are UI selection labels from the transcript, not independently verified provider/API identifiers.",
+    "Historical run has no frozen benchmark manifest or completed accept_build invocation in the inspected transcript.",
+    "Geometry and original transcript remain at local source paths; this evidence is not a complete portable run archive."
+  ]
+}

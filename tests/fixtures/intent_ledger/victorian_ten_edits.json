@@ -1,0 +1,17 @@
+{
+  "schema": "bricksmith-intent-ledger-fixture-v1",
+  "purpose": "Original compact lesson fixture inspired by the Victorian retrospective; not copied from ignored run artifacts.",
+  "historical_interruption_note": "An operator manually interrupted the Argon run and handed off rendering to Flash. This fixture makes no claim that Argon autonomously stopped or accepted an incomplete design.",
+  "events": [
+    {"edit": 1, "kind": "instruction_and_requirement", "text": "Keep a round window in the east facade.", "source": "user", "requirement_status": "pending"},
+    {"edit": 2, "kind": "issue", "status": "open", "issue_kind": "roof connectivity"},
+    {"edit": 3, "kind": "decision", "statement": "Use a bonded stepped roof with overlapping plates.", "evidence": "hash-bound source reference from the inspected design"},
+    {"edit": 4, "kind": "repair_candidate", "outcome": "blocked", "note": "A deliberately colliding roof repair candidate failed and was not committed."},
+    {"edit": 5, "kind": "repair_attempt_record", "outcome": "blocked", "note": "Record the failed candidate against the previously recorded roof issue."},
+    {"edit": 6, "kind": "geometry_edit", "outcome": "construction_passed", "note": "A later geometry candidate passed the real construction checks."},
+    {"edit": 7, "kind": "repair_attempt_record", "outcome": "committed", "note": "Record the later committed geometry outcome without claiming the window was solved."},
+    {"edit": 8, "kind": "requirement_observation", "requirement": "round east-facing window", "status": "pending"},
+    {"edit": 9, "kind": "next_action", "description": "Render only after review", "status": "pending"},
+    {"edit": 10, "kind": "operator_handoff", "instruction": "The operator interrupted Argon and requested a render-only handoff to Flash.", "status": "recorded", "rendered": false, "accepted": false}
+  ]
+}

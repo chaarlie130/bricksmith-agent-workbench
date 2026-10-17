@@ -1,0 +1,1116 @@
+[
+  {
+    "type": "namespace",
+    "name": "bricksmith",
+    "description": "Search and inspect LEGO references; save, check, and render the current LDraw build.",
+    "tools": [
+      {
+        "type": "function",
+        "name": "search",
+        "description": "Find construction examples by architecture or technique, not just part ID.",
+        "strict": true,
+        "parameters": {
+          "type": "object",
+          "properties": {
+            "query": {
+              "type": "string"
+            }
+          },
+          "required": [
+            "query"
+          ],
+          "additionalProperties": false
+        }
+      },
+      {
+        "type": "function",
+        "name": "inspect",
+        "description": "Read at most 60 numbered raw LDraw lines of a reference returned by search.",
+        "strict": true,
+        "parameters": {
+          "type": "object",
+          "properties": {
+            "reference_id": {
+              "type": "string"
+            },
+            "start": {
+              "type": "integer"
+            },
+            "count": {
+              "type": "integer"
+            }
+          },
+          "required": [
+            "reference_id",
+            "start",
+            "count"
+          ],
+          "additionalProperties": false
+        }
+      },
+      {
+        "type": "function",
+        "name": "study_reference",
+        "description": "Get compact, height-sorted placements and layer counts from an actual reference. Focus on overview, lower, upper, or slopes.",
+        "strict": true,
+        "parameters": {
+          "type": "object",
+          "properties": {
+            "reference_id": {
+              "type": "string"
+            },
+            "focus": {
+              "type": "string",
+              "enum": [
+                "overview",
+                "lower",
+                "upper",
+                "slopes"
+              ]
+            }
+          },
+          "required": [
+            "reference_id",
+            "focus"
+          ],
+          "additionalProperties": false
+        }
+      },
+      {
+        "type": "function",
+        "name": "inspect_reference_region",
+        "description": "Read exact, source-numbered placements inside a reference-model origin region. X/Z bounds are studs, height bounds are plates upward, matching study_reference. This filters origins, not full part bodies; page at most 40 matches at a time. Use after search/study to inspect a roof, bay, porch, or wall area without depending on raw file ordering.",
+        "strict": true,
+        "parameters": {
+          "type": "object",
+          "properties": {
+            "reference_id": {
+              "type": "string"
+            },
+            "x_min": {
+              "type": "number"
+            },
+            "x_max": {
+              "type": "number"
+            },
+            "z_min": {
+              "type": "number"
+            },
+            "z_max": {
+              "type": "number"
+            },
+            "h_min": {
+              "type": "number"
+            },
+            "h_max": {
+              "type": "number"
+            },
+            "offset": {
+              "type": "integer"
+            },
+            "count": {
+              "type": "integer"
+            }
+          },
+          "required": [
+            "reference_id",
+            "x_min",
+            "x_max",
+            "z_min",
+            "z_max",
+            "h_min",
+            "h_max",
+            "offset",
+            "count"
+          ],
+          "additionalProperties": false
+        }
+      },
+      {
+        "type": "function",
+        "name": "inspect_build_region",
+        "description": "Read current assembled placements by an origin region; include both build.ldr line and module-local line numbers for targeted edits or recoloring. X/Z are studs and height is plates upward. Page at most 40 matches; origin filtering does not include full part bodies.",
+        "strict": true,
+        "parameters": {
+          "type": "object",
+          "properties": {
+            "x_min": {
+              "type": "number"
+            },
+            "x_max": {
+              "type": "number"
+            },
+            "z_min": {
+              "type": "number"
+            },
+            "z_max": {
+              "type": "number"
+            },
+            "h_min": {
+              "type": "number"
+            },
+            "h_max": {
+              "type": "number"
+            },
+            "offset": {
+              "type": "integer"
+            },
+            "count": {
+              "type": "integer"
+            }
+          },
+          "required": [
+            "x_min",
+            "x_max",
+            "z_min",
+            "z_max",
+            "h_min",
+            "h_max",
+            "offset",
+            "count"
+          ],
+          "additionalProperties": false
+        }
+      },
+      {
+        "type": "function",
+        "name": "render_reference",
+        "description": "Render a searched real-set reference for visual study; the image appears in your next turn. Do not copy the set as your original design.",
+        "strict": true,
+        "parameters": {
+          "type": "object",
+          "properties": {
+            "reference_id": {
+              "type": "string"
+            },
+            "view": {
+              "type": "string",
+              "enum": [
+                "front_left",
+                "front_right",
+                "back_left",
+                "back_right",
+                "top"
+              ]
+            }
+          },
+          "required": [
+            "reference_id",
+            "view"
+          ],
+          "additionalProperties": false
+        }
+      },
+      {
+        "type": "function",
+        "name": "search_parts",
+        "description": "Find real parts by name, e.g. slope brick, hinge, lattice fence.",
+        "strict": true,
+        "parameters": {
+          "type": "object",
+          "properties": {
+            "query": {
+              "type": "string"
+            }
+          },
+          "required": [
+            "query"
+          ],
+          "additionalProperties": false
+        }
+      },
+      {
+        "type": "function",
+        "name": "search_omr_sets",
+        "description": "Search the live LDraw Official Model Repository (library.ldraw.org) for real LEGO sets by name or keyword; covers most but not every officially released set. Returns model numbers to fetch with fetch_omr_set.",
+        "strict": true,
+        "parameters": {
+          "type": "object",
+          "properties": {
+            "query": {
+              "type": "string"
+            }
+          },
+          "required": [
+            "query"
+          ],
+          "additionalProperties": false
+        }
+      },
+      {
+        "type": "function",
+        "name": "fetch_omr_set",
+        "description": "Fetch the raw LDraw file for an OMR set by model number (e.g. '21006-1', as returned by search_omr_sets). This is a real third-party design with unverified licensing -- reference data for study, not permission to copy verbatim into a submitted design.",
+        "strict": true,
+        "parameters": {
+          "type": "object",
+          "properties": {
+            "model_number": {
+              "type": "string"
+            }
+          },
+          "required": [
+            "model_number"
+          ],
+          "additionalProperties": false
+        }
+      },
+      {
+        "type": "function",
+        "name": "inspect_part",
+        "description": "Get verified local LDraw mesh bounds and origin offsets for a part ID.",
+        "strict": true,
+        "parameters": {
+          "type": "object",
+          "properties": {
+            "part_id": {
+              "type": "string"
+            }
+          },
+          "required": [
+            "part_id"
+          ],
+          "additionalProperties": false
+        }
+      },
+      {
+        "type": "function",
+        "name": "inspect_alignment",
+        "description": "For up to 30 current assembled placement lines, count matching underside holes on other parts' studs and suggest small XY shifts. Diagnostic only; also check collisions.",
+        "strict": true,
+        "parameters": {
+          "type": "object",
+          "properties": {
+            "lines": {
+              "type": "array",
+              "items": {
+                "type": "integer"
+              }
+            }
+          },
+          "required": [
+            "lines"
+          ],
+          "additionalProperties": false
+        }
+      },
+      {
+        "type": "function",
+        "name": "set_plan",
+        "description": "Save a concise architectural plan and current decisions for later steps. Must be 50-3000 characters; keep coordinates and silhouette priorities, omit repeated prose.",
+        "strict": true,
+        "parameters": {
+          "type": "object",
+          "properties": {
+            "plan": {
+              "type": "string"
+            }
+          },
+          "required": [
+            "plan"
+          ],
+          "additionalProperties": false
+        }
+      },
+      {
+        "type": "function",
+        "name": "save_module",
+        "description": "Replace one named build module with LDraw type-0/type-1 lines. In transaction workspaces this replaces direct parts with fresh stable IDs (delete/add); it does not infer identity from line order or coordinates. Keep modules focused so repairs do not rewrite the entire building. A new floor may be saved provisionally before its supports; add supports next. New collisions or ground violations roll back, and final submission requires all checks pass.",
+        "strict": true,
+        "parameters": {
+          "type": "object",
+          "properties": {
+            "name": {
+              "type": "string"
+            },
+            "ldr": {
+              "type": "string"
+            }
+          },
+          "required": [
+            "name",
+            "ldr"
+          ],
+          "additionalProperties": false
+        }
+      },
+      {
+        "type": "function",
+        "name": "clone_module",
+        "description": "Copy a verified leaf module into a new module with an LDU translation; creates fresh stable instance IDs while preserving catalog part IDs, colors, and orientations, and records derived_from. Useful for symmetric front/rear construction.",
+        "strict": true,
+        "parameters": {
+          "type": "object",
+          "properties": {
+            "source": {
+              "type": "string"
+            },
+            "name": {
+              "type": "string"
+            },
+            "dx": {
+              "type": "integer"
+            },
+            "dy": {
+              "type": "integer"
+            },
+            "dz": {
+              "type": "integer"
+            }
+          },
+          "required": [
+            "source",
+            "name",
+            "dx",
+            "dy",
+            "dz"
+          ],
+          "additionalProperties": false
+        }
+      },
+      {
+        "type": "function",
+        "name": "discard_module",
+        "description": "Remove one failed saved module while preserving an audit revision, then reassemble and recheck the remaining build. Use when a module is too broken to repair in place.",
+        "strict": true,
+        "parameters": {
+          "type": "object",
+          "properties": {
+            "name": {
+              "type": "string"
+            }
+          },
+          "required": [
+            "name"
+          ],
+          "additionalProperties": false
+        }
+      },
+      {
+        "type": "function",
+        "name": "read_module",
+        "description": "Read up to 60 numbered lines from one saved module before revising it.",
+        "strict": true,
+        "parameters": {
+          "type": "object",
+          "properties": {
+            "name": {
+              "type": "string"
+            },
+            "start": {
+              "type": "integer"
+            },
+            "count": {
+              "type": "integer"
+            }
+          },
+          "required": [
+            "name",
+            "start",
+            "count"
+          ],
+          "additionalProperties": false
+        }
+      },
+      {
+        "type": "function",
+        "name": "recolor_module_lines",
+        "description": "Change only the LDraw color of 1-30 existing placements in one saved module. Lines are the module-local numbers returned by read_module, not assembled build.ldr line numbers. Preserves part, rotation, and coordinates; saves an audit revision and rechecks.",
+        "strict": true,
+        "parameters": {
+          "type": "object",
+          "properties": {
+            "name": {
+              "type": "string"
+            },
+            "lines": {
+              "type": "array",
+              "items": {
+                "type": "integer"
+              }
+            },
+            "color": {
+              "type": "integer"
+            }
+          },
+          "required": [
+            "name",
+            "lines",
+            "color"
+          ],
+          "additionalProperties": false
+        }
+      },
+      {
+        "type": "function",
+        "name": "edit_lines",
+        "description": "Replace or delete specific assembled build.ldr placement lines from checker feedback; no whole-module rewrite needed.",
+        "strict": true,
+        "parameters": {
+          "type": "object",
+          "properties": {
+            "edits": {
+              "type": "array",
+              "items": {
+                "type": "object",
+                "properties": {
+                  "line": {
+                    "type": "integer"
+                  },
+                  "action": {
+                    "type": "string",
+                    "enum": [
+                      "replace",
+                      "delete"
+                    ]
+                  },
+                  "text": {
+                    "type": "string"
+                  }
+                },
+                "required": [
+                  "line",
+                  "action",
+                  "text"
+                ],
+                "additionalProperties": false
+              }
+            }
+          },
+          "required": [
+            "edits"
+          ],
+          "additionalProperties": false
+        }
+      },
+      {
+        "type": "function",
+        "name": "move_lines",
+        "description": "Translate existing assembled placement lines in LDU, preserving parts, colors, and rotations. Use for coordinate/parity repairs; lines must be current build.ldr numbers.",
+        "strict": true,
+        "parameters": {
+          "type": "object",
+          "properties": {
+            "lines": {
+              "type": "array",
+              "items": {
+                "type": "integer"
+              }
+            },
+            "dx": {
+              "type": "integer"
+            },
+            "dy": {
+              "type": "integer"
+            },
+            "dz": {
+              "type": "integer"
+            }
+          },
+          "required": [
+            "lines",
+            "dx",
+            "dy",
+            "dz"
+          ],
+          "additionalProperties": false
+        }
+      },
+      {
+        "type": "function",
+        "name": "move_groups",
+        "description": "Atomically translate multiple groups of current assembled placement lines by different LDU offsets in one call; preserves every part and rechecks once.",
+        "strict": true,
+        "parameters": {
+          "type": "object",
+          "properties": {
+            "groups": {
+              "type": "array",
+              "items": {
+                "type": "object",
+                "properties": {
+                  "lines": {
+                    "type": "array",
+                    "items": {
+                      "type": "integer"
+                    }
+                  },
+                  "dx": {
+                    "type": "integer"
+                  },
+                  "dy": {
+                    "type": "integer"
+                  },
+                  "dz": {
+                    "type": "integer"
+                  }
+                },
+                "required": [
+                  "lines",
+                  "dx",
+                  "dy",
+                  "dz"
+                ],
+                "additionalProperties": false
+              }
+            }
+          },
+          "required": [
+            "groups"
+          ],
+          "additionalProperties": false
+        }
+      },
+      {
+        "type": "function",
+        "name": "save_array",
+        "description": "Save a module by translating a small LDraw template on a 3D lattice. Coordinates and strides are LDU; negative Y goes up. No automatic overlap or opening removal.",
+        "strict": true,
+        "parameters": {
+          "type": "object",
+          "properties": {
+            "name": {
+              "type": "string"
+            },
+            "template": {
+              "type": "string"
+            },
+            "counts": {
+              "type": "array",
+              "items": {
+                "type": "integer"
+              }
+            },
+            "step_x": {
+              "type": "array",
+              "items": {
+                "type": "number"
+              }
+            },
+            "step_y": {
+              "type": "array",
+              "items": {
+                "type": "number"
+              }
+            },
+            "step_z": {
+              "type": "array",
+              "items": {
+                "type": "number"
+              }
+            }
+          },
+          "required": [
+            "name",
+            "template",
+            "counts",
+            "step_x",
+            "step_y",
+            "step_z"
+          ],
+          "additionalProperties": false
+        }
+      },
+      {
+        "type": "function",
+        "name": "save_floor",
+        "description": "Tile non-overlapping rectangular footprints with real plates. Bounds are stud-edge LDU coordinates and may touch but not overlap; y is the top-face LDraw coordinate. Saves one module and checks it.",
+        "strict": true,
+        "parameters": {
+          "type": "object",
+          "properties": {
+            "name": {
+              "type": "string"
+            },
+            "color": {
+              "type": "integer"
+            },
+            "y": {
+              "type": "integer"
+            },
+            "rectangles": {
+              "type": "array",
+              "items": {
+                "type": "object",
+                "properties": {
+                  "x_min": {
+                    "type": "integer"
+                  },
+                  "x_max": {
+                    "type": "integer"
+                  },
+                  "z_min": {
+                    "type": "integer"
+                  },
+                  "z_max": {
+                    "type": "integer"
+                  }
+                },
+                "required": [
+                  "x_min",
+                  "x_max",
+                  "z_min",
+                  "z_max"
+                ],
+                "additionalProperties": false
+              }
+            }
+          },
+          "required": [
+            "name",
+            "color",
+            "y",
+            "rectangles"
+          ],
+          "additionalProperties": false
+        }
+      },
+      {
+        "type": "function",
+        "name": "save_wall_runs",
+        "description": "Generate staggered 1-stud-thick brick wall runs, with course-specific window/door gaps. start/end are stud-edge LDU, fixed is the other axis stud-center LDU; bottom_y is the first brick top (typically -32 above a floor plate at -8). Saves one module and checks it.",
+        "strict": true,
+        "parameters": {
+          "type": "object",
+          "properties": {
+            "name": {
+              "type": "string"
+            },
+            "color": {
+              "type": "integer"
+            },
+            "bottom_y": {
+              "type": "integer"
+            },
+            "runs": {
+              "type": "array",
+              "items": {
+                "type": "object",
+                "properties": {
+                  "axis": {
+                    "type": "string",
+                    "enum": [
+                      "x",
+                      "z"
+                    ]
+                  },
+                  "start": {
+                    "type": "integer"
+                  },
+                  "end": {
+                    "type": "integer"
+                  },
+                  "fixed": {
+                    "type": "integer"
+                  },
+                  "courses": {
+                    "type": "integer"
+                  },
+                  "openings": {
+                    "type": "array",
+                    "items": {
+                      "type": "object",
+                      "properties": {
+                        "start": {
+                          "type": "integer"
+                        },
+                        "end": {
+                          "type": "integer"
+                        },
+                        "from_course": {
+                          "type": "integer"
+                        },
+                        "to_course": {
+                          "type": "integer"
+                        }
+                      },
+                      "required": [
+                        "start",
+                        "end",
+                        "from_course",
+                        "to_course"
+                      ],
+                      "additionalProperties": false
+                    }
+                  }
+                },
+                "required": [
+                  "axis",
+                  "start",
+                  "end",
+                  "fixed",
+                  "courses",
+                  "openings"
+                ],
+                "additionalProperties": false
+              }
+            }
+          },
+          "required": [
+            "name",
+            "color",
+            "bottom_y",
+            "runs"
+          ],
+          "additionalProperties": false
+        }
+      },
+      {
+        "type": "function",
+        "name": "save_gable",
+        "description": "Generate a stepped triangular one-stud-thick brick gable end over an already supported lintel. start/end are stud-edge LDU, fixed is the other axis stud center; bottom_y is first brick origin, then each row rises 24 LDU and narrows by inset_studs on both ends. This builds gable masonry, not the sloped roof. Saves and checks one module.",
+        "strict": true,
+        "parameters": {
+          "type": "object",
+          "properties": {
+            "name": {
+              "type": "string"
+            },
+            "color": {
+              "type": "integer"
+            },
+            "axis": {
+              "type": "string",
+              "enum": [
+                "x",
+                "z"
+              ]
+            },
+            "start": {
+              "type": "integer"
+            },
+            "end": {
+              "type": "integer"
+            },
+            "fixed": {
+              "type": "integer"
+            },
+            "bottom_y": {
+              "type": "integer"
+            },
+            "courses": {
+              "type": "integer"
+            },
+            "inset_studs": {
+              "type": "integer"
+            }
+          },
+          "required": [
+            "name",
+            "color",
+            "axis",
+            "start",
+            "end",
+            "fixed",
+            "bottom_y",
+            "courses",
+            "inset_studs"
+          ],
+          "additionalProperties": false
+        }
+      },
+      {
+        "type": "function",
+        "name": "save_stepped_roof_beams",
+        "description": "Cover a small X-width gabled building with two complete, visibly stepped roof planes made from real 1xN longitudinal bricks. Each beam rests on matching front/rear gable studs; this is not a smooth slope and the checker does not test bending strength. Both gables must already have `courses` rows, inset one stud per row, at front_z/rear_z. left_x/right_x are the outermost gable stud centers and gable_bottom_y is the first gable brick origin. beam_studs is even 4/6/8/10/12 and must span both gables with at most a two-stud overhang. Saves and checks one module.",
+        "strict": true,
+        "parameters": {
+          "type": "object",
+          "properties": {
+            "name": {
+              "type": "string"
+            },
+            "color": {
+              "type": "integer"
+            },
+            "left_x": {
+              "type": "integer"
+            },
+            "right_x": {
+              "type": "integer"
+            },
+            "front_z": {
+              "type": "integer"
+            },
+            "rear_z": {
+              "type": "integer"
+            },
+            "gable_bottom_y": {
+              "type": "integer"
+            },
+            "courses": {
+              "type": "integer"
+            },
+            "beam_studs": {
+              "type": "integer",
+              "enum": [
+                4,
+                6,
+                8,
+                10,
+                12
+              ]
+            }
+          },
+          "required": [
+            "name",
+            "color",
+            "left_x",
+            "right_x",
+            "front_z",
+            "rear_z",
+            "gable_bottom_y",
+            "courses",
+            "beam_studs"
+          ],
+          "additionalProperties": false
+        }
+      },
+      {
+        "type": "function",
+        "name": "save_roof_tile_caps",
+        "description": "Cover every stud on a previously saved stepped-roof beam assembly with aligned real 1x8/1x4/1x2 tiles. Pass exactly the same geometry as save_stepped_roof_beams; this adds only a smooth tile surface, not beams or support. Saves and checks one module; do not use on an absent or failed roof.",
+        "strict": true,
+        "parameters": {
+          "type": "object",
+          "properties": {
+            "name": {
+              "type": "string"
+            },
+            "color": {
+              "type": "integer"
+            },
+            "left_x": {
+              "type": "integer"
+            },
+            "right_x": {
+              "type": "integer"
+            },
+            "front_z": {
+              "type": "integer"
+            },
+            "rear_z": {
+              "type": "integer"
+            },
+            "gable_bottom_y": {
+              "type": "integer"
+            },
+            "courses": {
+              "type": "integer"
+            },
+            "beam_studs": {
+              "type": "integer",
+              "enum": [
+                4,
+                6,
+                8,
+                10,
+                12
+              ]
+            }
+          },
+          "required": [
+            "name",
+            "color",
+            "left_x",
+            "right_x",
+            "front_z",
+            "rear_z",
+            "gable_bottom_y",
+            "courses",
+            "beam_studs"
+          ],
+          "additionalProperties": false
+        }
+      },
+      {
+        "type": "function",
+        "name": "save_support_column",
+        "description": "Stack 1x1 or 2x2 bricks on supported studs, optionally capped by a matching plate. size_studs=1 uses odd-10 stud-center X/Z; size_studs=2 uses even-20 origins and can support adjacent roof segments across a seam. bottom_y is first brick origin; each higher brick rises 24 LDU. Saves and checks one module.",
+        "strict": true,
+        "parameters": {
+          "type": "object",
+          "properties": {
+            "name": {
+              "type": "string"
+            },
+            "x": {
+              "type": "integer"
+            },
+            "z": {
+              "type": "integer"
+            },
+            "bottom_y": {
+              "type": "integer"
+            },
+            "bricks": {
+              "type": "integer"
+            },
+            "color": {
+              "type": "integer"
+            },
+            "cap_color": {
+              "type": "integer"
+            },
+            "cap_plate": {
+              "type": "boolean"
+            },
+            "size_studs": {
+              "type": "integer",
+              "enum": [
+                1,
+                2
+              ]
+            }
+          },
+          "required": [
+            "name",
+            "x",
+            "z",
+            "bottom_y",
+            "bricks",
+            "color",
+            "cap_color",
+            "cap_plate",
+            "size_studs"
+          ],
+          "additionalProperties": false
+        }
+      },
+      {
+        "type": "function",
+        "name": "save_roof_seam_column",
+        "description": "Stack 1x2 bricks lengthwise along Z at a roof-segment seam, capped by a matching plate. X is a stud center (odd tens), Z is a stud edge (multiple of 20); the two top studs support the rear of one 4-stud roof slope and front of the next. bottom_y is first brick origin. Saves and checks one module.",
+        "strict": true,
+        "parameters": {
+          "type": "object",
+          "properties": {
+            "name": {
+              "type": "string"
+            },
+            "x": {
+              "type": "integer"
+            },
+            "z": {
+              "type": "integer"
+            },
+            "bottom_y": {
+              "type": "integer"
+            },
+            "bricks": {
+              "type": "integer"
+            },
+            "color": {
+              "type": "integer"
+            },
+            "cap_color": {
+              "type": "integer"
+            }
+          },
+          "required": [
+            "name",
+            "x",
+            "z",
+            "bottom_y",
+            "bricks",
+            "color",
+            "cap_color"
+          ],
+          "additionalProperties": false
+        }
+      },
+      {
+        "type": "function",
+        "name": "check",
+        "description": "Validate the current assembled model and return exact failures.",
+        "strict": true,
+        "parameters": {
+          "type": "object",
+          "properties": {},
+          "required": [],
+          "additionalProperties": false
+        }
+      },
+      {
+        "type": "function",
+        "name": "render",
+        "description": "Render one selected view; all requested images appear in your next turn.",
+        "strict": true,
+        "parameters": {
+          "type": "object",
+          "properties": {
+            "view": {
+              "type": "string",
+              "enum": [
+                "front_left",
+                "front_right",
+                "back_left",
+                "back_right",
+                "top"
+              ]
+            }
+          },
+          "required": [
+            "view"
+          ],
+          "additionalProperties": false
+        }
+      },
+      {
+        "type": "function",
+        "name": "review_renders",
+        "description": "After inspecting front_left and another current view, record the largest visual weakness and a concrete architectural revision. Submission requires revising the geometry after this review, then inspecting fresh views.",
+        "strict": true,
+        "parameters": {
+          "type": "object",
+          "properties": {
+            "visual_strengths": {
+              "type": "string"
+            },
+            "largest_gap": {
+              "type": "string"
+            },
+            "revision_plan": {
+              "type": "string"
+            }
+          },
+          "required": [
+            "visual_strengths",
+            "largest_gap",
+            "revision_plan"
+          ],
+          "additionalProperties": false
+        }
+      },
+      {
+        "type": "function",
+        "name": "submit_design",
+        "description": "Request final acceptance only after physics passes, the rough piece target is met, and a two-view review_renders checkpoint led to a geometry revision that was inspected from fresh views. Include a candid visual review and limitations.",
+        "strict": true,
+        "parameters": {
+          "type": "object",
+          "properties": {
+            "visual_review": {
+              "type": "string"
+            },
+            "signature_features": {
+              "type": "array",
+              "items": {
+                "type": "string"
+              }
+            },
+            "known_limits": {
+              "type": "string"
+            }
+          },
+          "required": [
+            "visual_review",
+            "signature_features",
+            "known_limits"
+          ],
+          "additionalProperties": false
+        }
+      }
+    ]
+  }
+]

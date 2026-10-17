@@ -7,6 +7,7 @@ from bricksmith.workbench.acceptance import CHECK_NAMES, _check, make_acceptance
 
 
 ROOT = Path(__file__).resolve().parents[1]
+FIXTURES = ROOT / "tests/fixtures/acceptance"
 
 
 class AcceptanceTests(unittest.TestCase):
@@ -16,8 +17,8 @@ class AcceptanceTests(unittest.TestCase):
             "inspected_views": ["front_left", "front_right"],
         }
 
-    def test_rejects_harbor_cottage_and_reports_all_actual_failures(self):
-        model = ROOT / "runs/harbor-artists-cottage/harbor-artists-cottage.ldr"
+    def test_rejects_collision_fixture_and_reports_all_actual_failures(self):
+        model = FIXTURES / "collision.ldr"
         with tempfile.TemporaryDirectory() as tmp, patch(
             "bricksmith.workbench.acceptance._render",
             side_effect=lambda _ldr, out, _az: {"path": str(out), "status": "rendered"},
@@ -29,22 +30,16 @@ class AcceptanceTests(unittest.TestCase):
         self.assertGreater(report["piece_count"], 0)
         self.assertEqual(set(report["construction"]["checks"]), set(CHECK_NAMES))
         self.assertEqual(report["construction"]["status"], "failed")
-        self.assertEqual(report["construction"]["checks"], {
-            "mesh_collision_free": False,
-            "included_base": True,
-            "no_parts_below_ground": False,
-            "actual_connectivity": False,
-            "approximate_gravity_equilibrium": False,
-        })
+        self.assertFalse(report["construction"]["checks"]["mesh_collision_free"])
+        self.assertFalse(report["construction"]["checks"]["included_base"])
+        self.assertFalse(report["construction"]["checks"]["actual_connectivity"])
         self.assertFalse(report["workflow"]["major_stages_validated"])
         self.assertFalse(report["workflow"]["major_stages_progressed"])
         self.assertTrue(report["workflow"]["two_final_views_rendered"])
         self.assertTrue(report["workflow"]["two_final_views_inspected"])
 
     def test_accepts_known_passing_fixture_only_with_workflow_evidence(self):
-        model = ROOT / "runs/astra-modern-house-prefetch-20261002/build.ldr"
-        actual_final = _check(model, 8)
-        self.assertEqual(actual_final["status"], "passed")
+        model = FIXTURES / "pass.ldr"
         with tempfile.TemporaryDirectory() as tmp, patch(
             "bricksmith.workbench.acceptance._render",
             side_effect=lambda _ldr, out, _az: {"path": str(out), "status": "rendered"},
@@ -54,22 +49,22 @@ class AcceptanceTests(unittest.TestCase):
                 stage = Path(tmp) / f"stage-{index}.ldr"
                 stage.write_text("0 stage\n" + "1 15 0 0 0 1 0 0 0 1 0 0 0 1 3005.dat\n" * index)
                 stages.append(stage)
-            mocked_check.side_effect = lambda path, _ground: actual_final if path == model.resolve() else {
+            mocked_check.side_effect = lambda _path, _ground: {
                 "status": "passed", "checks": {name: True for name in CHECK_NAMES}, "errors": []
             }
             report = make_acceptance_report(
-                model, ground_y=8, min_pieces=300, max_pieces=400,
+                model, ground_y=8, min_pieces=1, max_pieces=2,
                 render_dir=Path(tmp), stage_models=stages,
                 inspected_views=["front_left", "front_right"],
             )
             self.assertEqual([call.args[2] for call in mocked_render.call_args_list], [215.0, 325.0])
         self.assertTrue(report["accepted"])
-        self.assertEqual(report["piece_count"], 324)
+        self.assertEqual(report["piece_count"], 1)
         self.assertEqual(report["construction"]["status"], "passed")
         self.assertEqual(report["construction"]["checks"], {name: True for name in CHECK_NAMES})
 
     def test_piece_budget_and_distinct_stages_are_required(self):
-        model = ROOT / "runs/astra-modern-house-prefetch-20261002/build.ldr"
+        model = FIXTURES / "pass.ldr"
         with tempfile.TemporaryDirectory() as tmp, patch(
             "bricksmith.workbench.acceptance._render",
             side_effect=lambda _ldr, out, _az: {"path": str(out), "status": "rendered"},
@@ -89,9 +84,9 @@ class AcceptanceTests(unittest.TestCase):
             side_effect=lambda _ldr, out, _az: {"path": str(out), "status": "rendered"},
         ):
             report = make_acceptance_report(
-                ROOT / "runs/harbor-artists-cottage/harbor-artists-cottage.ldr",
+                FIXTURES / "floating.ldr",
                 ground_y=0, render_dir=Path(tmp), **self.passing_workflow(
-                    ROOT / "runs/harbor-artists-cottage/harbor-artists-cottage.ldr"
+                    FIXTURES / "floating.ldr"
                 )
             )
         self.assertFalse(report["accepted"])

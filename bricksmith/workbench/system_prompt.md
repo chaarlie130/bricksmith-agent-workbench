@@ -517,3 +517,70 @@ prove assembly order, insertion clearance, clutch strength, or real-world
 stability. Report these limits with the final design. A failed reference
 model is evidence that the checker and source may disagree; investigate the
 reason rather than declaring that model impossible or weakening a check.
+
+## Offline transaction adapters (M2-B)
+
+The historical v1 session runner retains its original file-based behavior. A v1
+session is never silently upgraded, and its existing tools are not transaction
+backed. Explicit M1 snapshots and initialized transaction workspaces remain
+offline operator paths; model `step`/`run` integration is pending M7. Use the
+versioned offline catalog and invocation envelope for transaction-backed calls.
+Every mutation must name its exact base revision and assembled-export SHA-256.
+Never reuse a line number after the revision changes; reload the sealed export
+and line map, then create a new invocation.
+
+In transaction workspaces, `save_module` replaces only the named assembly's
+direct contents. It preserves the assembly and unrelated metadata, assigns fresh
+stable instance IDs to all submitted placements, and retains submitted type-0
+comments as source evidence. It does not infer part identity from line order,
+coordinates, or similarity. `clone_module` creates fresh instance IDs and records
+`derived_from`; catalog part IDs, colors, orientations, and translated positions
+are preserved. A candidate is not a committed current module. Failed or blocked
+candidates retain their reports; provisional and repair-incomplete commits retain
+their statuses and open issues. A render records artifact creation only and does
+not establish review or acceptance.
+Adapter-specific details are reported under `tool_details`; they are descriptive
+evidence and never determine commitment, status, eligibility, identity, or export
+authority. Offline rendering reserves its operation ID, invocation, and source
+identity durably before rendering; reusing that ID with changed arguments fails.
+
+## Persistent intent ledger (M3-A offline operator path)
+
+`bricksmith-design-v2` adds an append-only intent ledger. A transaction workspace
+stays design-v1 until an operator explicitly runs
+`scripts/workbench.py transaction-upgrade-v2`; upgrade uses ordinary proposal,
+validation, commit, and recovery. Ledger mutations use `bricksmith-operation-v3`.
+Use `ledger-read` to page a sealed revision and select historical revisions.
+Ledger reads verify saved provenance and do not run construction physics.
+Each collection, the revision chain, and the trusted-instruction ID list return
+their own count, offset, page, continuation, and completeness fields. Issue,
+requirement, and decision progress is labelled as an attributed claim with its
+originating operation/revision and linked evidence; that attribution does not
+prove visual completion. Issue reads keep the creation snapshot separate from
+the latest status assertion. Each issue observation is reconstructed from its
+own committed, hash-verified candidate and includes that snapshot's status and
+evidence links; a later update never supplies evidence to an earlier observation.
+Only a committed operation that explicitly updates/creates the selected issue,
+or a verified checker-created policy issue, creates a status observation. A
+staged, blocked, discarded, failed, or aborted edit remains repair history and
+cannot become a published status observation. A committed operation that updates
+another issue, a geometry edit, or a repair-attempt record that merely carries
+the issue forward does not count as a new status observation. Legacy issue entries
+without verifiable observation operations remain historical/unverified.
+
+Exact user/operator instruction text enters only through the named
+`operator-intake` application entry point. Model-callable transaction proposals
+cannot assert a trusted source or operator role, and an instruction ID does not
+grant authority. Corrections append records; they do not rewrite original briefs
+or requirements. This is an application boundary, not protection against a
+process with arbitrary access to the workspace files. A ledger claim, resolved
+issue, passed construction check, or `done` action is not final design acceptance.
+Repair-attempt records use `bricksmith-repair-attempt-v2`. Their
+`recorded_revision_id` identifies the ledger-edit base; `observed_revision_id`
+must identify the attempted committed result or, for an uncommitted/failed
+attempt, its base. The immutable `outcome_at_recording` is separate from
+`current_reconciled_outcome`, which may reflect later discard or recovery.
+Adapter-specific details are reported under `tool_details`; they are descriptive
+evidence and never determine commitment, status, eligibility, identity, or export
+authority. Offline rendering reserves its operation ID, invocation, and source
+identity durably before rendering; reusing that ID with changed arguments fails.

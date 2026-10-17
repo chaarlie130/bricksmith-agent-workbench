@@ -21,6 +21,7 @@ from bricksmith.rendering.rasterizer import render_ldr_to_png
 from bricksmith.physics.validator import load_catalog
 
 SCHEMA = "bricksmith-agent-session-v1"
+READ_ONLY_V2_SCHEMA = "bricksmith-agent-session-v2"
 MAX_PARTS = 1500
 MAX_MODULE_PARTS = 250
 MAX_TOOLS_PER_STEP = 8
@@ -202,12 +203,12 @@ TOOLS = [{"type": "namespace", "name": "bricksmith",
                         {"lines": {"type": "array", "items": {"type": "integer"}}}, ["lines"]),
               _function("set_plan", "Save a concise architectural plan and current decisions for later steps. Must be 50-3000 characters; keep coordinates and silhouette priorities, omit repeated prose.",
                         {"plan": {"type": "string"}}, ["plan"]),
-              _function("save_module", "Replace one named build module with LDraw type-0/type-1 lines. "
+              _function("save_module", "Replace one named build module with LDraw type-0/type-1 lines. In transaction workspaces this replaces direct parts with fresh stable IDs (delete/add); it does not infer identity from line order or coordinates. "
                         "Keep modules focused so repairs do not rewrite the entire building. "
                         "A new floor may be saved provisionally before its supports; add supports next. "
                         "New collisions or ground violations roll back, and final submission requires all checks pass.",
                         {"name": {"type": "string"}, "ldr": {"type": "string"}}, ["name", "ldr"]),
-              _function("clone_module", "Copy a verified existing module into a new module with an LDU translation; preserves part IDs, colors, and orientations. Useful for symmetric front/rear construction.",
+              _function("clone_module", "Copy a verified leaf module into a new module with an LDU translation; creates fresh stable instance IDs while preserving catalog part IDs, colors, and orientations, and records derived_from. Useful for symmetric front/rear construction.",
                         {"source": {"type": "string"}, "name": {"type": "string"},
                          "dx": {"type": "integer"}, "dy": {"type": "integer"},
                          "dz": {"type": "integer"}}, ["source", "name", "dx", "dy", "dz"]),
@@ -330,6 +331,10 @@ def _state_path(directory: Path) -> Path:
 
 
 def _save(directory: Path, state: dict) -> None:
+    if state.get("schema") == READ_ONLY_V2_SCHEMA:
+        raise RuntimeError("bricksmith-agent-session-v2 remains an inert historical snapshot; offline transaction adapters are available separately, while runner integration is pending M7")
+    if state.get("schema") != SCHEMA:
+        raise ValueError("Refusing to save an unsupported BrickSmith session schema")
     path = _state_path(directory)
     temporary = path.with_suffix(".tmp")
     temporary.write_text(json.dumps(state, indent=2) + "\n", encoding="utf-8")
@@ -338,6 +343,10 @@ def _save(directory: Path, state: dict) -> None:
 
 def load_session(directory: Path) -> dict:
     state = json.loads(_state_path(directory).read_text(encoding="utf-8"))
+    if isinstance(state, dict) and state.get("schema") == READ_ONLY_V2_SCHEMA:
+        raise RuntimeError("bricksmith-agent-session-v2 remains an inert historical snapshot; offline transaction adapters are available separately, while runner integration is pending M7")
+    if isinstance(state, dict) and state.get("schema") == "bricksmith-transaction-state-v1":
+        raise RuntimeError("Transaction workspaces support offline tool adapters only; model step/run integration is pending M7")
     if state.get("schema") != SCHEMA:
         raise ValueError("Unsupported BrickSmith session schema")
     return state
@@ -882,7 +891,19 @@ def _roof_seam_column_ldr(x: int, z: int, bottom_y: int, bricks: int,
     return "\n".join(lines)
 
 
-def _tool(directory: Path, state: dict, name: str, args: dict) -> dict:
+def _tool(directory: Path, state: dict, name: str, args: dict,
+          invocation_context: dict | None = None) -> dict:
+    if state.get("schema") == "bricksmith-transaction-state-v1":
+        if invocation_context is None:
+            raise RuntimeError("Transaction workspaces require explicit offline invocation context; model runner integration is pending M7")
+        from .transaction_tools import dispatch
+        return dispatch(directory, name, args, invocation_context)
+    if invocation_context is not None:
+        raise ValueError("Offline transaction invocation context is valid only for an initialized transaction workspace")
+    if state.get("schema") == READ_ONLY_V2_SCHEMA:
+        raise RuntimeError("bricksmith-agent-session-v2 remains an inert historical snapshot; offline transaction adapters are available separately, while runner integration is pending M7")
+    if state.get("schema") != SCHEMA:
+        raise ValueError("Refusing to mutate an unsupported BrickSmith session schema")
     if name == "search":
         query = args["query"][:160]
         results = search(load_references(DEFAULT_CORPUS), query, limit=6)

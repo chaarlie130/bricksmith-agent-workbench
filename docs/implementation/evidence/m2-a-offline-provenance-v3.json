@@ -1,0 +1,1115 @@
+{
+  "baseline_classification": "provenance_only_no_design_result",
+  "baseline_result": null,
+  "brief_sha256": "21e86045d5f7716a53815f5089b75a827f58657cd7c82b9dbda38ccc6b143004",
+  "budgets": {},
+  "capture_status": "complete",
+  "corpus": {
+    "content_sha256": "a60ee0887b816492b515b03d6a37d7ea8e9564586a338e3f5f79741c04bbfaae",
+    "manifest_path": "data/reference_sets/manifest.json",
+    "manifest_sha256": "0891e90b3916d6eb466e9b7c316ca203f7a04979929531cda5e43904fa63ad35"
+  },
+  "created_at": "2026-10-16T06:30:54.334212Z",
+  "environment": {
+    "bricknet_source": {
+      "available": true,
+      "catalog_data": {
+        "available": true,
+        "content_sha256": "86cc1f75fc223f0250a1c82cc5afaee28a829214b236dfef38ef0668212fa018",
+        "error": null,
+        "files": [
+          {
+            "path": ".",
+            "size": 0,
+            "type": "directory"
+          },
+          {
+            "path": "color_names.json",
+            "sha256": "f726d32ac52db041b3a9f30befae83a30202988103eea09599d12df533afa7e6",
+            "size": 6468,
+            "type": "file"
+          },
+          {
+            "path": "labels.json.xz",
+            "sha256": "e9e4ef30813a94fa166bba9e407c9434df57b950ee74ab938583b9c28d8417db",
+            "size": 235656,
+            "type": "file"
+          },
+          {
+            "path": "part_aliases.json.xz",
+            "sha256": "1f94db3b84091303f3eba2513f32925fc4c0af406c2008ca486f364c87e03a1b",
+            "size": 12724,
+            "type": "file"
+          },
+          {
+            "path": "part_names.json",
+            "sha256": "445bb0c5fec41fae29543d0fb2b7149da274a2017f10cc9eafdd4fd4df3e7c5e",
+            "size": 1006113,
+            "type": "file"
+          }
+        ],
+        "path": "/Users/charliecittadini/GitHub/BrickBlender/scratch/bricknet-evaluation/src/bricknet/_data/v1"
+      },
+      "direct_url": {
+        "dir_info": {
+          "editable": true
+        },
+        "url": "file:///Users/charliecittadini/GitHub/BrickBlender/scratch/bricknet-evaluation"
+      },
+      "import_path": "/Users/charliecittadini/GitHub/BrickBlender/scratch/bricknet-evaluation/src/bricknet/__init__.py",
+      "source_content_sha256": "ee65eebeef634a102aa4ff4dbe613e7dcccb76aa9a7712a6af2d9987da703e81",
+      "source_files": [
+        {
+          "path": "eval/pe.py",
+          "sha256": "ce499bd9bf113163153cbda1fb603e864758f0c58a5b82c47fe214d468b913ff"
+        },
+        {
+          "path": "eval/siglip2.py",
+          "sha256": "553e43e1b550f51063bfcef48ed568aac245e0a308297294ab3a72c8e860bc32"
+        },
+        {
+          "path": "eval/vqascore.py",
+          "sha256": "8dd835076841ae2537a653443c8ab88a8ac4dd7e5bfc7a6ffced19700ae5c449"
+        },
+        {
+          "path": "scripts/generate.py",
+          "sha256": "5259d78c42a81d85669ffe63b12c646a8df2f925a5120a5c15800191519026e5"
+        },
+        {
+          "path": "scripts/train.py",
+          "sha256": "60f4209ab9a301a8012c2d179bd7dd7c59f4d6a93632e8bd4730cb12d651c581"
+        },
+        {
+          "path": "src/bricknet/__init__.py",
+          "sha256": "112d16f2249c23f6db91324635c3c6f62bebc080b0d54e7277d0b5c0af1ba49e"
+        },
+        {
+          "path": "src/bricknet/__main__.py",
+          "sha256": "8a275753454daf2073cc0a12e7ce97959e25df1fb5ab40e39c95f052703d76e6"
+        },
+        {
+          "path": "src/bricknet/collision.py",
+          "sha256": "f7f0c730312dc9791dec9b5370bc6fa5261784f063f4b3f569558f3f5cfc23e7"
+        },
+        {
+          "path": "src/bricknet/core.py",
+          "sha256": "917a559beb79487e8246829af8feecd9c34d103a4c538f34030228ba2b50ddd9"
+        },
+        {
+          "path": "src/bricknet/data.py",
+          "sha256": "7a6384fd26fd6671da34b2e14392593aeefdf292d0b6d3c3506ff76dd31865ad"
+        },
+        {
+          "path": "src/bricknet/graph.py",
+          "sha256": "3d08f85d526cf31b36de1ba44759deff36a11f1a51602a54348866219cf4b8f2"
+        },
+        {
+          "path": "src/bricknet/score.py",
+          "sha256": "62f92971140c7005ae1ce3993261488ed8c2e2da6a2082fe82cc1564e981869e"
+        },
+        {
+          "path": "src/bricknet/tree.py",
+          "sha256": "10fa632649d9c2c05d6a4ca97d9eb261632d3796fe4ee3b3b97f42c4b59a31b3"
+        }
+      ],
+      "source_root": "/Users/charliecittadini/GitHub/BrickBlender/scratch/bricknet-evaluation",
+      "vcs_commit": "b09a689c4929bd27f59c9bb9446237967aa332c9",
+      "vcs_dirty": false,
+      "vcs_status": "",
+      "version": "0.1.0"
+    },
+    "implementation": "CPython",
+    "machine": "arm64",
+    "packages": {
+      "bricknet": "0.1.0",
+      "matplotlib": "3.11.2",
+      "meshlib": "3.1.4.297",
+      "numpy": "2.5.3",
+      "pillow": "12.3.0",
+      "scipy": "1.18.1"
+    },
+    "platform": "macOS-26.6.1-arm64-arm-64bit-Mach-O",
+    "python": "3.14.7 (main, Aug  5 2026, 10:29:49) [Clang 21.0.0 (clang-2100.1.1.101)]"
+  },
+  "execution_track": "offline-provenance",
+  "generation_source": {
+    "baseline_clean_commit": true,
+    "baseline_commit": "22cb7c8431117b51b6e3b79ab312719075b06df4",
+    "baseline_source_sha256": "5accebca6b87380f865f42639e3b8bb5ab48493e428e5874affa3f28618fe743",
+    "implementation_files": [
+      {
+        "path": "bricksmith/__init__.py",
+        "sha256": "46e733f5888a43df62d0f918b959f92e9fa9c09e2b9a4b6a630a6f819ad06a40"
+      },
+      {
+        "path": "bricksmith/core/__init__.py",
+        "sha256": "4fdb55fd7932e13da52d7cb43f45743fcb2e8f0baa14fb40dae0c3353cd81300"
+      },
+      {
+        "path": "bricksmith/core/connector.py",
+        "sha256": "91227268833576d720b4c329a2d71199e129ef59dba2ef42c30a8736a9890521"
+      },
+      {
+        "path": "bricksmith/core/graph.py",
+        "sha256": "96f2230a3dd1c5056aa1db7fb7833724f22dfa50927e54501d2c44215de4eb02"
+      },
+      {
+        "path": "bricksmith/core/part.py",
+        "sha256": "fd5357cb1302b98662c515fd9b833a792d75f4b0f4a01938b7cc6442615d251b"
+      },
+      {
+        "path": "bricksmith/decomposition/__init__.py",
+        "sha256": "319c5b01856df82ba1791316d051324b83ccd5a17db1004cc5371359c9b93eba"
+      },
+      {
+        "path": "bricksmith/decomposition/modularizer.py",
+        "sha256": "b154450d5de2df537e5787e6019096835c7e9f1394aa010383e1dfdf1aef6ee1"
+      },
+      {
+        "path": "bricksmith/geometry/__init__.py",
+        "sha256": "cd0f906c872ea5fad85fb24c17f8685e7a7787b803841349f830201bcee8d899"
+      },
+      {
+        "path": "bricksmith/geometry/baseplate.py",
+        "sha256": "0aef51b50540a6afb957a7c15bca4c4283b5a807915edb47b2a6b5772a2a1ac3"
+      },
+      {
+        "path": "bricksmith/geometry/bounds.py",
+        "sha256": "a031e79d455d02c8ca71ff2a04e1ce715600b0c7b23e324745b9929e8f0faeaf"
+      },
+      {
+        "path": "bricksmith/geometry/envelope.py",
+        "sha256": "cde38ef39ad1a4c85a4ef519fd55dae98734b6635efe7b7084dd375b0e363ba1"
+      },
+      {
+        "path": "bricksmith/io/__init__.py",
+        "sha256": "f4ce10d3f1d2b3bafe41b9e1d3844b07fc6b5171a1b9be3a80746762c2765431"
+      },
+      {
+        "path": "bricksmith/io/bom.py",
+        "sha256": "1f0f7373431c520caf328200d3660cbd8ef33c61d6a9c477698ab9bf618f6727"
+      },
+      {
+        "path": "bricksmith/io/ldraw.py",
+        "sha256": "62b2ae0c11a4d568995cb5107836f03003c90f7e760d47c2f2fd61fc6897c9b9"
+      },
+      {
+        "path": "bricksmith/physics/__init__.py",
+        "sha256": "73aba028c44a6b1a6ca0087f6b178596fe844abb4d4f5c5c02368915afb7ac0a"
+      },
+      {
+        "path": "bricksmith/physics/validator.py",
+        "sha256": "1859576bd65f0c440f3412499a3878a0aa5fc76a8500b0c461729387a8c4af4b"
+      },
+      {
+        "path": "bricksmith/rendering/__init__.py",
+        "sha256": "067c8c68bf94faef397ab3fd06d30b35bf397a65e4b1fd4cb2d7377b7bb9c709"
+      },
+      {
+        "path": "bricksmith/rendering/rasterizer.py",
+        "sha256": "f08f951ecac2616d62c5a829c877f1d871ffdecad97893b2f166ebca913b2925"
+      },
+      {
+        "path": "bricksmith/workbench/__init__.py",
+        "sha256": "c92bc7a3fe629121bc2af135331cb632d5a2684a2834477d974087444b5f0090"
+      },
+      {
+        "path": "bricksmith/workbench/acceptance.py",
+        "sha256": "1fb0ab40f6adfabe4676d0db155cee01f140bcb8a99b3b1a9fbe74d2f93d3156"
+      },
+      {
+        "path": "bricksmith/workbench/agent_session.py",
+        "sha256": "411226b4ca9d25399c3a839d7e0ec28986dfe75ed875826f81ff088529847e99"
+      },
+      {
+        "path": "bricksmith/workbench/alignment.py",
+        "sha256": "f3a6b8d2627c50f0e6064ffd14e50bba6869adbeb0c6732b1538877790f2815e"
+      },
+      {
+        "path": "bricksmith/workbench/chatgpt_plan.py",
+        "sha256": "2c1323be7ab5c6e622071ac067c2c6c0f395f37956a55fbed956137f4a6dcf63"
+      },
+      {
+        "path": "bricksmith/workbench/design.py",
+        "sha256": "b0ddb47144e87662c214c419b1afc98c1cc08ade79a4acbf2e67afb9cbdb3e87"
+      },
+      {
+        "path": "bricksmith/workbench/feedback.py",
+        "sha256": "3bc23a2dea9b42c739dffe0d05d98b664bbfa8dfdea050f950d8df791ac5d69f"
+      },
+      {
+        "path": "bricksmith/workbench/omr.py",
+        "sha256": "8cd366da6f90d557b07896dce2c2fc39ed1484a1c292e6219f6be9056665f541"
+      },
+      {
+        "path": "bricksmith/workbench/parts.py",
+        "sha256": "226bfae04636aa197daf502f6f90765a7de04802a5c36d6e2ec842b71ae4ab3a"
+      },
+      {
+        "path": "bricksmith/workbench/prompt.py",
+        "sha256": "6eb35215e49a7126505bc660a25cbb96699ddccc5c5548da574363d3389355bb"
+      },
+      {
+        "path": "bricksmith/workbench/provenance.py",
+        "sha256": "242653c0d345e2eaf05d45681320226cc39eab6446cf35858c521367fa42e4f2"
+      },
+      {
+        "path": "bricksmith/workbench/references.py",
+        "sha256": "1a5f4dfeef406d8f6e0e65e9e371234dc6f9da69abbe657f4826a4c54b975bd5"
+      },
+      {
+        "path": "bricksmith/workbench/revisions.py",
+        "sha256": "201f7544618b9846f31db622b4bc47e3b68d3624bfd11372b5a50ec2db8cf048"
+      },
+      {
+        "path": "bricksmith/workbench/system_prompt.md",
+        "sha256": "05aa2fa8e19fa20bb1b331330a8661b940f9a5ae0b24298f679c58bb460a4b58"
+      },
+      {
+        "path": "bricksmith/workbench/tool_schema.json",
+        "sha256": "333b5df5df7fd6c0af0e2e5bb18da394029aeb679bbe96b1ad93a6d941aee0df"
+      },
+      {
+        "path": "bricksmith/workbench/transactions.py",
+        "sha256": "5124d6c9ddf647ae92380a79c18a6a467a603a9e49656758cb95d5cf12d186d2"
+      },
+      {
+        "path": "configs/architecture_scope.json",
+        "sha256": "4c046e9f0747c00ea746ffc31e1cfe5f45ec4bd0e765a4f695202065122912b2"
+      },
+      {
+        "path": "scripts/accept_build.py",
+        "sha256": "233b39d78fada0f69ecc5b937041b41da1d11cf5da685f1f8ab2f65126783128"
+      },
+      {
+        "path": "scripts/agent_session.py",
+        "sha256": "a226f179e884a1ba2ab151dd34d10d0b9176bd28ff61d881368a9512386cf764"
+      },
+      {
+        "path": "scripts/build_bel_air_estate.py",
+        "sha256": "0af319bf58404924243836f3d2a8544ec1746f7b747e32969ec28c48b1e2bca5"
+      },
+      {
+        "path": "scripts/build_bel_air_estate_v2.py",
+        "sha256": "7adbeaf19a43d8b2ad6ea23c60a707cd56049d66e8f69024afe5d83e32fb5590"
+      },
+      {
+        "path": "scripts/build_cathedral_1050.py",
+        "sha256": "15f1242d39a43dec2d7004f99e0ea729036055dd6fef9e503924d2ce493603b0"
+      },
+      {
+        "path": "scripts/build_chapel.py",
+        "sha256": "d6ed58df1b1dfc9b00d7e244614caae7f3130883f9166bbeb0662e12d4d31ced"
+      },
+      {
+        "path": "scripts/build_farmhouse.py",
+        "sha256": "b1b700fb3fb29dcfda411dd05c6dbab8a64a834620c0e57d99818f6f2da21b2d"
+      },
+      {
+        "path": "scripts/build_fire_island_lighthouse.py",
+        "sha256": "aa67be872ab49b2e3d1f14e0e7769bb3d655cd4c317e6a2bb9fd1f7dae2cbba1"
+      },
+      {
+        "path": "scripts/build_grand_cathedral.py",
+        "sha256": "ca6431f263ad7b06fcba740f98fbb827edac582949d27198b1b9b454961b7581"
+      },
+      {
+        "path": "scripts/build_grand_mansion.py",
+        "sha256": "79e494100debcf6a14e953d80eb6a6e2f03498b2e83928c7a6690a4ca63c5271"
+      },
+      {
+        "path": "scripts/build_reichstag.py",
+        "sha256": "f465455a5124f9cc785cfb6a794c5b70aa3fa8be9d7e43d2b17ac45c47ce22c2"
+      },
+      {
+        "path": "scripts/build_sol_cantilever_cove.py",
+        "sha256": "6e2f39f3ff687f18b1642f25c76dbee08aa99491b3d225d4c0f2895ae819c988"
+      },
+      {
+        "path": "scripts/chatgpt_plan.py",
+        "sha256": "91498bda7f68248961e7a6d57af2c1a3f7abbb4324c1c49a943e583eb52ee54a"
+      },
+      {
+        "path": "scripts/design_bel_air_estate.py",
+        "sha256": "0e4d3ec8909ed5db537a87a6a3211a6a5b3d395309a0f338fec2563687d30589"
+      },
+      {
+        "path": "scripts/design_grand_cathedral.py",
+        "sha256": "df1da05b0488483bb3803df76c89f1ce028e168a922c9d2768e9abcd8b732247"
+      },
+      {
+        "path": "scripts/design_grand_mansion.py",
+        "sha256": "da41092ce1f08bacc94a908c606d3a754b2e19e5737e7566889b77e30782137d"
+      },
+      {
+        "path": "scripts/diagnose_stages.py",
+        "sha256": "7ca977014039825c47f71af2a67f5b6aab52f72f87736b35c8f963c77e1d7103"
+      },
+      {
+        "path": "scripts/export_bom.py",
+        "sha256": "0d60a5138be6f5c141dba06e057f5ee29d66a5dca0df364e02eb693f1b53cace"
+      },
+      {
+        "path": "scripts/find_eq_fail.py",
+        "sha256": "81615d545bc73892146fc8c69e3f094d4e86ba7862f787dcf2c26a9cf3c36065"
+      },
+      {
+        "path": "scripts/find_equilibrium_issue.py",
+        "sha256": "a7c00e6938028d6fecb44c77bce564a2fce5ef03bfe0e13fa98b192055e79ffd"
+      },
+      {
+        "path": "scripts/fix_all_9_disconnected.py",
+        "sha256": "c3ade0676100c1cf62e018f4b302a414b3273ee252075678c5046574a040a53a"
+      },
+      {
+        "path": "scripts/fix_balustrades.py",
+        "sha256": "4789185bf6586c88b3b5d28af5b0b3630492973e1fa3d3eb11e3e2e797af5c7c"
+      },
+      {
+        "path": "scripts/fix_bench_tile.py",
+        "sha256": "58deb690fde16a6c6fa3c5ae1a5d1cb91af445d319114c61b13fa3d248ce3724"
+      },
+      {
+        "path": "scripts/fix_cabana.py",
+        "sha256": "649cef6bf2c20c71ebc3e6cd2d39c9ca1bdf772b179530fc57aed831a2c501e2"
+      },
+      {
+        "path": "scripts/fix_crossing_lintels.py",
+        "sha256": "20258c9fce59d86fd84232c6ad687af41295f2a488652ed4c071eb38cf717714"
+      },
+      {
+        "path": "scripts/fix_crossing_ring.py",
+        "sha256": "bbc8b4bcb6a569edcc1b2592d1b53e900f447aa54588eb99d19471fbe600d2e7"
+      },
+      {
+        "path": "scripts/fix_fountain_line.py",
+        "sha256": "e5e62a327a3048cbb54f09876650ae962f93fedcbfd2387523e14d23f6cc5012"
+      },
+      {
+        "path": "scripts/fix_indent.py",
+        "sha256": "f5ccacad97c93f9806870ed08a7d9c60968d2267616e919fe75119e19ee35731"
+      },
+      {
+        "path": "scripts/fix_lantern_plate.py",
+        "sha256": "44b3af75b1276d9afd3a3342bc3c8895b8178d75c0c5a13ffd0b868a9fa79d54"
+      },
+      {
+        "path": "scripts/fix_nameplate.py",
+        "sha256": "4385ccdfaa7fd75372be6e039a720e0c4f9868128fe5232d00b4e5130b590698"
+      },
+      {
+        "path": "scripts/fix_tiles_to_plates.py",
+        "sha256": "95b60a25862cb89ea097365ee6a0b445e1bd81e3db46e611a3a7113bdb3f1ab8"
+      },
+      {
+        "path": "scripts/fix_west_apron.py",
+        "sha256": "031e6437bac0be2bcf5adafb0a6d8781b864038d3b594cf64e89b5cce0a764df"
+      },
+      {
+        "path": "scripts/flatten_mpd.py",
+        "sha256": "52a1d3adbee7d87d42445eed1e65e90801579ee8f032186f6085e696e2baecf5"
+      },
+      {
+        "path": "scripts/generate_baseplate.py",
+        "sha256": "288b32e364e3148b328be48e94e6233dc11dfee20e92057bce587065ccaaaac1"
+      },
+      {
+        "path": "scripts/live_view.py",
+        "sha256": "db2d24cdeb7200692f2079ccd393804d62f2ea34f276200bf6e16a9bf8ab216a"
+      },
+      {
+        "path": "scripts/print_colliding_lines.py",
+        "sha256": "ff764ddc5a603c3f71eb1b3e5dec6838390691b8d034405b716351abfad67b1e"
+      },
+      {
+        "path": "scripts/render.py",
+        "sha256": "6f99909b6f83558151ee53a141ac81deef068cd90ffd220482b88372d862c9f7"
+      },
+      {
+        "path": "scripts/test_bel_air_tall.py",
+        "sha256": "c2feb95a5a0e374e21b5e368d3fe4e56e107aea617df8600c712647b83d135e3"
+      },
+      {
+        "path": "scripts/test_bel_air_v2.py",
+        "sha256": "952ba34fe9c1114f1b6d951346bd5cac02cef97a910546d53bd250236ea13358"
+      },
+      {
+        "path": "scripts/test_bel_air_v3.py",
+        "sha256": "1a06a2bf9dbf3f65c51b87461d908c71008be5b593138c74962a1a0b74815e64"
+      },
+      {
+        "path": "scripts/test_bel_air_wings.py",
+        "sha256": "3d281cda13378f042de6e1ffa1fcad7b3073c85725b6cb927632fb1691d44136"
+      },
+      {
+        "path": "scripts/test_bench_fix.py",
+        "sha256": "aaa4bf70812c5e171d61929a3441ce282ba25a8a90b15e876ed271093b4e1cef"
+      },
+      {
+        "path": "scripts/test_build.py",
+        "sha256": "1cddb0b286d43d9ee729467ba6513d94a2561ac93def8ff5b03db13421e1a607"
+      },
+      {
+        "path": "scripts/test_build_1000.py",
+        "sha256": "a1f870bfe9498d7869aefbaa685ab4b0a4119c480d3f40cca59a02ea33e0b330"
+      },
+      {
+        "path": "scripts/test_catalog_builder.py",
+        "sha256": "5c07f4fc16d0ee94c2f8add56bb865ee5aa5e52b2743023ed0aa61dddc59ee9d"
+      },
+      {
+        "path": "scripts/test_cathedral_builder.py",
+        "sha256": "4b11beb44c7ba36f04df8e47d219b2fa074244035a27159523c66301bde9568c"
+      },
+      {
+        "path": "scripts/test_complete_cathedral.py",
+        "sha256": "f1596124c715071f4bc8c111bbfe6546f3dd844cd40cb9e74f28ed98044ba77e"
+      },
+      {
+        "path": "scripts/test_crossing_2x6.py",
+        "sha256": "daa4f4646825ac819886ab1fd7d6b84eb527857a13e0e8f93aead97ba6bf57cf"
+      },
+      {
+        "path": "scripts/test_enhanced_mansion.py",
+        "sha256": "3cd187feb8bb056d6f72b5ff773c8325c51726473b8b9f2ff3aeb82e471574f8"
+      },
+      {
+        "path": "scripts/test_estate_stages.py",
+        "sha256": "bebf0dfbaf2e444b2b7f67d18decdb54b4c87e94258b0885e29f3d6e57175e0b"
+      },
+      {
+        "path": "scripts/test_fix_aisle_caps.py",
+        "sha256": "6d5d0d0b945efa601ae23cbc0d0ff5632a49ba926a7c4339a4e8247d71b1f249"
+      },
+      {
+        "path": "scripts/test_fix_aisle_vaults.py",
+        "sha256": "cd1464fa49c589b853d9bebe4fe71050dd404a14cf5cf1c9fa48380a2b61e102"
+      },
+      {
+        "path": "scripts/test_fix_aisle_vaults2.py",
+        "sha256": "270e5edafcf3929abc2378ce0097959112c947783de48ce49310f4489854ff8e"
+      },
+      {
+        "path": "scripts/test_fix_apse_cap.py",
+        "sha256": "3821edc668cd541745a31abce12aa66e1960508738c49b8c13319994b001fe45"
+      },
+      {
+        "path": "scripts/test_fix_clerestory.py",
+        "sha256": "4edc575b4b42d9421ca24246ea44743c71d538b034e28f5d0d6bb07b33828aea"
+      },
+      {
+        "path": "scripts/test_fix_cloister.py",
+        "sha256": "812f3eb19e38b8a34eaa0afbf3ae93639e03b6c3d4b6708e7a4d4b6a8bfb95a1"
+      },
+      {
+        "path": "scripts/test_fix_cloister2.py",
+        "sha256": "4cf2f7abc6beb0bd60daa53d3f60c2ad3f9a593f359dc2c074211e1bd8f85bfc"
+      },
+      {
+        "path": "scripts/test_fix_details.py",
+        "sha256": "92a2020380b4b606b2a540bdd450faca6d8d161a213336adf40833698a4476bd"
+      },
+      {
+        "path": "scripts/test_fix_fountain.py",
+        "sha256": "d4bd82471d0b66b2964039de75c00d2a434c205020e83fbb31d9790ab14a1bb1"
+      },
+      {
+        "path": "scripts/test_fix_fountain2.py",
+        "sha256": "0918b30a5c57180c2f1f92cc5a93c3a20ae09e673921b4951cc6e052bd0d6df2"
+      },
+      {
+        "path": "scripts/test_fix_portal.py",
+        "sha256": "5e52ba299ed6202da8778f661c30844325984365d68215c7ff8807bcab0f47a2"
+      },
+      {
+        "path": "scripts/test_fix_transept.py",
+        "sha256": "662b1755e1c3ec7222f226bd17ac075bfc609f17ba52d725c3bbde70ec928e02"
+      },
+      {
+        "path": "scripts/test_fix_transept_caps.py",
+        "sha256": "1f66b5ccebf3db4b13fdbf72b8d9a80f0db2fd6e77c192017b0ad85b05ef2e6f"
+      },
+      {
+        "path": "scripts/test_front_wall.py",
+        "sha256": "fafdf1a0387fc683f0b4c2bbbefe241dff009c12ba38aa05a702af8aa7b9ac56"
+      },
+      {
+        "path": "scripts/test_full_cathedral.py",
+        "sha256": "1bea6ef62b6f26226f8d6741acd51ef22963d8c867568265aa5cc42ad59bf989"
+      },
+      {
+        "path": "scripts/test_grand_cathedral_1000.py",
+        "sha256": "108fccf2f461db1e37cec887252e24f721b6b88b945a4b4521588e7a8753ce9a"
+      },
+      {
+        "path": "scripts/test_mansion_perfect.py",
+        "sha256": "baad3efda34c64ee4adfef7e2e8bb09e3949c3eb7a4bbb60b7883c028edd7584"
+      },
+      {
+        "path": "scripts/test_mansion_with_partitions.py",
+        "sha256": "dc9f089ab3f5bf3ab2e88903bb02170e72707780edc82e7fd701051731a2c655"
+      },
+      {
+        "path": "scripts/test_omit_floating_window.py",
+        "sha256": "15e0dee98ef2cb4da623c49229d537a6deaf57142f5a423ece978edfca3d5857"
+      },
+      {
+        "path": "scripts/test_roof_2x6.py",
+        "sha256": "48783136438834b416bffe72708d26e9b1dd5f5e22ae4ee8b17c7c1d98fd9f80"
+      },
+      {
+        "path": "scripts/test_roof_eq.py",
+        "sha256": "2d2eed875f57068e139dd693d06d07ab3373a4d0eee97ae39f6465e690f64109"
+      },
+      {
+        "path": "scripts/test_roof_fix.py",
+        "sha256": "8d3e62a7421a8561e136410c10d64074e93c026cc81c36ed5927d3e52cf00620"
+      },
+      {
+        "path": "scripts/test_roof_spans.py",
+        "sha256": "99c03bc3e76940089c0c45a900272cf11b3d5ddecb9e1cf974246c612cea2f0a"
+      },
+      {
+        "path": "scripts/test_s7_sub.py",
+        "sha256": "a2aaed4117829269bcff5ad47d0df148dc3a230cd84c337d0edb7b197df8efc7"
+      },
+      {
+        "path": "scripts/test_south_arch_beam.py",
+        "sha256": "24859b64bf18d519740e2ad960f1987c1fc9529638c36390b3033281bd120acb"
+      },
+      {
+        "path": "scripts/test_stage1_2.py",
+        "sha256": "a3aefa0fc2edb6411a3b6512fde6d9878f3121527b38b55cc689229012965ece"
+      },
+      {
+        "path": "scripts/test_unified_mansion.py",
+        "sha256": "f7ec12986ab8bcf2bbeb1c132c1ad50d8b1ae79af7359c0bf754d052fa3eb058"
+      },
+      {
+        "path": "scripts/test_v2_stages.py",
+        "sha256": "c6cb01be421884a1f1a3e1d70b1ed96171d3709c92cb71a065464030166532fd"
+      },
+      {
+        "path": "scripts/validate.py",
+        "sha256": "440105e48c2a5ce71826243c491a35cd228aab6ca6cffc5cc3247398afe22a74"
+      },
+      {
+        "path": "scripts/workbench.py",
+        "sha256": "d24b8da136b4ff8807f315ddf516c924bb7cff456ba3928219606d6079d80264"
+      }
+    ],
+    "instrumentation_commit": "22cb7c8431117b51b6e3b79ab312719075b06df4",
+    "instrumentation_dirty": true,
+    "source_manifest": {
+      "content_sha256": "d7071e7ebed71488289329680dd2c2d1702d5d07c05a24bd574ccd3c16e55bf6",
+      "dirty": true,
+      "dirty_patch_sha256": "97fd2959e809c4ada95df7db934429ec3edd00abe60c594140ad2f508702dcc8",
+      "dirty_paths": [
+        "M bricksmith/physics/validator.py",
+        " M bricksmith/workbench/agent_session.py",
+        " M scripts/workbench.py",
+        "?? bricksmith/workbench/design.py",
+        "?? bricksmith/workbench/provenance.py",
+        "?? bricksmith/workbench/revisions.py",
+        "?? bricksmith/workbench/tool_schema.json",
+        "?? bricksmith/workbench/transactions.py"
+      ],
+      "files": [
+        {
+          "path": "bricksmith/__init__.py",
+          "sha256": "46e733f5888a43df62d0f918b959f92e9fa9c09e2b9a4b6a630a6f819ad06a40"
+        },
+        {
+          "path": "bricksmith/core/__init__.py",
+          "sha256": "4fdb55fd7932e13da52d7cb43f45743fcb2e8f0baa14fb40dae0c3353cd81300"
+        },
+        {
+          "path": "bricksmith/core/connector.py",
+          "sha256": "91227268833576d720b4c329a2d71199e129ef59dba2ef42c30a8736a9890521"
+        },
+        {
+          "path": "bricksmith/core/graph.py",
+          "sha256": "96f2230a3dd1c5056aa1db7fb7833724f22dfa50927e54501d2c44215de4eb02"
+        },
+        {
+          "path": "bricksmith/core/part.py",
+          "sha256": "fd5357cb1302b98662c515fd9b833a792d75f4b0f4a01938b7cc6442615d251b"
+        },
+        {
+          "path": "bricksmith/decomposition/__init__.py",
+          "sha256": "319c5b01856df82ba1791316d051324b83ccd5a17db1004cc5371359c9b93eba"
+        },
+        {
+          "path": "bricksmith/decomposition/modularizer.py",
+          "sha256": "b154450d5de2df537e5787e6019096835c7e9f1394aa010383e1dfdf1aef6ee1"
+        },
+        {
+          "path": "bricksmith/geometry/__init__.py",
+          "sha256": "cd0f906c872ea5fad85fb24c17f8685e7a7787b803841349f830201bcee8d899"
+        },
+        {
+          "path": "bricksmith/geometry/baseplate.py",
+          "sha256": "0aef51b50540a6afb957a7c15bca4c4283b5a807915edb47b2a6b5772a2a1ac3"
+        },
+        {
+          "path": "bricksmith/geometry/bounds.py",
+          "sha256": "a031e79d455d02c8ca71ff2a04e1ce715600b0c7b23e324745b9929e8f0faeaf"
+        },
+        {
+          "path": "bricksmith/geometry/envelope.py",
+          "sha256": "cde38ef39ad1a4c85a4ef519fd55dae98734b6635efe7b7084dd375b0e363ba1"
+        },
+        {
+          "path": "bricksmith/io/__init__.py",
+          "sha256": "f4ce10d3f1d2b3bafe41b9e1d3844b07fc6b5171a1b9be3a80746762c2765431"
+        },
+        {
+          "path": "bricksmith/io/bom.py",
+          "sha256": "1f0f7373431c520caf328200d3660cbd8ef33c61d6a9c477698ab9bf618f6727"
+        },
+        {
+          "path": "bricksmith/io/ldraw.py",
+          "sha256": "62b2ae0c11a4d568995cb5107836f03003c90f7e760d47c2f2fd61fc6897c9b9"
+        },
+        {
+          "path": "bricksmith/physics/__init__.py",
+          "sha256": "73aba028c44a6b1a6ca0087f6b178596fe844abb4d4f5c5c02368915afb7ac0a"
+        },
+        {
+          "path": "bricksmith/physics/validator.py",
+          "sha256": "1859576bd65f0c440f3412499a3878a0aa5fc76a8500b0c461729387a8c4af4b"
+        },
+        {
+          "path": "bricksmith/rendering/__init__.py",
+          "sha256": "067c8c68bf94faef397ab3fd06d30b35bf397a65e4b1fd4cb2d7377b7bb9c709"
+        },
+        {
+          "path": "bricksmith/rendering/rasterizer.py",
+          "sha256": "f08f951ecac2616d62c5a829c877f1d871ffdecad97893b2f166ebca913b2925"
+        },
+        {
+          "path": "bricksmith/workbench/__init__.py",
+          "sha256": "c92bc7a3fe629121bc2af135331cb632d5a2684a2834477d974087444b5f0090"
+        },
+        {
+          "path": "bricksmith/workbench/acceptance.py",
+          "sha256": "1fb0ab40f6adfabe4676d0db155cee01f140bcb8a99b3b1a9fbe74d2f93d3156"
+        },
+        {
+          "path": "bricksmith/workbench/agent_session.py",
+          "sha256": "411226b4ca9d25399c3a839d7e0ec28986dfe75ed875826f81ff088529847e99"
+        },
+        {
+          "path": "bricksmith/workbench/alignment.py",
+          "sha256": "f3a6b8d2627c50f0e6064ffd14e50bba6869adbeb0c6732b1538877790f2815e"
+        },
+        {
+          "path": "bricksmith/workbench/chatgpt_plan.py",
+          "sha256": "2c1323be7ab5c6e622071ac067c2c6c0f395f37956a55fbed956137f4a6dcf63"
+        },
+        {
+          "path": "bricksmith/workbench/design.py",
+          "sha256": "b0ddb47144e87662c214c419b1afc98c1cc08ade79a4acbf2e67afb9cbdb3e87"
+        },
+        {
+          "path": "bricksmith/workbench/feedback.py",
+          "sha256": "3bc23a2dea9b42c739dffe0d05d98b664bbfa8dfdea050f950d8df791ac5d69f"
+        },
+        {
+          "path": "bricksmith/workbench/omr.py",
+          "sha256": "8cd366da6f90d557b07896dce2c2fc39ed1484a1c292e6219f6be9056665f541"
+        },
+        {
+          "path": "bricksmith/workbench/parts.py",
+          "sha256": "226bfae04636aa197daf502f6f90765a7de04802a5c36d6e2ec842b71ae4ab3a"
+        },
+        {
+          "path": "bricksmith/workbench/prompt.py",
+          "sha256": "6eb35215e49a7126505bc660a25cbb96699ddccc5c5548da574363d3389355bb"
+        },
+        {
+          "path": "bricksmith/workbench/provenance.py",
+          "sha256": "242653c0d345e2eaf05d45681320226cc39eab6446cf35858c521367fa42e4f2"
+        },
+        {
+          "path": "bricksmith/workbench/references.py",
+          "sha256": "1a5f4dfeef406d8f6e0e65e9e371234dc6f9da69abbe657f4826a4c54b975bd5"
+        },
+        {
+          "path": "bricksmith/workbench/revisions.py",
+          "sha256": "201f7544618b9846f31db622b4bc47e3b68d3624bfd11372b5a50ec2db8cf048"
+        },
+        {
+          "path": "bricksmith/workbench/system_prompt.md",
+          "sha256": "05aa2fa8e19fa20bb1b331330a8661b940f9a5ae0b24298f679c58bb460a4b58"
+        },
+        {
+          "path": "bricksmith/workbench/tool_schema.json",
+          "sha256": "333b5df5df7fd6c0af0e2e5bb18da394029aeb679bbe96b1ad93a6d941aee0df"
+        },
+        {
+          "path": "bricksmith/workbench/transactions.py",
+          "sha256": "5124d6c9ddf647ae92380a79c18a6a467a603a9e49656758cb95d5cf12d186d2"
+        },
+        {
+          "path": "configs/architecture_scope.json",
+          "sha256": "4c046e9f0747c00ea746ffc31e1cfe5f45ec4bd0e765a4f695202065122912b2"
+        },
+        {
+          "path": "scripts/accept_build.py",
+          "sha256": "233b39d78fada0f69ecc5b937041b41da1d11cf5da685f1f8ab2f65126783128"
+        },
+        {
+          "path": "scripts/agent_session.py",
+          "sha256": "a226f179e884a1ba2ab151dd34d10d0b9176bd28ff61d881368a9512386cf764"
+        },
+        {
+          "path": "scripts/build_bel_air_estate.py",
+          "sha256": "0af319bf58404924243836f3d2a8544ec1746f7b747e32969ec28c48b1e2bca5"
+        },
+        {
+          "path": "scripts/build_bel_air_estate_v2.py",
+          "sha256": "7adbeaf19a43d8b2ad6ea23c60a707cd56049d66e8f69024afe5d83e32fb5590"
+        },
+        {
+          "path": "scripts/build_cathedral_1050.py",
+          "sha256": "15f1242d39a43dec2d7004f99e0ea729036055dd6fef9e503924d2ce493603b0"
+        },
+        {
+          "path": "scripts/build_chapel.py",
+          "sha256": "d6ed58df1b1dfc9b00d7e244614caae7f3130883f9166bbeb0662e12d4d31ced"
+        },
+        {
+          "path": "scripts/build_farmhouse.py",
+          "sha256": "b1b700fb3fb29dcfda411dd05c6dbab8a64a834620c0e57d99818f6f2da21b2d"
+        },
+        {
+          "path": "scripts/build_fire_island_lighthouse.py",
+          "sha256": "aa67be872ab49b2e3d1f14e0e7769bb3d655cd4c317e6a2bb9fd1f7dae2cbba1"
+        },
+        {
+          "path": "scripts/build_grand_cathedral.py",
+          "sha256": "ca6431f263ad7b06fcba740f98fbb827edac582949d27198b1b9b454961b7581"
+        },
+        {
+          "path": "scripts/build_grand_mansion.py",
+          "sha256": "79e494100debcf6a14e953d80eb6a6e2f03498b2e83928c7a6690a4ca63c5271"
+        },
+        {
+          "path": "scripts/build_reichstag.py",
+          "sha256": "f465455a5124f9cc785cfb6a794c5b70aa3fa8be9d7e43d2b17ac45c47ce22c2"
+        },
+        {
+          "path": "scripts/build_sol_cantilever_cove.py",
+          "sha256": "6e2f39f3ff687f18b1642f25c76dbee08aa99491b3d225d4c0f2895ae819c988"
+        },
+        {
+          "path": "scripts/chatgpt_plan.py",
+          "sha256": "91498bda7f68248961e7a6d57af2c1a3f7abbb4324c1c49a943e583eb52ee54a"
+        },
+        {
+          "path": "scripts/design_bel_air_estate.py",
+          "sha256": "0e4d3ec8909ed5db537a87a6a3211a6a5b3d395309a0f338fec2563687d30589"
+        },
+        {
+          "path": "scripts/design_grand_cathedral.py",
+          "sha256": "df1da05b0488483bb3803df76c89f1ce028e168a922c9d2768e9abcd8b732247"
+        },
+        {
+          "path": "scripts/design_grand_mansion.py",
+          "sha256": "da41092ce1f08bacc94a908c606d3a754b2e19e5737e7566889b77e30782137d"
+        },
+        {
+          "path": "scripts/diagnose_stages.py",
+          "sha256": "7ca977014039825c47f71af2a67f5b6aab52f72f87736b35c8f963c77e1d7103"
+        },
+        {
+          "path": "scripts/export_bom.py",
+          "sha256": "0d60a5138be6f5c141dba06e057f5ee29d66a5dca0df364e02eb693f1b53cace"
+        },
+        {
+          "path": "scripts/find_eq_fail.py",
+          "sha256": "81615d545bc73892146fc8c69e3f094d4e86ba7862f787dcf2c26a9cf3c36065"
+        },
+        {
+          "path": "scripts/find_equilibrium_issue.py",
+          "sha256": "a7c00e6938028d6fecb44c77bce564a2fce5ef03bfe0e13fa98b192055e79ffd"
+        },
+        {
+          "path": "scripts/fix_all_9_disconnected.py",
+          "sha256": "c3ade0676100c1cf62e018f4b302a414b3273ee252075678c5046574a040a53a"
+        },
+        {
+          "path": "scripts/fix_balustrades.py",
+          "sha256": "4789185bf6586c88b3b5d28af5b0b3630492973e1fa3d3eb11e3e2e797af5c7c"
+        },
+        {
+          "path": "scripts/fix_bench_tile.py",
+          "sha256": "58deb690fde16a6c6fa3c5ae1a5d1cb91af445d319114c61b13fa3d248ce3724"
+        },
+        {
+          "path": "scripts/fix_cabana.py",
+          "sha256": "649cef6bf2c20c71ebc3e6cd2d39c9ca1bdf772b179530fc57aed831a2c501e2"
+        },
+        {
+          "path": "scripts/fix_crossing_lintels.py",
+          "sha256": "20258c9fce59d86fd84232c6ad687af41295f2a488652ed4c071eb38cf717714"
+        },
+        {
+          "path": "scripts/fix_crossing_ring.py",
+          "sha256": "bbc8b4bcb6a569edcc1b2592d1b53e900f447aa54588eb99d19471fbe600d2e7"
+        },
+        {
+          "path": "scripts/fix_fountain_line.py",
+          "sha256": "e5e62a327a3048cbb54f09876650ae962f93fedcbfd2387523e14d23f6cc5012"
+        },
+        {
+          "path": "scripts/fix_indent.py",
+          "sha256": "f5ccacad97c93f9806870ed08a7d9c60968d2267616e919fe75119e19ee35731"
+        },
+        {
+          "path": "scripts/fix_lantern_plate.py",
+          "sha256": "44b3af75b1276d9afd3a3342bc3c8895b8178d75c0c5a13ffd0b868a9fa79d54"
+        },
+        {
+          "path": "scripts/fix_nameplate.py",
+          "sha256": "4385ccdfaa7fd75372be6e039a720e0c4f9868128fe5232d00b4e5130b590698"
+        },
+        {
+          "path": "scripts/fix_tiles_to_plates.py",
+          "sha256": "95b60a25862cb89ea097365ee6a0b445e1bd81e3db46e611a3a7113bdb3f1ab8"
+        },
+        {
+          "path": "scripts/fix_west_apron.py",
+          "sha256": "031e6437bac0be2bcf5adafb0a6d8781b864038d3b594cf64e89b5cce0a764df"
+        },
+        {
+          "path": "scripts/flatten_mpd.py",
+          "sha256": "52a1d3adbee7d87d42445eed1e65e90801579ee8f032186f6085e696e2baecf5"
+        },
+        {
+          "path": "scripts/generate_baseplate.py",
+          "sha256": "288b32e364e3148b328be48e94e6233dc11dfee20e92057bce587065ccaaaac1"
+        },
+        {
+          "path": "scripts/live_view.py",
+          "sha256": "db2d24cdeb7200692f2079ccd393804d62f2ea34f276200bf6e16a9bf8ab216a"
+        },
+        {
+          "path": "scripts/print_colliding_lines.py",
+          "sha256": "ff764ddc5a603c3f71eb1b3e5dec6838390691b8d034405b716351abfad67b1e"
+        },
+        {
+          "path": "scripts/render.py",
+          "sha256": "6f99909b6f83558151ee53a141ac81deef068cd90ffd220482b88372d862c9f7"
+        },
+        {
+          "path": "scripts/test_bel_air_tall.py",
+          "sha256": "c2feb95a5a0e374e21b5e368d3fe4e56e107aea617df8600c712647b83d135e3"
+        },
+        {
+          "path": "scripts/test_bel_air_v2.py",
+          "sha256": "952ba34fe9c1114f1b6d951346bd5cac02cef97a910546d53bd250236ea13358"
+        },
+        {
+          "path": "scripts/test_bel_air_v3.py",
+          "sha256": "1a06a2bf9dbf3f65c51b87461d908c71008be5b593138c74962a1a0b74815e64"
+        },
+        {
+          "path": "scripts/test_bel_air_wings.py",
+          "sha256": "3d281cda13378f042de6e1ffa1fcad7b3073c85725b6cb927632fb1691d44136"
+        },
+        {
+          "path": "scripts/test_bench_fix.py",
+          "sha256": "aaa4bf70812c5e171d61929a3441ce282ba25a8a90b15e876ed271093b4e1cef"
+        },
+        {
+          "path": "scripts/test_build.py",
+          "sha256": "1cddb0b286d43d9ee729467ba6513d94a2561ac93def8ff5b03db13421e1a607"
+        },
+        {
+          "path": "scripts/test_build_1000.py",
+          "sha256": "a1f870bfe9498d7869aefbaa685ab4b0a4119c480d3f40cca59a02ea33e0b330"
+        },
+        {
+          "path": "scripts/test_catalog_builder.py",
+          "sha256": "5c07f4fc16d0ee94c2f8add56bb865ee5aa5e52b2743023ed0aa61dddc59ee9d"
+        },
+        {
+          "path": "scripts/test_cathedral_builder.py",
+          "sha256": "4b11beb44c7ba36f04df8e47d219b2fa074244035a27159523c66301bde9568c"
+        },
+        {
+          "path": "scripts/test_complete_cathedral.py",
+          "sha256": "f1596124c715071f4bc8c111bbfe6546f3dd844cd40cb9e74f28ed98044ba77e"
+        },
+        {
+          "path": "scripts/test_crossing_2x6.py",
+          "sha256": "daa4f4646825ac819886ab1fd7d6b84eb527857a13e0e8f93aead97ba6bf57cf"
+        },
+        {
+          "path": "scripts/test_enhanced_mansion.py",
+          "sha256": "3cd187feb8bb056d6f72b5ff773c8325c51726473b8b9f2ff3aeb82e471574f8"
+        },
+        {
+          "path": "scripts/test_estate_stages.py",
+          "sha256": "bebf0dfbaf2e444b2b7f67d18decdb54b4c87e94258b0885e29f3d6e57175e0b"
+        },
+        {
+          "path": "scripts/test_fix_aisle_caps.py",
+          "sha256": "6d5d0d0b945efa601ae23cbc0d0ff5632a49ba926a7c4339a4e8247d71b1f249"
+        },
+        {
+          "path": "scripts/test_fix_aisle_vaults.py",
+          "sha256": "cd1464fa49c589b853d9bebe4fe71050dd404a14cf5cf1c9fa48380a2b61e102"
+        },
+        {
+          "path": "scripts/test_fix_aisle_vaults2.py",
+          "sha256": "270e5edafcf3929abc2378ce0097959112c947783de48ce49310f4489854ff8e"
+        },
+        {
+          "path": "scripts/test_fix_apse_cap.py",
+          "sha256": "3821edc668cd541745a31abce12aa66e1960508738c49b8c13319994b001fe45"
+        },
+        {
+          "path": "scripts/test_fix_clerestory.py",
+          "sha256": "4edc575b4b42d9421ca24246ea44743c71d538b034e28f5d0d6bb07b33828aea"
+        },
+        {
+          "path": "scripts/test_fix_cloister.py",
+          "sha256": "812f3eb19e38b8a34eaa0afbf3ae93639e03b6c3d4b6708e7a4d4b6a8bfb95a1"
+        },
+        {
+          "path": "scripts/test_fix_cloister2.py",
+          "sha256": "4cf2f7abc6beb0bd60daa53d3f60c2ad3f9a593f359dc2c074211e1bd8f85bfc"
+        },
+        {
+          "path": "scripts/test_fix_details.py",
+          "sha256": "92a2020380b4b606b2a540bdd450faca6d8d161a213336adf40833698a4476bd"
+        },
+        {
+          "path": "scripts/test_fix_fountain.py",
+          "sha256": "d4bd82471d0b66b2964039de75c00d2a434c205020e83fbb31d9790ab14a1bb1"
+        },
+        {
+          "path": "scripts/test_fix_fountain2.py",
+          "sha256": "0918b30a5c57180c2f1f92cc5a93c3a20ae09e673921b4951cc6e052bd0d6df2"
+        },
+        {
+          "path": "scripts/test_fix_portal.py",
+          "sha256": "5e52ba299ed6202da8778f661c30844325984365d68215c7ff8807bcab0f47a2"
+        },
+        {
+          "path": "scripts/test_fix_transept.py",
+          "sha256": "662b1755e1c3ec7222f226bd17ac075bfc609f17ba52d725c3bbde70ec928e02"
+        },
+        {
+          "path": "scripts/test_fix_transept_caps.py",
+          "sha256": "1f66b5ccebf3db4b13fdbf72b8d9a80f0db2fd6e77c192017b0ad85b05ef2e6f"
+        },
+        {
+          "path": "scripts/test_front_wall.py",
+          "sha256": "fafdf1a0387fc683f0b4c2bbbefe241dff009c12ba38aa05a702af8aa7b9ac56"
+        },
+        {
+          "path": "scripts/test_full_cathedral.py",
+          "sha256": "1bea6ef62b6f26226f8d6741acd51ef22963d8c867568265aa5cc42ad59bf989"
+        },
+        {
+          "path": "scripts/test_grand_cathedral_1000.py",
+          "sha256": "108fccf2f461db1e37cec887252e24f721b6b88b945a4b4521588e7a8753ce9a"
+        },
+        {
+          "path": "scripts/test_mansion_perfect.py",
+          "sha256": "baad3efda34c64ee4adfef7e2e8bb09e3949c3eb7a4bbb60b7883c028edd7584"
+        },
+        {
+          "path": "scripts/test_mansion_with_partitions.py",
+          "sha256": "dc9f089ab3f5bf3ab2e88903bb02170e72707780edc82e7fd701051731a2c655"
+        },
+        {
+          "path": "scripts/test_omit_floating_window.py",
+          "sha256": "15e0dee98ef2cb4da623c49229d537a6deaf57142f5a423ece978edfca3d5857"
+        },
+        {
+          "path": "scripts/test_roof_2x6.py",
+          "sha256": "48783136438834b416bffe72708d26e9b1dd5f5e22ae4ee8b17c7c1d98fd9f80"
+        },
+        {
+          "path": "scripts/test_roof_eq.py",
+          "sha256": "2d2eed875f57068e139dd693d06d07ab3373a4d0eee97ae39f6465e690f64109"
+        },
+        {
+          "path": "scripts/test_roof_fix.py",
+          "sha256": "8d3e62a7421a8561e136410c10d64074e93c026cc81c36ed5927d3e52cf00620"
+        },
+        {
+          "path": "scripts/test_roof_spans.py",
+          "sha256": "99c03bc3e76940089c0c45a900272cf11b3d5ddecb9e1cf974246c612cea2f0a"
+        },
+        {
+          "path": "scripts/test_s7_sub.py",
+          "sha256": "a2aaed4117829269bcff5ad47d0df148dc3a230cd84c337d0edb7b197df8efc7"
+        },
+        {
+          "path": "scripts/test_south_arch_beam.py",
+          "sha256": "24859b64bf18d519740e2ad960f1987c1fc9529638c36390b3033281bd120acb"
+        },
+        {
+          "path": "scripts/test_stage1_2.py",
+          "sha256": "a3aefa0fc2edb6411a3b6512fde6d9878f3121527b38b55cc689229012965ece"
+        },
+        {
+          "path": "scripts/test_unified_mansion.py",
+          "sha256": "f7ec12986ab8bcf2bbeb1c132c1ad50d8b1ae79af7359c0bf754d052fa3eb058"
+        },
+        {
+          "path": "scripts/test_v2_stages.py",
+          "sha256": "c6cb01be421884a1f1a3e1d70b1ed96171d3709c92cb71a065464030166532fd"
+        },
+        {
+          "path": "scripts/validate.py",
+          "sha256": "440105e48c2a5ce71826243c491a35cd228aab6ca6cffc5cc3247398afe22a74"
+        },
+        {
+          "path": "scripts/workbench.py",
+          "sha256": "d24b8da136b4ff8807f315ddf516c924bb7cff456ba3928219606d6079d80264"
+        }
+      ],
+      "fingerprint_complete": true,
+      "omitted_paths": []
+    }
+  },
+  "input_provenance": [],
+  "libraries": {
+    "bricknet_data": {
+      "configured_path": "/Users/charliecittadini/GitHub/bricksmith-agent-workbench/data/bricknet-data",
+      "content_sha256": "abdcc7bf8176b439ff70a1dbc93f8cd8bcdb8df312b99552b088e8cf9692b021",
+      "fingerprint_complete": true,
+      "resolved_path": "/Users/charliecittadini/github/brickblender/scratch/bricknet-data",
+      "source": "repository_default",
+      "target_exists": true
+    },
+    "ldraw": {
+      "configured_path": "/Users/charliecittadini/GitHub/bricksmith-agent-workbench/data/ldraw",
+      "content_sha256": "45bb89c326dd6929df3976d9274d540a090ecd53c755f16e7836a96feb03eeeb",
+      "fingerprint_complete": true,
+      "resolved_path": "/Users/charliecittadini/github/brickblender/scratch/ldraw",
+      "source": "repository_default",
+      "target_exists": true
+    }
+  },
+  "manifest_identity": "7803a9a995a6501ae27b19800e33612196f4986407b08fa0eec26ef588733657",
+  "model": null,
+  "prompt_sha256": "05aa2fa8e19fa20bb1b331330a8661b940f9a5ae0b24298f679c58bb460a4b58",
+  "provider": null,
+  "run_id": "bbf82139479cf387",
+  "schema": "bricksmith-run-manifest-v1",
+  "settings": {},
+  "source_hashes": {
+    "checker": "1859576bd65f0c440f3412499a3878a0aa5fc76a8500b0c461729387a8c4af4b",
+    "implementation_manifest": "d7071e7ebed71488289329680dd2c2d1702d5d07c05a24bd574ccd3c16e55bf6",
+    "renderer": "f08f951ecac2616d62c5a829c877f1d871ffdecad97893b2f166ebca913b2925"
+  },
+  "tool_schema_sha256": "3505ef99d68b156a52fbbd40214682d933ccb4cf7be7a3fc8ee85f95e82393c1"
+}

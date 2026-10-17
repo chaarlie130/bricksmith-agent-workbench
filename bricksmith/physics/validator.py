@@ -289,6 +289,11 @@ def validate_ldraw(
                     "base and rerun with that ground-y value; this is not an automatic pass.")
         errors.append(ground_error)
     report["checks"]["no_parts_below_ground"] = not below_ground
+    # Additive stable-index evidence for transaction policy.  The historical
+    # sample below remains capped at 30 for existing consumers; policy code may
+    # opt into this complete list and must still map it through its exact export.
+    report["diagnostics"] = {"below_ground_indices_complete": list(below_ground),
+                             "below_ground_indices_complete_flag": True}
     if below_ground:
         errors.append({"kind": "parts_below_ground", "part_indices": below_ground[:30],
                        "count": len(below_ground), "ground_y_ldu": ground_y,
