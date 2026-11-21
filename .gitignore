@@ -46,3 +46,14 @@ runs/
 grok_interrupted_goal.md
 bricksmith-clean-view/
 bricksmith-clean-view.zip
+
+# Local part libraries and credentials
+/data/ldraw
+/data/bricknet-data
+/.env
+/.env.*
+!/.env.example
+/bricksmith-clean-view*/
+
+# Deliberately published renders
+!/examples/images/*.png

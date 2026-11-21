@@ -1,9 +1,8 @@
 # Agent workbench
 
-This workstream gives a frontier-model design agent reference search, modular
-LDraw authoring, construction checks, and rendered feedback. It reuses
-BrickSmith's checker and renderer; it does not include the former local
-language-model training pipeline.
+This guide describes BrickSmith's command-line interface for reference search,
+LDraw editing, construction checks, and rendering. Start with the
+[local setup guide](SETUP.md) and the [runnable example](../README.md#try-it-locally).
 
 ## Commands
 
@@ -34,7 +33,7 @@ Run from the repository root with the BrickSmith Python environment:
 ./.venv/bin/python scripts/workbench.py check path/to/candidate.ldr
 ```
 
-All successful commands return JSON. `search` scans the checked-in reference
+`search`, `inspect`, and `check` return JSON. `search` scans the checked-in reference
 models and ranks title, a small set of reviewed seed descriptions, and part IDs
 with lexical matching. Results include an absolute source path, source prefix,
 SHA-256 digest, piece count, and any license line found in the file. A missing

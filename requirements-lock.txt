@@ -1,5 +1,5 @@
 # Exact versions observed on CPython 3.14.7, macOS 26.6.1 arm64. Other runtimes unverified.
-# BrickNet is installed separately from its editable VCS checkout; see README.md.
+# BrickNet is installed separately from its editable VCS checkout; see docs/SETUP.md.
 cffi==2.1.1
 contourpy==1.4.0
 cryptography==50.0.2
